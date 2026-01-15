@@ -1,20 +1,24 @@
 {
-  "Group": "Hardaway",
-  "Name": "Hyvatar",
-  "Version": "0.0.0",
-  "Description": "An example plugin for HyTale!",
-  "Authors": [
-    {
-      "Name": "Jackson",
-      "Email": "jackson@hardaway.dev",
-      "Url": "https://hardawy.dev"
-    }
-  ],
-  "Website": "https://hardaway.dev",
-  "ServerVersion": "*",
-  "Dependencies": {},
-  "OptionalDependencies": {},
-  "DisabledByDefault": false,
-  "Main": "dev.hardaway.hyvatar.HyvatarPlugin",
-  "IncludesAssetPack": true
+    "Group": "Hardaway",
+    "Name": "Hyvatar",
+    "Version": "0.0.1",
+    "Description": "An example plugin for HyTale!",
+    "Authors": [
+        {
+            "Name": "Jackson",
+            "Email": "jackson@hardaway.dev",
+            "Url": "https://hardawy.dev"
+        }
+    ],
+    "Website": "https://hardaway.dev",
+    "ServerVersion": "*",
+    "Dependencies": {
+        
+    },
+    "OptionalDependencies": {
+        
+    },
+    "DisabledByDefault": false,
+    "Main": "dev.hardaway.hyvatar.HyvatarPlugin",
+    "IncludesAssetPack": true
 }
