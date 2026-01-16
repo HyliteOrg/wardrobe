@@ -7,6 +7,9 @@ import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticRegistry;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
@@ -16,8 +19,12 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Set;
 
 public class AvatarCustomisationPage extends InteractiveCustomUIPage<AvatarCustomisationPage.PageEventData> {
+
+    public CosmeticTab currentTab;
+    public CosmeticSubTab currentSubTab;
 
     public AvatarCustomisationPage(@Nonnull PlayerRef playerRef, @Nonnull CustomPageLifetime lifetime) {
         super(playerRef, lifetime, PageEventData.CODEC);
@@ -27,39 +34,18 @@ public class AvatarCustomisationPage extends InteractiveCustomUIPage<AvatarCusto
     public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder commandBuilder, @Nonnull UIEventBuilder eventBuilder, @Nonnull Store<EntityStore> store) {
         commandBuilder.append("Pages/AvatarCustomisation/AvatarCustomisation.ui");
 
-        switchCategory(commandBuilder, "Head");
+        switchTab(commandBuilder, CosmeticTab.Head);
+        buildCosmeticList(ref, store, commandBuilder, null);
 
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#SearchField", EventData.of("@SearchQuery", "#SearchField.Value"), false);
 
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabHead #Button", EventData.of("Category", "Head"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabGeneral #Button", EventData.of("Category", "General"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabTorso #Button", EventData.of("Category", "Torso"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabLegs #Button", EventData.of("Category", "Legs"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabCapes #Button", EventData.of("Category", "Capes"), false);
+        for (CosmeticTab tab : CosmeticTab.values()) {
+            eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Tab" + tab.toString().replace("_", "") + " #Button", EventData.of("Tab", tab.toString()), false);
+        }
 
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabUnderwear #Button", EventData.of("SubCategory", "Underwear"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabBodyCharacteristics #Button", EventData.of("SubCategory", "Body Characteristics"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabFace #Button", EventData.of("SubCategory", "Face"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabMouth #Button", EventData.of("SubCategory", "Mouth"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabEars #Button", EventData.of("SubCategory", "Ears"), false);
-
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabHaircut #Button", EventData.of("SubCategory", "Haircut"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabEyebrows #Button", EventData.of("SubCategory", "Eyebrows"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabEyes #Button", EventData.of("SubCategory", "Eyes"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabFacialHair #Button", EventData.of("SubCategory", "Facial Hair"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabHeadAccessory #Button", EventData.of("SubCategory", "Head Accessory"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabFaceAccessory #Button", EventData.of("SubCategory", "Face Accessory"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabEarAccessory #Button", EventData.of("SubCategory", "Ear Accessory"), false);
-
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabUndertop #Button", EventData.of("SubCategory", "Undertop"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabOvertop #Button", EventData.of("SubCategory", "Overtop"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabGloves #Button", EventData.of("SubCategory", "Gloves"), false);
-
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabPants #Button", EventData.of("SubCategory", "Pants"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabOverpants #Button", EventData.of("SubCategory", "Overpants"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabShoes #Button", EventData.of("SubCategory", "Shoes"), false);
-
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#TabCape #Button", EventData.of("SubCategory", "Cape"), false);
+        for (CosmeticSubTab tab : CosmeticSubTab.values()) {
+            eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Tab" + tab.toString().replace("_", "") + " #Button", EventData.of("SubTab", tab.toString()), false);
+        }
     }
 
     @Override
@@ -67,144 +53,87 @@ public class AvatarCustomisationPage extends InteractiveCustomUIPage<AvatarCusto
         super.handleDataEvent(ref, store, data);
 
         UICommandBuilder commandBuilder = new UICommandBuilder();
-        switchCategory(commandBuilder, data.category);
-        switchSubCategory(commandBuilder, data.subCategory);
+
+        if (data.tab != null) switchTab(commandBuilder, CosmeticTab.valueOf(data.tab));
+        if (data.subTab != null) switchSubTab(commandBuilder, CosmeticSubTab.valueOf(data.subTab));
+
+        buildCosmeticList(ref, store, commandBuilder, data.searchQuery);
         sendUpdate(commandBuilder);
     }
 
-    public static void switchCategory(UICommandBuilder commandBuilder, @Nullable String category) {
-        if (category == null) return;
+    private void buildCosmeticList(Ref<EntityStore> ref, Store<EntityStore> store, UICommandBuilder commandBuilder, @Nullable String searchQuery) {
+        commandBuilder.clear("#Parts");
+        if (currentSubTab.hasEmptyPart && (searchQuery == null || searchQuery.isEmpty()))
+            commandBuilder.append("#Parts", "Pages/AvatarCustomisation/EmptyPart.ui");
 
-        commandBuilder.set("#CategoryName.Text", category);
+        CosmeticRegistry cosmeticRegistry = CosmeticsModule.get().getRegistry();
 
-        switch (category) {
-            case "Head" -> {
-                resetCategories(commandBuilder);
-                commandBuilder.set("#TabHead #Button #Selected.Visible", true);
-
-                commandBuilder.set("#TabHaircut.Visible", true);
-                commandBuilder.set("#TabEyebrows.Visible", true);
-                commandBuilder.set("#TabEyes.Visible", true);
-                commandBuilder.set("#TabFacialHair.Visible", true);
-                commandBuilder.set("#TabHeadAccessory.Visible", true);
-                commandBuilder.set("#TabFaceAccessory.Visible", true);
-                commandBuilder.set("#TabEarAccessory.Visible", true);
-                switchSubCategory(commandBuilder, "Haircut");
-            }
-            case "General" -> {
-                resetCategories(commandBuilder);
-                commandBuilder.set("#TabGeneral #Button #Selected.Visible", true);
-
-                commandBuilder.set("#TabUnderwear.Visible", true);
-                commandBuilder.set("#TabBodyCharacteristics.Visible", true);
-                commandBuilder.set("#TabFace.Visible", true);
-                commandBuilder.set("#TabMouth.Visible", true);
-                commandBuilder.set("#TabEars.Visible", true);
-                switchSubCategory(commandBuilder, "Underwear");
-            }
-            case "Torso" -> {
-                resetCategories(commandBuilder);
-                commandBuilder.set("#TabTorso #Button #Selected.Visible", true);
-
-                commandBuilder.set("#TabUndertop.Visible", true);
-                commandBuilder.set("#TabOvertop.Visible", true);
-                commandBuilder.set("#TabGloves.Visible", true);
-                switchSubCategory(commandBuilder, "Undertop");
-            }
-            case "Legs" -> {
-                resetCategories(commandBuilder);
-                commandBuilder.set("#TabLegs #Button #Selected.Visible", true);
-
-                commandBuilder.set("#TabPants.Visible", true);
-                commandBuilder.set("#TabOverpants.Visible", true);
-                commandBuilder.set("#TabShoes.Visible", true);
-                switchSubCategory(commandBuilder, "Pants");
-            }
-            case "Capes" -> {
-                resetCategories(commandBuilder);
-                commandBuilder.set("#TabCapes #Button #Selected.Visible", true);
-
-                commandBuilder.set("#TabCape.Visible", true);
-                switchSubCategory(commandBuilder, "Cape");
+        for (CosmeticType cosmeticType : CosmeticType.values()) {
+            if (cosmeticType.toString().equalsIgnoreCase(currentSubTab.toString())) {
+                Set<String> list = cosmeticRegistry.getByType(cosmeticType).keySet();
+                for (int i = 0; i < list.size(); i++) {
+                    commandBuilder.append("#Parts", "Pages/AvatarCustomisation/Cosmetic.ui");
+                }
             }
         }
     }
 
-    public static void switchSubCategory(UICommandBuilder commandBuilder, @Nullable String subCategory) {
-        if (subCategory == null) return;
+    public void switchTab(UICommandBuilder commandBuilder, CosmeticTab tab) {
+        resetTabs(commandBuilder);
 
-        resetSubCategories(commandBuilder);
-        commandBuilder.set("#Tab" + subCategory.replace(" ", "") + " #Button #Selected.Visible", true);
-        commandBuilder.set("#SubCategoryName.Text", subCategory);
+        if (tab.subTabs.isEmpty()) {
+            commandBuilder.set("#CategoryLabelArrow.Visible", false);
+            commandBuilder.set("#CategoryName.Text", "");
+        } else {
+            commandBuilder.set("#CategoryLabelArrow.Visible", true);
+            commandBuilder.set("#CategoryName.Text", tab.toString().replace("_", " "));
+        }
+
+        commandBuilder.set("#Tab" + tab.toString().replace("_", "") + " #Button #Selected.Visible", true);
+
+        for (CosmeticSubTab subTab : CosmeticSubTab.values()) {
+            if (tab.subTabs.contains(subTab)) commandBuilder.set("#Tab" + subTab.toString().replace("_", "") + ".Visible", true);
+        }
+
+        commandBuilder.set("#Tab" + tab.defaultSubTab.toString().replace("_", "") + ".Visible", true);
+        switchSubTab(commandBuilder, tab.defaultSubTab);
+
+        currentTab = tab;
     }
 
-    public static void resetCategories(UICommandBuilder commandBuilder) {
-        commandBuilder.set("#TabHead #Button #Selected.Visible", false);
-        commandBuilder.set("#TabGeneral #Button #Selected.Visible", false);
-        commandBuilder.set("#TabTorso #Button #Selected.Visible", false);
-        commandBuilder.set("#TabLegs #Button #Selected.Visible", false);
-        commandBuilder.set("#TabCapes #Button #Selected.Visible", false);
+    public void switchSubTab(UICommandBuilder commandBuilder, CosmeticSubTab subTab) {
+        resetSubTabs(commandBuilder);
+        commandBuilder.set("#Tab" + subTab.toString().replace("_", "") + " #Button #Selected.Visible", true);
+        commandBuilder.set("#SubCategoryName.Text", subTab.toString().replace("_", " "));
 
-        commandBuilder.set("#TabUnderwear.Visible", false);
-        commandBuilder.set("#TabBodyCharacteristics.Visible", false);
-        commandBuilder.set("#TabFace.Visible", false);
-        commandBuilder.set("#TabMouth.Visible", false);
-        commandBuilder.set("#TabEars.Visible", false);
-
-        commandBuilder.set("#TabHaircut.Visible", false);
-        commandBuilder.set("#TabEyebrows.Visible", false);
-        commandBuilder.set("#TabEyes.Visible", false);
-        commandBuilder.set("#TabFacialHair.Visible", false);
-        commandBuilder.set("#TabHeadAccessory.Visible", false);
-        commandBuilder.set("#TabFaceAccessory.Visible", false);
-        commandBuilder.set("#TabEarAccessory.Visible", false);
-
-        commandBuilder.set("#TabUndertop.Visible", false);
-        commandBuilder.set("#TabOvertop.Visible", false);
-        commandBuilder.set("#TabGloves.Visible", false);
-
-        commandBuilder.set("#TabPants.Visible", false);
-        commandBuilder.set("#TabOverpants.Visible", false);
-        commandBuilder.set("#TabShoes.Visible", false);
-
-        commandBuilder.set("#TabCape.Visible", false);
+        currentSubTab = subTab;
     }
 
-    public static void resetSubCategories(UICommandBuilder commandBuilder) {
-        commandBuilder.set("#TabUnderwear #Button #Selected.Visible", false);
-        commandBuilder.set("#TabBodyCharacteristics #Button #Selected.Visible", false);
-        commandBuilder.set("#TabFace #Button #Selected.Visible", false);
-        commandBuilder.set("#TabMouth #Button #Selected.Visible", false);
-        commandBuilder.set("#TabEars #Button #Selected.Visible", false);
+    public static void resetTabs(UICommandBuilder commandBuilder) {
+        for (CosmeticTab tab : CosmeticTab.values()) {
+            commandBuilder.set("#Tab" + tab.toString().replace("_", "") + " #Button #Selected.Visible", false);
+        }
 
-        commandBuilder.set("#TabHaircut #Button #Selected.Visible", false);
-        commandBuilder.set("#TabEyebrows #Button #Selected.Visible", false);
-        commandBuilder.set("#TabEyes #Button #Selected.Visible", false);
-        commandBuilder.set("#TabFacialHair #Button #Selected.Visible", false);
-        commandBuilder.set("#TabHeadAccessory #Button #Selected.Visible", false);
-        commandBuilder.set("#TabFaceAccessory #Button #Selected.Visible", false);
-        commandBuilder.set("#TabEarAccessory #Button #Selected.Visible", false);
+        for (CosmeticSubTab tab : CosmeticSubTab.values()) {
+            commandBuilder.set("#Tab" + tab.toString().replace("_", "") + ".Visible", false);
+        }
+    }
 
-        commandBuilder.set("#TabUndertop #Button #Selected.Visible", false);
-        commandBuilder.set("#TabOvertop #Button #Selected.Visible", false);
-        commandBuilder.set("#TabGloves #Button #Selected.Visible", false);
-
-        commandBuilder.set("#TabPants #Button #Selected.Visible", false);
-        commandBuilder.set("#TabOverpants #Button #Selected.Visible", false);
-        commandBuilder.set("#TabShoes #Button #Selected.Visible", false);
-
-        commandBuilder.set("#TabCape #Button #Selected.Visible", false);
+    public static void resetSubTabs(UICommandBuilder commandBuilder) {
+        for (CosmeticSubTab tab : CosmeticSubTab.values()) {
+            commandBuilder.set("#Tab" + tab.toString().replace("_", "") + " #Button #Selected.Visible", false);
+        }
     }
 
     public static class PageEventData {
         public static final BuilderCodec<PageEventData> CODEC = BuilderCodec.builder(PageEventData.class, PageEventData::new)
                 .append(new KeyedCodec<>("@SearchQuery", Codec.STRING), (entry, s) -> entry.searchQuery = s, (entry) -> entry.searchQuery).add()
-                .append(new KeyedCodec<>("Category", Codec.STRING), (entry, s) -> entry.category = s, (entry) -> entry.category).add()
-                .append(new KeyedCodec<>("SubCategory", Codec.STRING), (entry, s) -> entry.subCategory = s, (entry) -> entry.subCategory).add()
+                .append(new KeyedCodec<>("Tab", Codec.STRING), (entry, s) -> entry.tab = s, (entry) -> entry.tab).add()
+                .append(new KeyedCodec<>("SubTab", Codec.STRING), (entry, s) -> entry.subTab = s, (entry) -> entry.subTab).add()
                 .build();
 
         private String searchQuery;
-        private String category;
-        private String subCategory;
+        private String tab;
+        private String subTab;
     }
 }

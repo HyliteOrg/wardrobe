@@ -7,12 +7,11 @@ $Sounds = "../../Sounds.ui";
 
 @TabAnchor = Anchor(Width: 69, Height: 69, Top: -18);
 @TabArrowAnchor = Anchor(Width: 9, Height: 18, Right: 0);
-@TabArrowTexture = "SelectedCategoryArrow.png";
 
 @PartPreviewWidth = 92;
 @PartPreviewHeight = 149;
 @PartPreviewMargin = 10;
-@PartPreviewRows = 3;
+@PartPreviewRows = 4.75;
 @PartPreviewsPerRow = 5;
 @PartPreviewBackgroundColor = #2f3a4f;
 @PartPreviewBackgroundColorHovered = #39455d;
@@ -210,7 +209,7 @@ Group {
     }
   }
 
-  @TabButton #TabHaircut {
+  @TabButton #TabHaircuts {
     #Button {
       Style: (
       Default: (Background: (TexturePath: "CategoryIcons/Haircut.png")),
@@ -273,113 +272,113 @@ Group {
   }
   @TabButton #TabFaceAccessory {
       #Button {
-      Style: (
-      Default: (Background: (TexturePath: "CategoryIcons/FaceAccessory.png")),
-      Sounds: $Sounds.@ButtonsLight
-      );
+       Style: (
+         Default: (Background: (TexturePath: "CategoryIcons/FaceAccessory.png")),
+          Sounds: $Sounds.@ButtonsLight
+        );
     }
 
       #Selected {
-      Background: (TexturePath: "CategoryIcons/FaceAccessorySelected.png");
+        Background: (TexturePath: "CategoryIcons/FaceAccessorySelected.png");
     }
   }
   @TabButton #TabEarAccessory {
       #Button {
-      Style: (
-      Default: (Background: (TexturePath: "CategoryIcons/EarAccessory.png")),
-      Sounds: $Sounds.@ButtonsLight
-      );
+        Style: (
+          Default: (Background: (TexturePath: "CategoryIcons/EarAccessory.png")),
+          Sounds: $Sounds.@ButtonsLight
+        );
     }
 
       #Selected {
-      Background: (TexturePath: "CategoryIcons/EarAccessorySelected.png");
+        Background: (TexturePath: "CategoryIcons/EarAccessorySelected.png");
     }
   }
 
   @TabButton #TabUndertop {
       #Button {
-      Style: (
-      Default: (Background: (TexturePath: "CategoryIcons/Undertop.png")),
-      Sounds: $Sounds.@ButtonsLight
-      );
+        Style: (
+         Default: (Background: (TexturePath: "CategoryIcons/Undertop.png")),
+          Sounds: $Sounds.@ButtonsLight
+        );
     }
 
       #Selected {
-      Background: (TexturePath: "CategoryIcons/UndertopSelected.png");
+        Background: (TexturePath: "CategoryIcons/UndertopSelected.png");
     }
   }
   @TabButton #TabOvertop {
       #Button {
-      Style: (
-      Default: (Background: (TexturePath: "CategoryIcons/Overtop.png")),
-      Sounds: $Sounds.@ButtonsLight
-      );
+        Style: (
+          Default: (Background: (TexturePath: "CategoryIcons/Overtop.png")),
+          Sounds: $Sounds.@ButtonsLight
+        );
     }
 
       #Selected {
-      Background: (TexturePath: "CategoryIcons/OvertopSelected.png");
+        Background: (TexturePath: "CategoryIcons/OvertopSelected.png");
     }
   }
   @TabButton #TabGloves {
       #Button {
-      Style: (
-      Default: (Background: (TexturePath: "CategoryIcons/Gloves.png")),
-      Sounds: $Sounds.@ButtonsLight
-      );
+        Style: (
+          Default: (Background: (TexturePath: "CategoryIcons/Gloves.png")),
+          Sounds: $Sounds.@ButtonsLight
+        );
     }
 
       #Selected {
-      Background: (TexturePath: "CategoryIcons/GlovesSelected.png");
+        Background: (TexturePath: "CategoryIcons/GlovesSelected.png");
     }
   }
 
   @TabButton #TabPants {
       #Button {
-      Style: (
-      Default: (Background: (TexturePath: "CategoryIcons/Pants.png")),
-      Sounds: $Sounds.@ButtonsLight
-      );
+       Style: (
+         Default: (Background: (TexturePath: "CategoryIcons/Pants.png")),
+         Sounds: $Sounds.@ButtonsLight
+        );
     }
 
       #Selected {
-      Background: (TexturePath: "CategoryIcons/PantsSelected.png");
+        Background: (TexturePath: "CategoryIcons/PantsSelected.png");
     }
   }
   @TabButton #TabOverpants {
       #Button {
-      Style: (
-      Default: (Background: (TexturePath: "CategoryIcons/Overpants.png")),
-      Sounds: $Sounds.@ButtonsLight
-      );
+        Style: (
+          Default: (Background: (TexturePath: "CategoryIcons/Overpants.png")),
+          Sounds: $Sounds.@ButtonsLight
+        );
     }
 
       #Selected {
-      Background: (TexturePath: "CategoryIcons/OverpantsSelected.png");
+        Background: (TexturePath: "CategoryIcons/OverpantsSelected.png");
     }
   }
   @TabButton #TabShoes {
       #Button {
-      Style: (
-      Default: (Background: (TexturePath: "CategoryIcons/Shoes.png")),
-      Sounds: $Sounds.@ButtonsLight
-      );
+        Style: (
+          Default: (Background: (TexturePath: "CategoryIcons/Shoes.png")),
+          Sounds: $Sounds.@ButtonsLight
+        );
     }
 
       #Selected {
-      Background: (TexturePath: "CategoryIcons/ShoesSelected.png");
+        Background: (TexturePath: "CategoryIcons/ShoesSelected.png");
     }
   }
 
   @TabButton #TabCape {
       #Button {
-      Style: (
-      Default: (Background: (TexturePath: "CategoryIcons/Cape.png")),
-      Sounds: $Sounds.@ButtonsLight
-      );
+        Style: (
+          Default: (Background: (TexturePath: "CategoryIcons/Cape.png")),
+          Sounds: $Sounds.@ButtonsLight
+        );
     }
 
       #Selected {
-      Background: (TexturePath: "CategoryIcons/CapeSelected.png");
+        Background: (TexturePath: "CategoryIcons/CapeSelected.png");
     }
   }
 }
@@ -405,6 +404,7 @@ Group {
       Group #CategoryLabelArrow {
       Anchor: (Width: 6, Height: 10, Top: 4, Horizontal: 8);
       Background: (TexturePath: "../../Common/ContainerTitleArrow.png");
+      Visible: true;
     }
 
       Label #SubCategoryName {

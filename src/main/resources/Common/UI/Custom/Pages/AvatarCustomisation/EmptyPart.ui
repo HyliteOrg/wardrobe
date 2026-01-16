@@ -1,0 +1,25 @@
+$AC = "AvatarCustomisation.ui";
+$Common = "../../Common.ui";
+$Sounds = "../../Sounds.ui";
+
+Group #EmptyPart {
+  Anchor: (Width: $AC.@PartPreviewWidth, Height: $AC.@PartPreviewHeight, Bottom: $AC.@PartPreviewMargin, Left: $AC.@PartPreviewMargin);
+      Visible: true;
+
+      Button #Button {
+        MaskTexturePath: "Icons/PartMask.png";
+        Style: (
+          Default: (Background: (Color: $AC.@PartPreviewBackgroundColor)),
+          Hovered: (Background: (Color: $AC.@PartPreviewBackgroundColorHovered)),
+          Sounds: (
+            Activate: (SoundPath: $Sounds.@Untick, Volume: 6),
+            MouseHover: (SoundPath: $Sounds.@ButtonsLightHover, Volume: 6)
+          )
+        );
+      }
+
+      Group {
+        Anchor: (Width: 44, Height: 44);
+        Background: "Icons/EmptyPartIcon.png";
+      }
+    }
