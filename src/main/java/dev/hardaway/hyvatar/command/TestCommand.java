@@ -1,4 +1,4 @@
-package dev.hardaway.hyvatar.cosmetic;
+package dev.hardaway.hyvatar.command;
 
 
 import com.hypixel.hytale.component.Ref;
@@ -17,6 +17,8 @@ import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.hardaway.hyvatar.asset.CosmeticAsset;
+import dev.hardaway.hyvatar.asset.config.GradientTextureConfig;
 
 import javax.annotation.Nonnull;
 
@@ -24,16 +26,14 @@ import javax.annotation.Nonnull;
 public class TestCommand extends AbstractPlayerCommand {
 
     public TestCommand() {
-        super("test", "Hyvatar test command");
+        super("test", "Wardrobe test command");
         this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
     }
 
     @Override
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
         Model baseModel = Model.createUnitScaleModel(ModelAsset.getAssetMap().getAsset("Player"));
-        CosmeticRegistry cosmeticRegistry = CosmeticsModule.get().getRegistry();
-        PlayerSkinPart popStarCape = cosmeticRegistry.getCapes().get("Cape_PopStar");
-        PlayerSkinPart kingsCrown = cosmeticRegistry.getHeadAccessories().get("Head_Crown");
+        CosmeticAsset cosmetic = CosmeticAsset.getAssetMap().getAsset("Hyvatar_HeadAccessory_Test3");
 
         ModelAttachment[] attachments = new ModelAttachment[]{
                 new ModelAttachment(
@@ -65,17 +65,10 @@ public class TestCommand extends AbstractPlayerCommand {
                         1.0
                 ),
                 new ModelAttachment(
-                        popStarCape.getModel(),
-                        popStarCape.getGreyscaleTexture(),
-                        popStarCape.getGradientSet(),
-                        "Red",
-                        1.0
-                ),
-                new ModelAttachment(
-                        kingsCrown.getModel(),
-                        kingsCrown.getTextures().get("Red").getTexture(),
-                        null,
-                        null,
+                        cosmetic.getModel(),
+                        ((GradientTextureConfig) cosmetic.getTexture()).getGrayscaleTexture(),
+                        ((GradientTextureConfig) cosmetic.getTexture()).getGradientSet(),
+                        "White",
                         1.0
                 )
         };

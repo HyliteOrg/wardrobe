@@ -13,7 +13,7 @@
     "Website": "https://hardaway.dev",
     "ServerVersion": "*",
     "Dependencies": {
-        
+        "Hytale:AssetModule": "*"
     },
     "OptionalDependencies": {
         

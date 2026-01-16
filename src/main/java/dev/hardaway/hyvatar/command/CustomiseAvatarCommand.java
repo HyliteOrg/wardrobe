@@ -1,4 +1,4 @@
-package dev.hardaway.hyvatar.cosmetic;
+package dev.hardaway.hyvatar.command;
 
 
 import com.hypixel.hytale.component.Ref;
