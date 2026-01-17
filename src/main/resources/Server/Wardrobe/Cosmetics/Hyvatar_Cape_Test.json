@@ -1,0 +1,9 @@
+{
+  "Type": "Default",
+  "Model": "Cosmetics/Capes/Cape_PopStar.blockymodel",
+  "TextureConfig": {
+    "Type": "Gradient",
+    "GradientSet": "Faded_Leather",
+    "GrayscaleTexture": "Cosmetics/Capes/Cape_PopStar_Textures/Cape_PopStar_Texture.png"
+  }
+}

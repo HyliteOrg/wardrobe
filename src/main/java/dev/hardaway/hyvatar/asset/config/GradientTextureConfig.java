@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.cosmetics.CosmeticAssetValidator;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class GradientTextureConfig implements TextureConfig {
 
@@ -27,12 +28,14 @@ public class GradientTextureConfig implements TextureConfig {
     private String grayscaleTexture;
 
     @Nonnull
-    public String getGradientSet() {
-        return gradientSet;
+    @Override
+    public String getTexture(@Nullable String variant) {
+        return grayscaleTexture;
     }
 
     @Nonnull
-    public String getGrayscaleTexture() {
-        return grayscaleTexture;
+    @Override
+    public String getGradientSet() {
+        return gradientSet;
     }
 }

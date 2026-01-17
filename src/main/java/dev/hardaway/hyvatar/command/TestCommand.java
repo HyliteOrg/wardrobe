@@ -1,102 +1,41 @@
 package dev.hardaway.hyvatar.command;
 
 
+import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.Message;
-import com.hypixel.hytale.server.core.asset.type.model.config.Model;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
-import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticRegistry;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
-import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPart;
-import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.hyvatar.asset.CosmeticAsset;
-import dev.hardaway.hyvatar.asset.config.GradientTextureConfig;
+import dev.hardaway.hyvatar.cosmetic.PlayerWardrobeComponent;
+import dev.hardaway.hyvatar.cosmetic.WardrobeCosmeticData;
 
 import javax.annotation.Nonnull;
 
 
 public class TestCommand extends AbstractPlayerCommand {
 
-    public TestCommand() {
+    private final ComponentType<EntityStore, PlayerWardrobeComponent> playerWardrobeComponentType;
+
+
+    public TestCommand(ComponentType<EntityStore, PlayerWardrobeComponent> wardrobeComponentType) {
         super("test", "Wardrobe test command");
         this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
+        this.playerWardrobeComponentType = wardrobeComponentType;
     }
 
     @Override
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
-        Model baseModel = Model.createUnitScaleModel(ModelAsset.getAssetMap().getAsset("Player"));
-        CosmeticAsset cosmetic = CosmeticAsset.getAssetMap().getAsset("Hyvatar_HeadAccessory_Test3");
-
-        ModelAttachment[] attachments = new ModelAttachment[]{
-                new ModelAttachment(
-                        "Characters/Body_Attachments/Faces/Player_Face_Detached.blockymodel",
-                        "Characters/Body_Attachments/Faces/Faces_Detached_Textures/Face.png",
-                        "Skin",
-                        "02",
-                        1.0
-                ),
-                new ModelAttachment(
-                        "Characters/Body_Attachments/Ears/Ears1.blockymodel",
-                        "Characters/Body_Attachments/Ears/Ears1_Textures/Ears1_Greyscale_Texture.png",
-                        "Skin",
-                        "02",
-                        1.0
-                ),
-                new ModelAttachment(
-                        "Characters/Body_Attachments/Mouths/Mouth1.blockymodel",
-                        "Characters/Body_Attachments/Mouths/Mouth1_Textures/Default_Greyscale.png",
-                        "Skin",
-                        "02",
-                        1.0
-                ),
-                new ModelAttachment(
-                        "Characters/Body_Attachments/Eyes/Eyes.blockymodel",
-                        "Characters/Body_Attachments/Eyes/Eyes_Textures/Greyscale_Large.png",
-                        "Eyes_Gradient",
-                        "Brown",
-                        1.0
-                ),
-                new ModelAttachment(
-                        cosmetic.getModel(),
-                        ((GradientTextureConfig) cosmetic.getTexture()).getGrayscaleTexture(),
-                        ((GradientTextureConfig) cosmetic.getTexture()).getGradientSet(),
-                        "White",
-                        1.0
-                )
-        };
-
-
-        Model model = new Model(
-                baseModel.getModelAssetId(),
-                baseModel.getScale(),
-                baseModel.getRandomAttachmentIds(),
-                attachments, // Skin attachments
-                baseModel.getBoundingBox(),
-                baseModel.getModel(), // Model
-                baseModel.getTexture(), // Skin texture
-                baseModel.getGradientSet(), // Skin gradient set
-                baseModel.getGradientId(), // Skin gradient id
-                baseModel.getEyeHeight(),
-                baseModel.getCrouchOffset(),
-                baseModel.getAnimationSetMap(),
-                baseModel.getCamera(),
-                baseModel.getLight(),
-                baseModel.getParticles(),
-                baseModel.getTrails(),
-                baseModel.getPhysicsValues(),
-                baseModel.getDetailBoxes(),
-                baseModel.getPhobia(),
-                baseModel.getPhobiaModelAssetId()
-        );
-        store.putComponent(ref, ModelComponent.getComponentType(), new ModelComponent(model));
+        PlayerWardrobeComponent component = store.getComponent(ref, this.playerWardrobeComponentType);
+        component.setCosmetic(CosmeticType.CAPES, new WardrobeCosmeticData("Hyvatar_Cape_Test", "Red"));
+        component.setCosmetic(CosmeticType.FACIAL_HAIR, new WardrobeCosmeticData("Hyvatar_FacialHair_Test", "Brown"));
+//        component.setCosmetic(CosmeticType.CAPES, null);
+        component.setDirty(true);
         context.sendMessage(Message.raw("Changed model"));
     }
 }

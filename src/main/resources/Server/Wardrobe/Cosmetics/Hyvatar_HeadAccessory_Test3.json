@@ -1,9 +1,0 @@
-{
-  "Type": "Default",
-  "Model": "Cosmetics/Head/Goggles.blockymodel",
-  "Texture": {
-    "Type": "Gradient",
-    "GradientSet": "Faded_Leather",
-    "GrayscaleTexture": "Cosmetics/Head/Goggles_Texture.png"
-  }
-}

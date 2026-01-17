@@ -13,7 +13,9 @@
     "Website": "https://hardaway.dev",
     "ServerVersion": "*",
     "Dependencies": {
-        "Hytale:AssetModule": "*"
+        "Hytale:AssetModule": "*",
+        "Hytale:EntityModule": "*",
+        "Hytale:CosmeticsModule": "*"
     },
     "OptionalDependencies": {
         

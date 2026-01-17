@@ -24,9 +24,9 @@ public class CosmeticAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
                     t -> t.model
             ).addValidator(CommonAssetValidator.MODEL_CHARACTER_ATTACHMENT).add()
 
-            .append(new KeyedCodec<>("Texture", TextureConfig.CODEC, true),
-                    (t, value) -> t.texture = value,
-                    t -> t.texture
+            .append(new KeyedCodec<>("TextureConfig", TextureConfig.CODEC, true),
+                    (t, value) -> t.textureConfig = value,
+                    t -> t.textureConfig
             ).add()
             .build();
 
@@ -34,9 +34,9 @@ public class CosmeticAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
             .build();
 
 
-    public static final AssetCodecMapCodec<String, CosmeticAsset> CODEC = new AssetCodecMapCodec<String, CosmeticAsset>(
+    public static final AssetCodecMapCodec<String, CosmeticAsset> CODEC = new AssetCodecMapCodec<>(
             Codec.STRING, (t, k) -> t.id = k, t -> t.id, (t, data) -> t.data = data, t -> t.data, true
-    ).register(Priority.DEFAULT, "Default", CosmeticAsset.class, CosmeticAsset.BASE_CODEC);
+    );
 
     public static final Supplier<AssetStore<String, CosmeticAsset, DefaultAssetMap<String, CosmeticAsset>>> ASSET_STORE = HyvatarUtil.createAssetStore(CosmeticAsset.class);
 
@@ -48,7 +48,7 @@ public class CosmeticAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
     protected AssetExtraInfo.Data data;
 
     protected String model;
-    protected TextureConfig texture;
+    protected TextureConfig textureConfig;
 
     @Override
     public String getId() {
@@ -61,7 +61,7 @@ public class CosmeticAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
     }
 
     @Nonnull
-    public TextureConfig getTexture() {
-        return texture;
+    public TextureConfig getTextureConfig() {
+        return textureConfig;
     }
 }

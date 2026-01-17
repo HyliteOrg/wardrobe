@@ -8,6 +8,7 @@ import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,6 +22,13 @@ public class VariantTextureConfig implements TextureConfig {
 
     public Map<String, Entry> getVariants() {
         return variants;
+    }
+
+    @Nonnull
+    @Override
+    public String getTexture(@Nullable String variant) {
+        Entry entry = this.getVariants().get(variant);
+        return entry.getTexture();
     }
 
     public static class Entry {
