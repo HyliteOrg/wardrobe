@@ -455,58 +455,17 @@ Group {
     Anchor: (Left: 30, Top: 10);
 
     Group {
-      Anchor: (Top: 0, Height: 36);
-      LayoutMode: Right;
-
-      // Only visible in non production builds
-      $Common.@TertiaryTextButton #DevMenu {
-      @Text = "Dev";
-      @Anchor = Anchor();
-      Visible: false;
-    }
-    }
-
-    Group {
       Anchor: (Bottom: 0, Height: 36);
       LayoutMode: Left;
 
-      $Common.@SecondaryButton #ResetOptions {
-      @Sounds = $Sounds.@ButtonsMain;
-      @Anchor = Anchor(Right: 8);
-      TooltipText: %client.myAvatar.button.resetOptions;
-      TextTooltipStyle: $Common.@DefaultTextTooltipStyle;
-
-      Group {
-        Background: "Icons/ResetSkinIcon.png";
-        Anchor: (Width: 24, Height: 21);
-      }
-    }
-
-      $Common.@SecondaryButton #ResetClothing {
-      @Sounds = $Sounds.@ButtonsMain;
-      @Anchor = Anchor(Right: 8);
-      TooltipText: %client.myAvatar.button.resetClothing;
-      TextTooltipStyle: $Common.@DefaultTextTooltipStyle;
-
-      Group {
-        Background: "Icons/ResetClothingIcon.png";
-        Anchor: (Width: 24, Height: 21);
-      }
-    }
-
-      Group {
-        Anchor: (Width: 4, Right: 8);
-        Background: (Color: #a6afba(0.20));
-      }
-
-      $Common.@SecondaryTextButton #DiscardChanges {
-      @Text = %client.general.button.discardChanges;
+      $Common.@SecondaryTextButton #Right {
+      @Text = "Right";
       @Anchor = Anchor(Right: 8, MinWidth: $Common.@DefaultButtonMinWidth);
     }
 
-      $Common.@TextButton #SaveChanges {
+      $Common.@SecondaryTextButton #Left {
       @Sounds = $Sounds.@SaveSettings;
-      @Text = %client.general.button.save;
+      @Text = "Left";
       @Anchor = Anchor(MinWidth: $Common.@DefaultButtonMinWidth);
     }
     }

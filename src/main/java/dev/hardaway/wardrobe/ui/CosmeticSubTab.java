@@ -1,33 +1,27 @@
 package dev.hardaway.wardrobe.ui;
 
 public enum CosmeticSubTab {
-    Haircuts(true),
-    Eyebrows(true),
-    Eyes(false),
-    Facial_Hair(true),
-    Head_Accessory(true),
-    Face_Accessory(true),
-    Ear_Accessory(true),
+    Haircuts,
+    Eyebrows,
+    Eyes,
+    Facial_Hair,
+    Head_Accessory,
+    Face_Accessory,
+    Ear_Accessory,
 
-    Underwear(false),
-    Body_Characteristics(false),
-    Face(false),
-    Mouth(false),
-    Ears(false),
+    Underwear,
+    Body_Characteristics,
+    Face,
+    Mouth,
+    Ears,
 
-    Undertop(true),
-    Overtop(true),
-    Gloves(true),
+    Undertop,
+    Overtop,
+    Gloves,
 
-    Pants(true),
-    Overpants(true),
-    Shoes(true),
+    Pants,
+    Overpants,
+    Shoes,
 
-    Cape(true);
-
-    public final boolean hasEmptyPart;
-
-    CosmeticSubTab(boolean hasEmptyPart) {
-        this.hasEmptyPart = hasEmptyPart;
-    }
+    Cape;
 }

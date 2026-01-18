@@ -11,16 +11,16 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.wardrobe.ui.AvatarCustomisationPage;
+import dev.hardaway.wardrobe.ui.WardrobePage;
 
 import javax.annotation.Nonnull;
 
 
-public class CustomiseAvatarCommand extends AbstractPlayerCommand {
+public class WardrobeCommand extends AbstractPlayerCommand {
 
-    public CustomiseAvatarCommand() {
-        super("avatar", "Customise the player avatar model and cosmetics");
-        this.setPermissionGroup(GameMode.Adventure); // Allows the command to be used by anyone, not just OP
+    public WardrobeCommand() {
+        super("wardrobe", "Customise the player's Wardrobe cosmetics");
+        this.setPermissionGroup(GameMode.Adventure);
     }
 
     @Override
@@ -28,6 +28,6 @@ public class CustomiseAvatarCommand extends AbstractPlayerCommand {
         Player player = store.getComponent(ref, Player.getComponentType());
 
         if (player != null)
-            player.getPageManager().openCustomPage(ref, store, new AvatarCustomisationPage(playerRef, CustomPageLifetime.CanDismiss));
+            player.getPageManager().openCustomPage(ref, store, new WardrobePage(playerRef, CustomPageLifetime.CanDismiss));
     }
 }

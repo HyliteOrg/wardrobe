@@ -16,12 +16,12 @@ import dev.hardaway.wardrobe.asset.config.DefaultTextureConfig;
 import dev.hardaway.wardrobe.asset.config.GradientTextureConfig;
 import dev.hardaway.wardrobe.asset.config.TextureConfig;
 import dev.hardaway.wardrobe.asset.config.VariantTextureConfig;
-import dev.hardaway.wardrobe.command.CustomiseAvatarCommand;
 import dev.hardaway.wardrobe.command.TestCommand;
+import dev.hardaway.wardrobe.command.WardrobeCommand;
 import dev.hardaway.wardrobe.cosmetic.PlayerWardrobeComponent;
 import dev.hardaway.wardrobe.cosmetic.PlayerWardrobeSystem;
 import dev.hardaway.wardrobe.cosmetic.SetupPlayerWardrobeSystem;
-import dev.hardaway.wardrobe.ui.AvatarCustomisationPage;
+import dev.hardaway.wardrobe.ui.WardrobePage;
 
 import javax.annotation.Nonnull;
 
@@ -66,12 +66,12 @@ public class WardrobePlugin extends JavaPlugin {
         this.getEntityStoreRegistry().registerSystem(new SetupPlayerWardrobeSystem(this.playerWardrobeComponentType));
         this.getEntityStoreRegistry().registerSystem(new PlayerWardrobeSystem(this.playerWardrobeComponentType));
 
-        OpenCustomUIInteraction.registerCustomPageSupplier(this, AvatarCustomisationPage.class, "AvatarCustomisation", (_, _, playerRef, _) ->
-                new AvatarCustomisationPage(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction)
+        OpenCustomUIInteraction.registerCustomPageSupplier(this, WardrobePage.class, "AvatarCustomisation", (_, _, playerRef, _) ->
+                new WardrobePage(playerRef, CustomPageLifetime.CanDismissOrCloseThroughInteraction)
         );
 
         this.getCommandRegistry().registerCommand(new TestCommand(this.playerWardrobeComponentType));
-        this.getCommandRegistry().registerCommand(new CustomiseAvatarCommand());
+        this.getCommandRegistry().registerCommand(new WardrobeCommand());
 
     }
 }

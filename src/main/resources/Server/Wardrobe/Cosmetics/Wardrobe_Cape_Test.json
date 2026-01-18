@@ -1,5 +1,6 @@
 {
   "Type": "Default",
+  "CosmeticType": "Capes",
   "Model": "Cosmetics/Capes/Cape_PopStar.blockymodel",
   "TextureConfig": {
     "Type": "Gradient",

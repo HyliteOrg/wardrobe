@@ -1,0 +1,38 @@
+$AC = "Wardrobe.ui";
+$Common = "../../Common.ui";
+$Sounds = "../../Sounds.ui";
+
+@LabelStyle = (
+  Hovered: (
+    Background: #000000(0.2),
+  ),
+  Sounds: (
+    Activate: (SoundPath: $Sounds.@ButtonsLightActivate, Volume: 6),
+    MouseHover: (SoundPath: $Sounds.@ButtonsLightHover, Volume: 6)
+  )
+);
+
+@SelectedLabelStyle = (
+  Default: (
+    LabelStyle: (RenderBold: true)
+  ),
+  Hovered: (
+    LabelStyle: (RenderBold: true),
+    Background: #000000(0.2)
+  )
+);
+
+Group {
+  LayoutMode: Left;
+
+  TextButton #Button {
+    Padding: (Full: 6);
+    Style: @LabelStyle;
+    FlexWeight: 1;
+  }
+
+  Group #Icon {
+      Anchor: (Width: 22, Height: 22);
+  }
+}
+
