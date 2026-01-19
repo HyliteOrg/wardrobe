@@ -1,5 +1,6 @@
 package dev.hardaway.wardrobe.cosmetic.system;
 
+import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentType;
@@ -14,15 +15,13 @@ import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.cosmetic.BuiltinCosmetic;
 import dev.hardaway.wardrobe.cosmetic.asset.CosmeticAsset;
+import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticGroup;
 import dev.hardaway.wardrobe.cosmetic.asset.config.TextureConfig;
-import dev.hardaway.wardrobe.cosmetic.system.component.PlayerCosmeticData;
-import dev.hardaway.wardrobe.cosmetic.system.component.PlayerWardrobeComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
     private final ComponentType<EntityStore, PlayerWardrobeComponent> wardrobeComponentType;
@@ -34,73 +33,63 @@ public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
     @Override
     public void tick(float v, int i, @Nonnull ArchetypeChunk<EntityStore> chunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
         PlayerWardrobeComponent wardrobeComponent = chunk.getComponent(i, this.wardrobeComponentType);
-        if (!wardrobeComponent.isDirty()) // TODO: use events instead of ticking
+        if (!wardrobeComponent.consumeDirty()) // TODO: use events instead of ticking
             return;
 
-        wardrobeComponent.setDirty(false);
-        Map<CosmeticType, PlayerCosmeticData> cosmeticData = wardrobeComponent.getCosmetics();
         PlayerSkinComponent playerSkinComponent = chunk.getComponent(i, PlayerSkinComponent.getComponentType());
         CosmeticsModule cosmeticsModule = CosmeticsModule.get();
-
-        if (cosmeticData.isEmpty()) {
-            Model newModel = cosmeticsModule.createModel(playerSkinComponent.getPlayerSkin());
-            chunk.setComponent(i, ModelComponent.getComponentType(), new ModelComponent(newModel));
-            playerSkinComponent.setNetworkOutdated();
-            return;
-        }
 
         List<ModelAttachment> attachmentList = new ArrayList<>();
         PlayerSkin skin = PlayerWardrobeSystem.skinFromProtocol(playerSkinComponent.getPlayerSkin());
 
-        for (CosmeticType slot : CosmeticType.values()) {
-            if (slot == CosmeticType.BODY_CHARACTERISTICS) // Skip body characteristics, we handle that separately.
-                continue;
+        BuiltinCosmetic builtinBodyCharacteristic = PlayerWardrobeSystem.createBuiltinCosmetic(CosmeticType.BODY_CHARACTERISTICS, skin);
+        String baseModelName = builtinBodyCharacteristic.model();
+        String baseModelTexture = builtinBodyCharacteristic.texture();
+        String baseModelGradientSet = builtinBodyCharacteristic.gradientSet();
+        String baseModelGradientId = builtinBodyCharacteristic.gradientId();
 
-            if (cosmeticData.containsKey(slot)) {
-                PlayerCosmeticData data = cosmeticData.get(slot);
-                CosmeticAsset cosmetic = CosmeticAsset.getAssetMap().getAsset(data.getId());
+        DefaultAssetMap<String, CosmeticGroup> cosmeticGroups = CosmeticGroup.getAssetMap();
+        for (CosmeticGroup group : cosmeticGroups.getAssetMap().values()) {
+            if (group.getCosmeticType() == CosmeticType.BODY_CHARACTERISTICS) {
+                PlayerCosmetic bodyCharacteristic = wardrobeComponent.getCosmetic(group);
+                if (bodyCharacteristic != null) {
+                    CosmeticAsset cosmetic = CosmeticAsset.getAssetMap().getAsset(bodyCharacteristic.getId());
+                    if (cosmetic != null) {
+                        TextureConfig textureConfig = cosmetic.getTextureConfig();
+                        baseModelName = cosmetic.getModel();
+                        baseModelTexture = textureConfig.getTexture(bodyCharacteristic.getVariantId());
+                        baseModelGradientSet = textureConfig.getGradientSet();
+                        baseModelGradientId = textureConfig.getGradientSet() != null ? bodyCharacteristic.getVariantId() : null;
+                    }
+                }
+                continue;
+            }
+
+            PlayerCosmetic cosmeticData = wardrobeComponent.getCosmetic(group);
+            if (cosmeticData != null) {
+                // TODO: more warnings when this is null
+                CosmeticAsset cosmetic = CosmeticAsset.getAssetMap().getAsset(cosmeticData.getId());
                 if (cosmetic != null) {
                     TextureConfig textureConfig = cosmetic.getTextureConfig();
                     attachmentList.add(new ModelAttachment(
                             cosmetic.getModel(),
-                            textureConfig.getTexture(data.getVariantId()),
+                            textureConfig.getTexture(cosmeticData.getVariantId()),
                             textureConfig.getGradientSet(),
-                            textureConfig.getGradientSet() != null ? data.getVariantId() : null,
+                            textureConfig.getGradientSet() != null ? cosmeticData.getVariantId() : null,
                             1.0
                     ));
-                    continue;
+                }
+            } else if (group.getCosmeticType() != null) {
+                BuiltinCosmetic builtinCosmetic = PlayerWardrobeSystem.createBuiltinCosmetic(group.getCosmeticType(), skin);
+                if (builtinCosmetic != null) {
+                    attachmentList.add(builtinCosmetic.toModelAttachment());
                 }
             }
-
-            BuiltinCosmetic assetData = PlayerWardrobeSystem.createCosmeticData(slot, skin);
-            if (assetData != null) {
-                attachmentList.add(assetData.toModelAttachment());
-            }
         }
 
-
-        BuiltinCosmetic bodyCharacteristicsData = PlayerWardrobeSystem.createCosmeticData(CosmeticType.BODY_CHARACTERISTICS, skin);
         Model baseModel = cosmeticsModule.createModel(playerSkinComponent.getPlayerSkin());
-
-        String baseModelName = bodyCharacteristicsData.model();
-        String baseModelTexture = bodyCharacteristicsData.texture();
-        String baseModelGradientSet = bodyCharacteristicsData.gradientSet();
-        String baseModelGradientId = bodyCharacteristicsData.gradientId();
-        if (cosmeticData.containsKey(CosmeticType.BODY_CHARACTERISTICS)) {
-            PlayerCosmeticData bodyData = cosmeticData.get(CosmeticType.BODY_CHARACTERISTICS);
-            CosmeticAsset cosmetic = CosmeticAsset.getAssetMap().getAsset(bodyData.getId());
-            if (cosmetic != null) {
-                TextureConfig textureConfig = cosmetic.getTextureConfig();
-                baseModelName = cosmetic.getModel();
-                baseModelTexture = textureConfig.getTexture(bodyData.getVariantId());
-                baseModelGradientSet = textureConfig.getGradientSet();
-                baseModelGradientId = textureConfig.getGradientSet() != null ? bodyData.getVariantId() : null;
-            }
-        }
-
-
         Model model = new Model(
-                "Wardrobe_Player",
+                baseModel.getModelAssetId(),
                 baseModel.getScale(), // TODO: allow scale change
                 baseModel.getRandomAttachmentIds(),
                 attachmentList.toArray(ModelAttachment[]::new), // Skin attachments
@@ -135,7 +124,7 @@ public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
         return new PlayerSkin(protocolPlayerSkin.bodyCharacteristic, protocolPlayerSkin.underwear, protocolPlayerSkin.face, protocolPlayerSkin.ears, protocolPlayerSkin.mouth, protocolPlayerSkin.eyes, protocolPlayerSkin.facialHair, protocolPlayerSkin.haircut, protocolPlayerSkin.eyebrows, protocolPlayerSkin.pants, protocolPlayerSkin.overpants, protocolPlayerSkin.undertop, protocolPlayerSkin.overtop, protocolPlayerSkin.shoes, protocolPlayerSkin.headAccessory, protocolPlayerSkin.faceAccessory, protocolPlayerSkin.earAccessory, protocolPlayerSkin.skinFeature, protocolPlayerSkin.gloves, protocolPlayerSkin.cape);
     }
 
-    public static BuiltinCosmetic createCosmeticData(CosmeticType type, PlayerSkin skin) {
+    public static BuiltinCosmetic createBuiltinCosmetic(CosmeticType type, PlayerSkin skin) {
         PlayerSkin.PlayerSkinPartId skinPartId = switch (type) {
             case EMOTES, GRADIENT_SETS, EYE_COLORS, SKIN_TONES -> null;
             case BODY_CHARACTERISTICS -> skin.getBodyCharacteristic();
@@ -159,6 +148,7 @@ public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
             case FACE -> new PlayerSkin.PlayerSkinPartId(skin.getFace(), skin.getBodyCharacteristic().textureId, null);
             case MOUTHS ->
                     new PlayerSkin.PlayerSkinPartId(skin.getMouth(), skin.getBodyCharacteristic().textureId, null);
+            case null -> null;
         };
 
         if (skinPartId == null)

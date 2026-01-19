@@ -1,4 +1,4 @@
-package dev.hardaway.wardrobe.cosmetic.system.component;
+package dev.hardaway.wardrobe.cosmetic.system;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -6,9 +6,9 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 
 import javax.annotation.Nullable;
 
-public final class PlayerCosmeticData {
+public final class PlayerCosmetic {
 
-    public static final BuilderCodec<PlayerCosmeticData> CODEC = BuilderCodec.builder(PlayerCosmeticData.class, PlayerCosmeticData::new)
+    public static final BuilderCodec<PlayerCosmetic> CODEC = BuilderCodec.builder(PlayerCosmetic.class, PlayerCosmetic::new)
             .append(new KeyedCodec<>("Id", Codec.STRING, true), (t, value) -> t.id = value, t -> t.id).add()
             .append(new KeyedCodec<>("Variant", Codec.STRING), (t, value) -> t.variantId = value, t -> t.variantId).add()
             .build();
@@ -17,14 +17,14 @@ public final class PlayerCosmeticData {
     @Nullable
     private String variantId;
 
-    public PlayerCosmeticData() {
+    public PlayerCosmetic() {
     }
 
-    public PlayerCosmeticData(String id) {
+    public PlayerCosmetic(String id) {
         this(id, null);
     }
 
-    public PlayerCosmeticData(String id, @Nullable String variantId) {
+    public PlayerCosmetic(String id, @Nullable String variantId) {
         this.id = id;
         this.variantId = variantId;
     }

@@ -12,7 +12,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.wardrobe.cosmetic.system.component.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeComponent;
 import dev.hardaway.wardrobe.ui.WardrobePage;
 
 import javax.annotation.Nonnull;
@@ -30,6 +30,7 @@ public class WardrobeCommand extends AbstractPlayerCommand {
 
     @Override
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
+        PlayerWardrobeComponent wardrobeComponent = store.ensureAndGetComponent(ref, this.playerWardrobeComponentType);
         Player player = store.getComponent(ref, Player.getComponentType());
 
         if (player != null)

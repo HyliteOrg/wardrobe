@@ -1,4 +1,4 @@
-package dev.hardaway.wardrobe.cosmetic.asset.category;
+package dev.hardaway.wardrobe.api;
 
 public interface WardrobeTab {
 

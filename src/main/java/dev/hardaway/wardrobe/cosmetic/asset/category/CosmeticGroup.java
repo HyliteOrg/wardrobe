@@ -8,9 +8,13 @@ import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.codecs.EnumCodec;
 import com.hypixel.hytale.codec.validation.Validators;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import dev.hardaway.wardrobe.WardrobeUtil;
+import dev.hardaway.wardrobe.api.WardrobeTab;
 
+import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
 public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticGroup>> {
@@ -23,6 +27,12 @@ public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, Defa
                     (asset, data) -> asset.data = data,
                     (asset) -> asset.data
             )
+
+            .append(new KeyedCodec<>("CosmeticType", new EnumCodec<>(CosmeticType.class)),
+                    (t, value) -> t.cosmeticType = value,
+                    t -> t.cosmeticType
+            ).add()
+
 
             .append(new KeyedCodec<>("Category", Codec.STRING, true),
                     (t, value) -> t.category = value,
@@ -55,6 +65,8 @@ public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, Defa
     private String id;
     private AssetExtraInfo.Data data;
 
+    private CosmeticType cosmeticType;
+
     private String category;
     private String icon;
     private String selectedIcon;
@@ -63,6 +75,11 @@ public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, Defa
     @Override
     public String getId() {
         return id;
+    }
+
+    @Nullable
+    public CosmeticType getCosmeticType() {
+        return cosmeticType;
     }
 
     public String getCategory() {

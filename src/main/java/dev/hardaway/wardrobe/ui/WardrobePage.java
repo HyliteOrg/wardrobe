@@ -23,8 +23,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.cosmetic.asset.CosmeticAsset;
 import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticCategory;
 import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticGroup;
-import dev.hardaway.wardrobe.cosmetic.system.component.PlayerCosmeticData;
-import dev.hardaway.wardrobe.cosmetic.system.component.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.cosmetic.system.PlayerCosmetic;
+import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeComponent;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
@@ -43,7 +43,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     private CosmeticGroup selectedGroup;
     private String searchQuery = "";
 
-    private ServerCameraSettings cameraSettings = new ServerCameraSettings();
+    private final ServerCameraSettings cameraSettings = new ServerCameraSettings();
 
     public WardrobePage(@Nonnull PlayerRef playerRef, @Nonnull CustomPageLifetime lifetime, ComponentType<EntityStore, PlayerWardrobeComponent> wardrobeComponentType) {
         super(playerRef, lifetime, PageEventData.CODEC);
@@ -96,9 +96,12 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         UIEventBuilder eventBuilder = new UIEventBuilder();
 
         if (data.searchQuery != null) buildCosmeticList(commandBuilder, eventBuilder, ref, store, data.searchQuery);
-        if (data.category != null) selectCategory(commandBuilder, eventBuilder, ref, store, CosmeticCategory.getAssetMap().getAsset(data.category));
-        if (data.group != null) selectGroup(commandBuilder, eventBuilder, ref, store, CosmeticGroup.getAssetMap().getAsset(data.group));
-        if (data.cosmetic != null) wearCosmetic(commandBuilder, eventBuilder, ref, store, CosmeticAsset.getAssetMap().getAsset(data.cosmetic));
+        if (data.category != null)
+            selectCategory(commandBuilder, eventBuilder, ref, store, CosmeticCategory.getAssetMap().getAsset(data.category));
+        if (data.group != null)
+            selectGroup(commandBuilder, eventBuilder, ref, store, CosmeticGroup.getAssetMap().getAsset(data.group));
+        if (data.cosmetic != null)
+            wearCosmetic(commandBuilder, eventBuilder, ref, store, CosmeticAsset.getAssetMap().getAsset(data.cosmetic));
 
         if (data.direction != null) {
             TransformComponent transformComponent = store.getComponent(ref, TransformComponent.getComponentType());
@@ -145,7 +148,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         }
 
         PlayerWardrobeComponent wardrobeComponent = store.getComponent(ref, playerWardrobeComponentType);
-        Collection<PlayerCosmeticData> cosmeticData = wardrobeComponent.getCosmetics().values();
+        Collection<PlayerCosmetic> cosmeticData = wardrobeComponent.getCosmetics().values();
 
         for (int i = 0; i < cosmetics.size(); i++) {
             CosmeticAsset cosmetic = cosmetics.get(i);

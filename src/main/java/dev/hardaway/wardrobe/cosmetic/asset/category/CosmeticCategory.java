@@ -10,6 +10,7 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.Validators;
 import dev.hardaway.wardrobe.WardrobeUtil;
+import dev.hardaway.wardrobe.api.WardrobeTab;
 
 import java.util.function.Supplier;
 

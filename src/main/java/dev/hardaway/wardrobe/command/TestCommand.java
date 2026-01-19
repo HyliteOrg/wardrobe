@@ -8,12 +8,12 @@ import com.hypixel.hytale.protocol.GameMode;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.wardrobe.cosmetic.system.component.PlayerCosmeticData;
-import dev.hardaway.wardrobe.cosmetic.system.component.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticGroup;
+import dev.hardaway.wardrobe.cosmetic.system.PlayerCosmetic;
+import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeComponent;
 
 import javax.annotation.Nonnull;
 
@@ -31,12 +31,17 @@ public class TestCommand extends AbstractPlayerCommand {
 
     @Override
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
-        PlayerWardrobeComponent component = store.getComponent(ref, this.playerWardrobeComponentType);
-        component.setCosmetic(CosmeticType.CAPES, new PlayerCosmeticData("Wardrobe_Cape_Test", "Red"));
-        component.setCosmetic(CosmeticType.FACIAL_HAIR, new PlayerCosmeticData("Wardrobe_FacialHair_Test", "Brown"));
-        component.setCosmetic(CosmeticType.BODY_CHARACTERISTICS, new PlayerCosmeticData("Wardrobe_BodyCharacteristic_Test"));
+        if (store.removeComponentIfExists(ref, this.playerWardrobeComponentType)) {
+            context.sendMessage(Message.raw("Reset Wardrobe Model"));
+            return;
+        }
+
+        PlayerWardrobeComponent component = store.ensureAndGetComponent(ref, this.playerWardrobeComponentType);
+        component.setCosmetic(CosmeticGroup.getAssetMap().getAsset("Cape"), new PlayerCosmetic("Wardrobe_Cape_Test", "Red"));
+        component.setCosmetic(CosmeticGroup.getAssetMap().getAsset("FacialHair"), new PlayerCosmetic("Wardrobe_FacialHair_Test", "Brown"));
+        component.setCosmetic(CosmeticGroup.getAssetMap().getAsset("BodyCharacteristic"), new PlayerCosmetic("Wardrobe_BodyCharacteristic_Test"));
 //        component.setCosmetic(CosmeticType.CAPES, null);
-        component.setDirty(true);
-        context.sendMessage(Message.raw("Changed model"));
+//        component.setDirty(true);
+        context.sendMessage(Message.raw("Applied Test Wardrobe Model"));
     }
 }

@@ -61,6 +61,17 @@ public class CosmeticAsset implements JsonAssetWithMap<String, DefaultAssetMap<S
     protected TextureConfig textureConfig;
     protected String icon;
 
+    public CosmeticAsset() {
+    }
+
+    public CosmeticAsset(String id, String group, String model, TextureConfig textureConfig, String icon) {
+        this.id = id;
+        this.group = group;
+        this.model = model;
+        this.textureConfig = textureConfig;
+        this.icon = icon;
+    }
+
     @Override
     public String getId() {
         return id;

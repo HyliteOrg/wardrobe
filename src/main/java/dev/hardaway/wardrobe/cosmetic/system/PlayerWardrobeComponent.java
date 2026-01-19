@@ -1,15 +1,14 @@
-package dev.hardaway.wardrobe.cosmetic.system.component;
+package dev.hardaway.wardrobe.cosmetic.system;
 
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.hypixel.hytale.codec.codecs.map.EnumMapCodec;
+import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.component.Component;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticGroup;
 
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -41,38 +40,38 @@ import java.util.Map;
 public class PlayerWardrobeComponent implements Component<EntityStore> {
 
     public static final BuilderCodec<PlayerWardrobeComponent> CODEC = BuilderCodec.builder(PlayerWardrobeComponent.class, PlayerWardrobeComponent::new)
-            .append(new KeyedCodec<>("Cosmetics", new EnumMapCodec<>(CosmeticType.class, PlayerCosmeticData.CODEC, false), true), (t, value) -> t.cosmetics = value, t -> t.cosmetics).add()
+            .append(new KeyedCodec<>("Cosmetics", new MapCodec<>(PlayerCosmetic.CODEC, HashMap::new, false), true), (t, value) -> t.cosmetics = value, t -> t.cosmetics).add()
             .build();
 
-    private Map<CosmeticType, PlayerCosmeticData> cosmetics;
-    protected boolean dirty = true;
+    private Map<String, PlayerCosmetic> cosmetics;
+    protected boolean dirty;
 
     public PlayerWardrobeComponent() {
-        this.cosmetics = new EnumMap<>(CosmeticType.class);
+        this(new HashMap<>());
     }
 
-    protected PlayerWardrobeComponent(Map<CosmeticType, PlayerCosmeticData> cosmetics) {
+    protected PlayerWardrobeComponent(Map<String, PlayerCosmetic> cosmetics) {
         this.cosmetics = cosmetics;
+        this.dirty = true;
     }
 
-    public void setDirty(boolean dirty) {
-        this.dirty = dirty;
-    }
-
-    public boolean isDirty() {
+    public boolean consumeDirty() {
+        boolean dirty = this.dirty;
+        this.dirty = false;
         return dirty;
     }
 
-    public Map<CosmeticType, PlayerCosmeticData> getCosmetics() {
-        return Collections.unmodifiableMap(this.cosmetics);
+    public Map<String, PlayerCosmetic> getCosmetics() {
+        return cosmetics;
     }
 
-    public void setCosmetic(CosmeticType slot, PlayerCosmeticData cosmetic) {
-        if (cosmetic == null) {
-            this.cosmetics.remove(slot);
-        } else {
-            this.cosmetics.put(slot, cosmetic);
-        }
+    @Nullable
+    public PlayerCosmetic getCosmetic(CosmeticGroup group) {
+        return cosmetics.get(group.getId());
+    }
+
+    public void setCosmetic(CosmeticGroup group, @Nullable PlayerCosmetic cosmetic) {
+        this.cosmetics.compute(group.getId(), (_, _) -> cosmetic);
         this.dirty = true;
     }
 

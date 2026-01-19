@@ -19,9 +19,9 @@ import dev.hardaway.wardrobe.cosmetic.asset.config.DefaultTextureConfig;
 import dev.hardaway.wardrobe.cosmetic.asset.config.GradientTextureConfig;
 import dev.hardaway.wardrobe.cosmetic.asset.config.TextureConfig;
 import dev.hardaway.wardrobe.cosmetic.asset.config.VariantTextureConfig;
+import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeComponent;
 import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeSystem;
-import dev.hardaway.wardrobe.cosmetic.system.SetupPlayerWardrobeSystem;
-import dev.hardaway.wardrobe.cosmetic.system.component.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.cosmetic.system.ResetPlayerWardrobeSystem;
 import dev.hardaway.wardrobe.ui.WardrobePage;
 
 import javax.annotation.Nonnull;
@@ -75,7 +75,7 @@ public class WardrobePlugin extends JavaPlugin {
                 PlayerWardrobeComponent.CODEC
         );
 
-        this.getEntityStoreRegistry().registerSystem(new SetupPlayerWardrobeSystem(this.playerWardrobeComponentType));
+        this.getEntityStoreRegistry().registerSystem(new ResetPlayerWardrobeSystem(this.playerWardrobeComponentType));
         this.getEntityStoreRegistry().registerSystem(new PlayerWardrobeSystem(this.playerWardrobeComponentType));
 
         OpenCustomUIInteraction.registerCustomPageSupplier(this, WardrobePage.class, "AvatarCustomisation", (_, _, playerRef, _) ->
@@ -85,5 +85,9 @@ public class WardrobePlugin extends JavaPlugin {
         this.getCommandRegistry().registerCommand(new TestCommand(this.playerWardrobeComponentType));
         this.getCommandRegistry().registerCommand(new WardrobeCommand(this.playerWardrobeComponentType));
 
+    }
+
+    @Override
+    protected void start() {
     }
 }
