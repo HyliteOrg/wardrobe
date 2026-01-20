@@ -76,6 +76,9 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
 
         List<CosmeticAsset> sortedCosmetics = CosmeticAsset.getAssetMap().getAssetMap().values().stream().sorted(Comparator.comparing(CosmeticAsset::getId)).toList();
         for (CosmeticAsset asset : sortedCosmetics) {
+            if (!asset.hasPermission(this.playerRef.getUuid()))
+                continue;
+
             cosmeticMap.get(CosmeticGroup.getAssetMap().getAsset(asset.getGroup())).add(asset);
         }
 

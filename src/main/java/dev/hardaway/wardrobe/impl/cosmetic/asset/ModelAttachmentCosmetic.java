@@ -10,6 +10,7 @@ import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticAsset;
 import dev.hardaway.wardrobe.api.cosmetic.asset.config.TextureConfig;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ModelAttachmentCosmetic extends CosmeticAsset {
 
@@ -30,8 +31,8 @@ public class ModelAttachmentCosmetic extends CosmeticAsset {
     private ModelAttachmentCosmetic() {
     }
 
-    public ModelAttachmentCosmetic(String id, String nameKey, String group, String icon, String model, TextureConfig textureConfig) {
-        super(id, nameKey, group, icon);
+    public ModelAttachmentCosmetic(String id, String nameKey, String group, String icon, @Nullable String permissionNode, String model, TextureConfig textureConfig) {
+        super(id, nameKey, group, icon, permissionNode);
         this.model = model;
         this.textureConfig = textureConfig;
     }

@@ -10,11 +10,14 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import dev.hardaway.wardrobe.WardrobePlugin;
 import dev.hardaway.wardrobe.api.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.PlayerCosmetic;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public abstract class CosmeticAsset implements JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticAsset>> {
@@ -31,6 +34,10 @@ public abstract class CosmeticAsset implements JsonAssetWithMap<String, DefaultA
             .append(new KeyedCodec<>("Icon", Codec.STRING),
                     (t, value) -> t.icon = value,
                     t -> t.icon
+            ).add()
+            .append(new KeyedCodec<>("PermissionNode", Codec.STRING),
+                    (t, value) -> t.permissionNode = value,
+                    t -> t.permissionNode
             ).add()
             .build();
 
@@ -50,15 +57,17 @@ public abstract class CosmeticAsset implements JsonAssetWithMap<String, DefaultA
     protected String nameKey;
     protected String group;
     protected String icon;
+    protected @Nullable String permissionNode;
 
     protected CosmeticAsset() {
     }
 
-    public CosmeticAsset(String id, String nameKey, String group, String icon) {
+    public CosmeticAsset(String id, String nameKey, String group, String icon, @Nullable String permissionNode) {
         this.id = id;
         this.nameKey = nameKey;
         this.group = group;
         this.icon = icon;
+        this.permissionNode = permissionNode;
     }
 
     @Override
@@ -87,6 +96,17 @@ public abstract class CosmeticAsset implements JsonAssetWithMap<String, DefaultA
 
     public String getIcon() {
         return icon;
+    }
+
+    @Nullable
+    public String getPermissionNode() {
+        return permissionNode;
+    }
+
+    public boolean hasPermission(@Nonnull UUID uuid) {
+        String permissionNode = this.getPermissionNode();
+        if (permissionNode == null) return true;
+        return PermissionsModule.get().hasPermission(uuid, permissionNode);
     }
 
     public abstract void applyCosmetic(WardrobeContext context, PlayerCosmetic playerCosmetic);
