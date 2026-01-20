@@ -1,0 +1,30 @@
+$Common = "../../Common.ui";
+$Sounds = "../../Sounds.ui";
+
+Group #Rotate {
+  Anchor: (Bottom: 30, Left: 900, Width: 100, Height: 100);
+  LayoutMode: CenterMiddle;
+
+  Button #RotateLeft {
+    Anchor: (Width: 64, Height: 64);
+    Background: (TexturePath: "../Icons/CategoryIconBackground.png");
+
+    Group {
+      Background: (TexturePath: "../Icons/Left.png");
+    }
+  }
+
+  Group {
+    Anchor: (Width: 48, Right: 8);
+    Background: (Color: #a6afba(0.2));
+  }
+
+  Button #RotateRight {
+    Anchor: (Width: 64, Height: 64);
+    Background: (TexturePath: "../Icons/CategoryIconBackground.png");
+
+    Group {
+      Background: (TexturePath: "../Icons/Right.png");
+    }
+  }
+}

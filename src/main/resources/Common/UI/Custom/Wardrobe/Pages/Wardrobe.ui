@@ -9,25 +9,6 @@ $Sounds = "../../Sounds.ui";
   LabelStyle(RenderBold: true, RenderUppercase: true, FontSize: 18, TextColor: #96a9be, VerticalAlignment: Start)
 );
 
-
-@TabButton = Group {
-  Anchor: (Width: 47, Height: 47, Top: 2, Bottom: 2);
-  Background: (TexturePath: "Icons/CategoryIconBackground.png");
-  Visible: true;
-
-  Button #Button {
-  Anchor: Anchor(Width: 66, Height: 50);
-
-  Group #Selected {
-  Visible: false;
-  Group {
-    Anchor: Anchor(Width: 67, Height: 33, Left: -2);
-    Background: "Icons/SelectedCategoryArrow.png";
-  }
-}
-}
-};
-
 Group {
   Anchor: (Top: 110, Left: 30, MaxWidth: 400, Height: 924);
   LayoutMode: Left;
@@ -131,36 +112,4 @@ Group {
 }
 }
 }
-
-  Group {
-    FlexWeight: 1;
-    Anchor: (Left: 30, Top: 10);
-
-    Group {
-      Anchor: (Bottom: 0, Height: 36);
-      LayoutMode: Left;
-
-
-      $Common.@SecondaryButton #Left {
-        @Sounds = $Sounds.@ButtonsLight;
-        @Anchor = Anchor(Right: 8);
-
-         Group {
-//          Background: "ResetSkinIcon.png";
-          Anchor: (Width: 24, Height: 21);
-        }
-      }
-
-
-      $Common.@SecondaryButton #Right {
-        @Sounds = $Sounds.@ButtonsLight;
-        @Anchor = Anchor(Right: 8);
-
-         Group {
-//          Background: "ResetClothingIcon.png";
-          Anchor: (Width: 24, Height: 21);
-        }
-      }
-    }
-  }
 }
