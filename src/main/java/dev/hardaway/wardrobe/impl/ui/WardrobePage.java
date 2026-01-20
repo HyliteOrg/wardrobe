@@ -1,4 +1,4 @@
-package dev.hardaway.wardrobe.ui;
+package dev.hardaway.wardrobe.impl.ui;
 
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
@@ -12,7 +12,6 @@ import com.hypixel.hytale.protocol.ServerCameraSettings;
 import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
@@ -21,11 +20,11 @@ import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.wardrobe.cosmetic.asset.CosmeticAsset;
-import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticCategory;
-import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticGroup;
-import dev.hardaway.wardrobe.cosmetic.system.PlayerCosmetic;
-import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.api.component.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.api.cosmetic.PlayerCosmetic;
+import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticAsset;
+import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticCategory;
+import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticGroup;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 

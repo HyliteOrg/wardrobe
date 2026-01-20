@@ -1,30 +1,36 @@
 package dev.hardaway.wardrobe;
 
 import com.hypixel.hytale.assetstore.AssetRegistry;
+import com.hypixel.hytale.assetstore.AssetStore;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
+import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.lookup.Priority;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.OpenCustomUIInteraction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.wardrobe.command.TestCommand;
-import dev.hardaway.wardrobe.command.WardrobeCommand;
-import dev.hardaway.wardrobe.cosmetic.asset.CosmeticAsset;
-import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticCategory;
-import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticGroup;
-import dev.hardaway.wardrobe.cosmetic.asset.config.DefaultTextureConfig;
-import dev.hardaway.wardrobe.cosmetic.asset.config.GradientTextureConfig;
-import dev.hardaway.wardrobe.cosmetic.asset.config.TextureConfig;
-import dev.hardaway.wardrobe.cosmetic.asset.config.VariantTextureConfig;
-import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeComponent;
-import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeSystem;
-import dev.hardaway.wardrobe.cosmetic.system.ResetPlayerModelSystem;
-import dev.hardaway.wardrobe.ui.WardrobePage;
+import dev.hardaway.wardrobe.api.component.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticAsset;
+import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticCategory;
+import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticGroup;
+import dev.hardaway.wardrobe.api.cosmetic.asset.config.TextureConfig;
+import dev.hardaway.wardrobe.impl.command.TestCommand;
+import dev.hardaway.wardrobe.impl.command.WardrobeCommand;
+import dev.hardaway.wardrobe.impl.cosmetic.asset.ModelAttachmentCosmetic;
+import dev.hardaway.wardrobe.impl.cosmetic.asset.PlayerModelCosmetic;
+import dev.hardaway.wardrobe.impl.cosmetic.asset.config.GradientTextureConfig;
+import dev.hardaway.wardrobe.impl.cosmetic.asset.config.StaticTextureConfig;
+import dev.hardaway.wardrobe.impl.cosmetic.asset.config.VariantTextureConfig;
+import dev.hardaway.wardrobe.impl.cosmetic.system.PlayerWardrobeSystem;
+import dev.hardaway.wardrobe.impl.cosmetic.system.ResetPlayerModelSystem;
+import dev.hardaway.wardrobe.impl.ui.WardrobePage;
 
 import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 public class WardrobePlugin extends JavaPlugin {
 
@@ -43,9 +49,13 @@ public class WardrobePlugin extends JavaPlugin {
     @Override
     protected void setup() {
         this.getCodecRegistry(TextureConfig.CODEC)
-                .register(Priority.DEFAULT, "Default", DefaultTextureConfig.class, DefaultTextureConfig.CODEC)
-                .register("Gradient", GradientTextureConfig.class, GradientTextureConfig.CODEC)
-                .register("Variant", VariantTextureConfig.class, VariantTextureConfig.CODEC);
+                .register(Priority.DEFAULT, "Static", StaticTextureConfig.class, StaticTextureConfig.CODEC)
+                .register(Priority.NORMAL, "Gradient", GradientTextureConfig.class, GradientTextureConfig.CODEC)
+                .register(Priority.NORMAL, "Variant", VariantTextureConfig.class, VariantTextureConfig.CODEC);
+
+        this.getCodecRegistry(CosmeticAsset.CODEC)
+                .register(Priority.DEFAULT, "ModelAttachment", ModelAttachmentCosmetic.class, ModelAttachmentCosmetic.CODEC)
+                .register(Priority.NORMAL, "PlayerModel", PlayerModelCosmetic.class, PlayerModelCosmetic.CODEC);
 
         AssetRegistry.register(HytaleAssetStore.builder(CosmeticCategory.class, new DefaultAssetMap<>())
                 .setPath("Wardrobe/Categories")
@@ -64,7 +74,7 @@ public class WardrobePlugin extends JavaPlugin {
                 .setPath("Wardrobe/Cosmetics")
                 .setCodec(CosmeticAsset.CODEC)
                 .setKeyFunction(CosmeticAsset::getId)
-                .loadsAfter(CosmeticGroup.class)
+                .loadsAfter(ModelAsset.class, CosmeticGroup.class)
                 .build()
         );
 
@@ -87,7 +97,16 @@ public class WardrobePlugin extends JavaPlugin {
 
     }
 
-    @Override
-    protected void start() {
+    public static <T extends JsonAssetWithMap<String, DefaultAssetMap<String, T>>> Supplier<AssetStore<String, T, DefaultAssetMap<String, T>>> createAssetStore(Class<T> clazz) {
+        return new Supplier<>() {
+            AssetStore<String, T, DefaultAssetMap<String, T>> value;
+
+            @Override
+            public AssetStore<String, T, DefaultAssetMap<String, T>> get() {
+                if (value == null)
+                    value = AssetRegistry.getAssetStore(clazz);
+                return value;
+            }
+        };
     }
 }

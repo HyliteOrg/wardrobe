@@ -15,7 +15,8 @@
     "Dependencies": {
         "Hytale:AssetModule": "*",
         "Hytale:EntityModule": "*",
-        "Hytale:CosmeticsModule": "*"
+        "Hytale:CosmeticsModule": "*",
+        "Hytale:CommonAssetModule": "*"
     },
     "OptionalDependencies": {
         

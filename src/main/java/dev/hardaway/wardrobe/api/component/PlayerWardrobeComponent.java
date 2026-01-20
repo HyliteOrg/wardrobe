@@ -1,11 +1,12 @@
-package dev.hardaway.wardrobe.cosmetic.system;
+package dev.hardaway.wardrobe.api.component;
 
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticGroup;
+import dev.hardaway.wardrobe.api.cosmetic.PlayerCosmetic;
+import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticGroup;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

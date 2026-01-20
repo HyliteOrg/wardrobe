@@ -1,4 +1,4 @@
-package dev.hardaway.wardrobe.cosmetic.asset.category;
+package dev.hardaway.wardrobe.api.cosmetic.asset;
 
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
 import com.hypixel.hytale.assetstore.AssetStore;
@@ -10,13 +10,12 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.Message;
-import dev.hardaway.wardrobe.WardrobeUtil;
-import dev.hardaway.wardrobe.api.WardrobeTab;
+import dev.hardaway.wardrobe.WardrobePlugin;
 
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
-public class CosmeticCategory implements WardrobeTab, JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticCategory>> {
+public class CosmeticCategory implements JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticCategory>> {
 
     public static final AssetCodec<String, CosmeticCategory> CODEC = AssetBuilderCodec
             .builder(CosmeticCategory.class, CosmeticCategory::new,
@@ -48,7 +47,7 @@ public class CosmeticCategory implements WardrobeTab, JsonAssetWithMap<String, D
             ).add().build();
 
 
-    public static final Supplier<AssetStore<String, CosmeticCategory, DefaultAssetMap<String, CosmeticCategory>>> ASSET_STORE = WardrobeUtil.createAssetStore(CosmeticCategory.class);
+    public static final Supplier<AssetStore<String, CosmeticCategory, DefaultAssetMap<String, CosmeticCategory>>> ASSET_STORE = WardrobePlugin.createAssetStore(CosmeticCategory.class);
 
     public static DefaultAssetMap<String, CosmeticCategory> getAssetMap() {
         return ASSET_STORE.get().getAssetMap();
@@ -75,24 +74,21 @@ public class CosmeticCategory implements WardrobeTab, JsonAssetWithMap<String, D
             return nameKey;
         }
 
-        return "server.wardrobe.categories." + this.id + ".name";
+        return "server.wardrobe.category." + this.id + ".name";
     }
 
     public Message getName() {
         return Message.translation(this.getTranslationKey());
     }
 
-    @Override
     public String getIcon() {
         return icon;
     }
 
-    @Override
     public String getSelectedIcon() {
         return selectedIcon;
     }
 
-    @Override
     public int getOrder() {
         return order;
     }

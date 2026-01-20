@@ -1,4 +1,4 @@
-package dev.hardaway.wardrobe.cosmetic.asset.category;
+package dev.hardaway.wardrobe.api.cosmetic.asset;
 
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
 import com.hypixel.hytale.assetstore.AssetStore;
@@ -12,14 +12,13 @@ import com.hypixel.hytale.codec.codecs.EnumCodec;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
-import dev.hardaway.wardrobe.WardrobeUtil;
-import dev.hardaway.wardrobe.api.WardrobeTab;
+import dev.hardaway.wardrobe.WardrobePlugin;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticGroup>> {
+public class CosmeticGroup implements JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticGroup>> {
 
     public static final AssetCodec<String, CosmeticGroup> CODEC = AssetBuilderCodec
             .builder(CosmeticGroup.class, CosmeticGroup::new,
@@ -63,7 +62,7 @@ public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, Defa
             ).add().build();
 
 
-    public static final Supplier<AssetStore<String, CosmeticGroup, DefaultAssetMap<String, CosmeticGroup>>> ASSET_STORE = WardrobeUtil.createAssetStore(CosmeticGroup.class);
+    public static final Supplier<AssetStore<String, CosmeticGroup, DefaultAssetMap<String, CosmeticGroup>>> ASSET_STORE = WardrobePlugin.createAssetStore(CosmeticGroup.class);
 
     public static DefaultAssetMap<String, CosmeticGroup> getAssetMap() {
         return ASSET_STORE.get().getAssetMap();
@@ -92,7 +91,7 @@ public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, Defa
             return nameKey;
         }
 
-        return "server.wardrobe.categories." + this.id + ".name";
+        return "server.wardrobe.group." + this.id + ".name";
     }
 
     public Message getName() {
@@ -108,17 +107,14 @@ public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, Defa
         return category;
     }
 
-    @Override
     public String getIcon() {
         return icon;
     }
 
-    @Override
     public String getSelectedIcon() {
         return selectedIcon;
     }
 
-    @Override
     public int getOrder() {
         return order;
     }

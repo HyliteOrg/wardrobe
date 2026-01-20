@@ -1,4 +1,4 @@
-package dev.hardaway.wardrobe.command;
+package dev.hardaway.wardrobe.impl.command;
 
 
 import com.hypixel.hytale.component.ComponentType;
@@ -12,8 +12,8 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeComponent;
-import dev.hardaway.wardrobe.ui.WardrobePage;
+import dev.hardaway.wardrobe.api.component.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.impl.ui.WardrobePage;
 
 import javax.annotation.Nonnull;
 

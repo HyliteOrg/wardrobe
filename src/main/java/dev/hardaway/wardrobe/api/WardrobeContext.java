@@ -3,8 +3,8 @@ package dev.hardaway.wardrobe.api;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkin;
-import dev.hardaway.wardrobe.cosmetic.asset.config.TextureConfig;
-import dev.hardaway.wardrobe.cosmetic.system.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.api.component.PlayerWardrobeComponent;
+import dev.hardaway.wardrobe.api.cosmetic.asset.config.TextureConfig;
 
 import javax.annotation.Nullable;
 import java.util.Collections;

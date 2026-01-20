@@ -1,4 +1,4 @@
-package dev.hardaway.wardrobe.cosmetic.system;
+package dev.hardaway.wardrobe.impl.cosmetic.system;
 
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentType;
@@ -12,6 +12,7 @@ import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.hardaway.wardrobe.api.component.PlayerWardrobeComponent;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -42,12 +43,14 @@ public class ResetPlayerModelSystem extends RefChangeSystem<EntityStore, PlayerW
 
     @Override
     public void onComponentRemoved(@Nonnull Ref<EntityStore> ref, @Nonnull PlayerWardrobeComponent playerWardrobeComponent, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
-        // Reset player model
         PlayerSkinComponent playerSkinComponent = store.getComponent(ref, PlayerSkinComponent.getComponentType());
-
-        Model model = CosmeticsModule.get().createModel(playerSkinComponent.getPlayerSkin());
-        commandBuffer.putComponent(ref, ModelComponent.getComponentType(), new ModelComponent(model));
-        playerSkinComponent.setNetworkOutdated();
+        if (playerSkinComponent != null) {
+            playerSkinComponent.setNetworkOutdated();
+            Model newModel = CosmeticsModule.get().createModel(playerSkinComponent.getPlayerSkin());
+            if (newModel != null) {
+                commandBuffer.putComponent(ref, ModelComponent.getComponentType(), new ModelComponent(newModel));
+            }
+        }
     }
 
     @Nonnull
