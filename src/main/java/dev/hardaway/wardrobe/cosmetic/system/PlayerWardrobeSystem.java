@@ -13,9 +13,11 @@ import com.hypixel.hytale.server.core.cosmetics.*;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.hardaway.wardrobe.api.WardrobeContext;
 import dev.hardaway.wardrobe.cosmetic.BuiltinCosmetic;
 import dev.hardaway.wardrobe.cosmetic.asset.CosmeticAsset;
 import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticGroup;
+import dev.hardaway.wardrobe.cosmetic.asset.config.GradientTextureConfig;
 import dev.hardaway.wardrobe.cosmetic.asset.config.TextureConfig;
 
 import javax.annotation.Nonnull;
@@ -41,6 +43,19 @@ public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
 
         List<ModelAttachment> attachmentList = new ArrayList<>();
         PlayerSkin skin = PlayerWardrobeSystem.skinFromProtocol(playerSkinComponent.getPlayerSkin());
+
+        Model playerModel = cosmeticsModule.createModel(playerSkinComponent.getPlayerSkin());
+        WardrobeContext context = new WardrobeContext(
+                skin,
+                wardrobeComponent,
+                attachmentList,
+                playerModel,
+                new GradientTextureConfig(
+                        playerModel.getGradientSet(),
+                        playerModel.getTexture()
+                ),
+                playerModel.getGradientId()
+        );
 
         BuiltinCosmetic builtinBodyCharacteristic = PlayerWardrobeSystem.createBuiltinCosmetic(CosmeticType.BODY_CHARACTERISTICS, skin);
         String baseModelName = builtinBodyCharacteristic.model();
@@ -70,14 +85,7 @@ public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
                 // TODO: more warnings when this is null
                 CosmeticAsset cosmetic = CosmeticAsset.getAssetMap().getAsset(cosmeticData.getId());
                 if (cosmetic != null) {
-                    TextureConfig textureConfig = cosmetic.getTextureConfig();
-                    attachmentList.add(new ModelAttachment(
-                            cosmetic.getModel(),
-                            textureConfig.getTexture(cosmeticData.getVariantId()),
-                            textureConfig.getGradientSet(),
-                            textureConfig.getGradientSet() != null ? cosmeticData.getVariantId() : null,
-                            1.0
-                    ));
+                    cosmetic.applyCosmetic(context, cosmeticData);
                 }
             } else if (group.getCosmeticType() != null) {
                 BuiltinCosmetic builtinCosmetic = PlayerWardrobeSystem.createBuiltinCosmetic(group.getCosmeticType(), skin);
@@ -89,7 +97,7 @@ public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
 
         Model baseModel = cosmeticsModule.createModel(playerSkinComponent.getPlayerSkin());
         Model model = new Model(
-                baseModel.getModelAssetId(),
+                "Wardrobe_Player",
                 baseModel.getScale(), // TODO: allow scale change
                 baseModel.getRandomAttachmentIds(),
                 attachmentList.toArray(ModelAttachment[]::new), // Skin attachments

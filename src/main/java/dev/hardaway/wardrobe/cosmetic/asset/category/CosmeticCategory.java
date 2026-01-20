@@ -9,9 +9,11 @@ import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.Validators;
+import com.hypixel.hytale.server.core.Message;
 import dev.hardaway.wardrobe.WardrobeUtil;
 import dev.hardaway.wardrobe.api.WardrobeTab;
 
+import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
 public class CosmeticCategory implements WardrobeTab, JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticCategory>> {
@@ -24,6 +26,12 @@ public class CosmeticCategory implements WardrobeTab, JsonAssetWithMap<String, D
                     (asset, data) -> asset.data = data,
                     (asset) -> asset.data
             )
+
+            .append(new KeyedCodec<>("NameKey", Codec.STRING),
+                    (t, value) -> t.nameKey = value,
+                    t -> t.nameKey
+            ).add()
+
             .append(new KeyedCodec<>("Icon", Codec.STRING, true),
                     (t, value) -> t.icon = value,
                     t -> t.icon
@@ -50,6 +58,8 @@ public class CosmeticCategory implements WardrobeTab, JsonAssetWithMap<String, D
     private String id;
     private AssetExtraInfo.Data data;
 
+    protected String nameKey;
+
     private String icon;
     private String selectedIcon;
     private int order = -1;
@@ -57,6 +67,19 @@ public class CosmeticCategory implements WardrobeTab, JsonAssetWithMap<String, D
     @Override
     public String getId() {
         return id;
+    }
+
+    @Nonnull
+    public String getTranslationKey() {
+        if (this.nameKey != null) {
+            return nameKey;
+        }
+
+        return "server.wardrobe.categories." + this.id + ".name";
+    }
+
+    public Message getName() {
+        return Message.translation(this.getTranslationKey());
     }
 
     @Override

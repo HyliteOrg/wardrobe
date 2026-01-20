@@ -8,35 +8,10 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticGroup;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * avatar components
- * - each cosmetic type has a component
- * - if cosmetic component exists: remove hypixel cosmetic
- * - if it doesnt: put hypixel cosmetic back
- * - tags to allow cosmetics to be incompatible with each other
- * <p>
- * component types
- * Eyes,
- * Ears,
- * Mouth,
- * Eyebrows,
- * Haircut,
- * FacialHair,
- * Pants,
- * Overpants,
- * Undertops,
- * Overtops,
- * Shoes,
- * HeadAccessory,
- * FaceAccessory,
- * EarAccessory,
- * Avatar, - Model and Texture
- * Gloves;
- */
 public class PlayerWardrobeComponent implements Component<EntityStore> {
 
     public static final BuilderCodec<PlayerWardrobeComponent> CODEC = BuilderCodec.builder(PlayerWardrobeComponent.class, PlayerWardrobeComponent::new)
@@ -62,7 +37,7 @@ public class PlayerWardrobeComponent implements Component<EntityStore> {
     }
 
     public Map<String, PlayerCosmetic> getCosmetics() {
-        return cosmetics;
+        return Collections.unmodifiableMap(this.cosmetics);
     }
 
     @Nullable

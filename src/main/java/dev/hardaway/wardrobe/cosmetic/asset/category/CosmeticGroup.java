@@ -10,10 +10,12 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.codecs.EnumCodec;
 import com.hypixel.hytale.codec.validation.Validators;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import dev.hardaway.wardrobe.WardrobeUtil;
 import dev.hardaway.wardrobe.api.WardrobeTab;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
@@ -27,6 +29,11 @@ public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, Defa
                     (asset, data) -> asset.data = data,
                     (asset) -> asset.data
             )
+
+            .append(new KeyedCodec<>("NameKey", Codec.STRING),
+                    (t, value) -> t.nameKey = value,
+                    t -> t.nameKey
+            ).add()
 
             .append(new KeyedCodec<>("CosmeticType", new EnumCodec<>(CosmeticType.class)),
                     (t, value) -> t.cosmeticType = value,
@@ -65,6 +72,8 @@ public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, Defa
     private String id;
     private AssetExtraInfo.Data data;
 
+    protected String nameKey;
+
     private CosmeticType cosmeticType;
 
     private String category;
@@ -75,6 +84,19 @@ public class CosmeticGroup implements WardrobeTab, JsonAssetWithMap<String, Defa
     @Override
     public String getId() {
         return id;
+    }
+
+    @Nonnull
+    public String getTranslationKey() {
+        if (this.nameKey != null) {
+            return nameKey;
+        }
+
+        return "server.wardrobe.categories." + this.id + ".name";
+    }
+
+    public Message getName() {
+        return Message.translation(this.getTranslationKey());
     }
 
     @Nullable

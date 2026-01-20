@@ -12,14 +12,14 @@ import com.hypixel.hytale.protocol.ServerCameraSettings;
 import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
+import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
-import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
-import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.cosmetic.asset.CosmeticAsset;
 import dev.hardaway.wardrobe.cosmetic.asset.category.CosmeticCategory;
@@ -104,14 +104,10 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             selectCosmetic(commandBuilder, eventBuilder, ref, store, Objects.requireNonNull(CosmeticAsset.getAssetMap().getAsset(data.cosmetic)));
 
         if (data.direction != null) {
-            World world = store.getExternalData().getWorld();
-
-            world.execute(() -> {
-                TransformComponent transformComponent = store.ensureAndGetComponent(ref, TransformComponent.getComponentType());
-                HeadRotation headRotation = store.ensureAndGetComponent(ref, HeadRotation.getComponentType());
-
-                transformComponent.setPosition(transformComponent.getPosition().add(1, 0, 0));
-            });
+            TransformComponent transformComponent = store.getComponent(ref, TransformComponent.getComponentType());
+            Teleport teleport = Teleport.createForPlayer(transformComponent.getTransform());
+            teleport.setRotation(transformComponent.getRotation().add(1, 0, 0));
+            store.putComponent(ref, Teleport.getComponentType(), teleport);
             if (data.direction.equals("Right")) {
             } else {
             }
@@ -161,7 +157,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             CosmeticAsset cosmetic = cosmetics.get(i);
             commandBuilder.append("#Cosmetics", "Wardrobe/Pages/Cosmetic.ui");
             String selector = "#Cosmetics[" + i + "]";
-            commandBuilder.set(selector + " #Button.Text", cosmetic.getId());
+            commandBuilder.set(selector + " #Button.Text", cosmetic.getName());
             if (cosmetic.getIcon() != null) commandBuilder.set(selector + " #Icon.AssetPath", cosmetic.getIcon());
             eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, selector + " #Button", EventData.of("Cosmetic", cosmetic.getId()), false);
 
@@ -179,7 +175,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             commandBuilder.set("#Groups[" + i + "] #Button #Selected.Visible", false);
         }
         commandBuilder.set("#Groups[" + groups.indexOf(group) + "] #Button #Selected.Visible", true);
-        commandBuilder.set("#SubCategoryName.Text", group.getId());
+        commandBuilder.set("#SubCategoryName.Text", group.getName());
         selectedGroup = group;
 
         buildCosmeticList(commandBuilder, eventBuilder, ref, store, searchQuery);
@@ -207,7 +203,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             commandBuilder.set("#CategoryName.Text", "");
         } else {
             commandBuilder.set("#CategoryLabelArrow.Visible", true);
-            commandBuilder.set("#CategoryName.Text", category.getId());
+            commandBuilder.set("#CategoryName.Text", category.getName());
         }
 
         selectedCategory = category;

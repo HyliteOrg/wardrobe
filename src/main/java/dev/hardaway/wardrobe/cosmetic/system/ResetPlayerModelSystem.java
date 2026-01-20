@@ -16,13 +16,13 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class ResetPlayerWardrobeSystem extends RefChangeSystem<EntityStore, PlayerWardrobeComponent> {
+public class ResetPlayerModelSystem extends RefChangeSystem<EntityStore, PlayerWardrobeComponent> {
 
     private static final Query<EntityStore> QUERY = Query.and(Player.getComponentType(), PlayerSkinComponent.getComponentType(), ModelComponent.getComponentType());
 
     private final ComponentType<EntityStore, PlayerWardrobeComponent> wardrobeComponentType;
 
-    public ResetPlayerWardrobeSystem(ComponentType<EntityStore, PlayerWardrobeComponent> wardrobeComponentType) {
+    public ResetPlayerModelSystem(ComponentType<EntityStore, PlayerWardrobeComponent> wardrobeComponentType) {
         this.wardrobeComponentType = wardrobeComponentType;
     }
 

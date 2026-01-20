@@ -27,6 +27,13 @@ public class GradientTextureConfig implements TextureConfig {
     private String gradientSet;
     private String grayscaleTexture;
 
+    private GradientTextureConfig() {}
+
+    public GradientTextureConfig(String gradientSet, String grayscaleTexture) {
+        this.gradientSet = gradientSet;
+        this.grayscaleTexture = grayscaleTexture;
+    }
+
     @Nonnull
     @Override
     public String getTexture(@Nullable String variant) {
