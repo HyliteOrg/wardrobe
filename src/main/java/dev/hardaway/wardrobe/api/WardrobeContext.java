@@ -1,8 +1,12 @@
 package dev.hardaway.wardrobe.api;
 
+import com.hypixel.hytale.component.ArchetypeChunk;
+import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkin;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.api.component.PlayerWardrobeComponent;
 import dev.hardaway.wardrobe.api.cosmetic.asset.config.TextureConfig;
 
@@ -12,6 +16,7 @@ import java.util.List;
 
 public class WardrobeContext {
 
+    private final Player player;
     private final PlayerSkin skin;
     private final PlayerWardrobeComponent component;
     private final List<ModelAttachment> attachments;
@@ -19,13 +24,18 @@ public class WardrobeContext {
     private TextureConfig playerTexture;
     private String playerTextureVariantId;
 
-    public WardrobeContext(PlayerSkin skin, PlayerWardrobeComponent component, List<ModelAttachment> attachments, Model playerModel, TextureConfig texture, @Nullable String playerTextureVariantId) {
+    public WardrobeContext(Player player, PlayerSkin skin, PlayerWardrobeComponent component, List<ModelAttachment> attachments, Model playerModel, TextureConfig texture, @Nullable String playerTextureVariantId) {
+        this.player = player;
         this.skin = skin;
         this.component = component;
         this.attachments = attachments;
         this.playerModel = playerModel;
         this.playerTexture = texture;
         this.playerTextureVariantId = playerTextureVariantId;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     public PlayerSkin getSkin() {

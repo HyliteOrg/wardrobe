@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import dev.hardaway.wardrobe.api.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticAsset;
+import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticGroup;
 import dev.hardaway.wardrobe.api.cosmetic.asset.config.TextureConfig;
 
 import javax.annotation.Nonnull;
@@ -32,6 +33,7 @@ public class PlayerModelCosmetic extends CosmeticAsset {
     private PlayerModelCosmetic() {
     }
 
+    // Required Groups (underwear, face, mouth, ears, eyes)
     public PlayerModelCosmetic(String id, String nameKey, String group, String icon, @Nullable String permissionNode, String modelAsset, TextureConfig textureConfig) {
         super(id, nameKey, group, icon, permissionNode);
         this.modelAsset = modelAsset;
@@ -49,7 +51,7 @@ public class PlayerModelCosmetic extends CosmeticAsset {
     }
 
     @Override
-    public void applyCosmetic(WardrobeContext context, PlayerCosmetic playerCosmetic) {
+    public void applyCosmetic(WardrobeContext context, CosmeticGroup group, PlayerCosmetic playerCosmetic) {
         ModelAsset model = ModelAsset.getAssetMap().getAsset(this.modelAsset);
         context.setPlayerModel(Model.createUnitScaleModel(model));
         context.setPlayerTexture(this.textureConfig);

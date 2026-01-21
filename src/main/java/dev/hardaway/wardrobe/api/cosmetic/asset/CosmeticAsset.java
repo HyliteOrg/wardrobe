@@ -109,5 +109,5 @@ public abstract class CosmeticAsset implements JsonAssetWithMap<String, DefaultA
         return PermissionsModule.get().hasPermission(uuid, permissionNode);
     }
 
-    public abstract void applyCosmetic(WardrobeContext context, PlayerCosmetic playerCosmetic);
+    public abstract void applyCosmetic(WardrobeContext context, CosmeticGroup group, PlayerCosmetic playerCosmetic);
 }

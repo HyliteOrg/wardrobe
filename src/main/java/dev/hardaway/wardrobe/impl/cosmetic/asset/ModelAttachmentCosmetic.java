@@ -3,10 +3,17 @@ package dev.hardaway.wardrobe.impl.cosmetic.asset;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.protocol.Cosmetic;
+import com.hypixel.hytale.server.core.asset.type.item.config.ItemArmor;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import dev.hardaway.wardrobe.api.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticAsset;
+import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticGroup;
 import dev.hardaway.wardrobe.api.cosmetic.asset.config.TextureConfig;
 
 import javax.annotation.Nonnull;
@@ -28,7 +35,7 @@ public class ModelAttachmentCosmetic extends CosmeticAsset {
     private String model;
     private TextureConfig textureConfig;
 
-    private ModelAttachmentCosmetic() {
+    protected ModelAttachmentCosmetic() {
     }
 
     public ModelAttachmentCosmetic(String id, String nameKey, String group, String icon, @Nullable String permissionNode, String model, TextureConfig textureConfig) {
@@ -48,8 +55,35 @@ public class ModelAttachmentCosmetic extends CosmeticAsset {
     }
 
     @Override
-    public void applyCosmetic(WardrobeContext context, PlayerCosmetic playerCosmetic) {
+    public void applyCosmetic(WardrobeContext context, CosmeticGroup group, PlayerCosmetic playerCosmetic) {
         TextureConfig textureConfig = this.getTextureConfig();
+
+        Player player = context.getPlayer();
+        if (group.getCosmeticType() != null) {
+            ItemContainer armorContainer = player.getInventory().getArmor();
+            for (short i = 0; i < armorContainer.getCapacity(); i++) {
+                ItemStack stack = armorContainer.getItemStack(i);
+                if (stack == null || stack.isEmpty()) continue;
+
+                ItemArmor armor = stack.getItem().getArmor();
+                if (armor == null)
+                    return;
+
+                com.hypixel.hytale.protocol.ItemArmor protocolArmor = armor.toPacket();
+                if (protocolArmor.cosmeticsToHide == null)
+                    return;
+
+                for (Cosmetic cosmetic : protocolArmor.cosmeticsToHide) {
+                    CosmeticType type = protocolCosmeticToCosmeticType(cosmetic);
+                    if (type == null)
+                        continue;
+
+                    if (group.getCosmeticType().equals(type))
+                        return; // Cosmetic is hidden
+                }
+            }
+        }
+
         context.addAttachment(new ModelAttachment(
                 this.getModel(),
                 textureConfig.getTexture(playerCosmetic.getVariantId()),
@@ -59,4 +93,23 @@ public class ModelAttachmentCosmetic extends CosmeticAsset {
         ));
     }
 
+    @Nullable
+    private static CosmeticType protocolCosmeticToCosmeticType(Cosmetic cosmetic) {
+        return switch (cosmetic) {
+            case Haircut -> CosmeticType.HAIRCUTS;
+            case FacialHair -> CosmeticType.FACIAL_HAIR;
+            case Undertop -> CosmeticType.UNDERTOPS;
+            case Overtop -> CosmeticType.OVERTOPS;
+            case Pants -> CosmeticType.PANTS;
+            case Overpants -> CosmeticType.OVERPANTS;
+            case Shoes -> CosmeticType.SHOES;
+            case Gloves -> CosmeticType.GLOVES;
+            case Cape -> CosmeticType.CAPES;
+            case HeadAccessory -> CosmeticType.HEAD_ACCESSORY;
+            case FaceAccessory -> CosmeticType.FACE_ACCESSORY;
+            case EarAccessory -> CosmeticType.EAR_ACCESSORY;
+            case Ear -> CosmeticType.EARS;
+            case null -> null;
+        };
+    }
 }

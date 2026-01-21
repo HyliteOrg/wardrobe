@@ -20,6 +20,8 @@ import dev.hardaway.wardrobe.api.cosmetic.asset.CosmeticGroup;
 import dev.hardaway.wardrobe.api.cosmetic.asset.config.TextureConfig;
 import dev.hardaway.wardrobe.impl.command.TestCommand;
 import dev.hardaway.wardrobe.impl.command.WardrobeCommand;
+import dev.hardaway.wardrobe.impl.cosmetic.asset.HaircutCosmetic;
+import dev.hardaway.wardrobe.impl.cosmetic.asset.HeadAccessoryCosmetic;
 import dev.hardaway.wardrobe.impl.cosmetic.asset.ModelAttachmentCosmetic;
 import dev.hardaway.wardrobe.impl.cosmetic.asset.PlayerModelCosmetic;
 import dev.hardaway.wardrobe.impl.cosmetic.asset.config.GradientTextureConfig;
@@ -55,7 +57,9 @@ public class WardrobePlugin extends JavaPlugin {
 
         this.getCodecRegistry(CosmeticAsset.CODEC)
                 .register(Priority.DEFAULT, "ModelAttachment", ModelAttachmentCosmetic.class, ModelAttachmentCosmetic.CODEC)
-                .register(Priority.NORMAL, "PlayerModel", PlayerModelCosmetic.class, PlayerModelCosmetic.CODEC);
+                .register(Priority.NORMAL, "PlayerModel", PlayerModelCosmetic.class, PlayerModelCosmetic.CODEC)
+                .register(Priority.NORMAL, "Haircut", HaircutCosmetic.class, HaircutCosmetic.CODEC)
+                .register(Priority.NORMAL, "HeadAccessory", HeadAccessoryCosmetic.class, HeadAccessoryCosmetic.CODEC);
 
         AssetRegistry.register(HytaleAssetStore.builder(CosmeticCategory.class, new DefaultAssetMap<>())
                 .setPath("Wardrobe/Categories")

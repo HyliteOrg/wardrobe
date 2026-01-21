@@ -4,12 +4,18 @@ import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.component.ArchetypeChunk;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.ComponentType;
+import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
-import com.hypixel.hytale.server.core.cosmetics.*;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticRegistry;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
+import com.hypixel.hytale.server.core.cosmetics.PlayerSkin;
+import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPart;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
 import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -25,7 +31,6 @@ import dev.hardaway.wardrobe.impl.cosmetic.asset.config.GradientTextureConfig;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
     private final ComponentType<EntityStore, PlayerWardrobeComponent> wardrobeComponentType;
@@ -40,15 +45,21 @@ public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
         if (!wardrobeComponent.consumeDirty()) // TODO: use events instead of ticking
             return;
 
+        if (wardrobeComponent.getCosmetics().isEmpty()) {
+            Ref<EntityStore> ref = chunk.getReferenceTo(i);
+            commandBuffer.tryRemoveComponent(ref, this.wardrobeComponentType);
+            return;
+        }
 
-        List<ModelAttachment> attachmentList = new ArrayList<>();
-        PlayerSkinComponent playerSkinComponent = chunk.getComponent(i, PlayerSkinComponent.getComponentType());
-        PlayerSkin skin = PlayerWardrobeSystem.skinFromProtocol(playerSkinComponent.getPlayerSkin());
-        Model playerModel = CosmeticsModule.get().createModel(playerSkinComponent.getPlayerSkin());
+        Player player = chunk.getComponent(i, Player.getComponentType());
+        com.hypixel.hytale.protocol.PlayerSkin playerSkin = chunk.getComponent(i, PlayerSkinComponent.getComponentType()).getPlayerSkin();
+        Model playerModel = CosmeticsModule.get().createModel(playerSkin);
+        PlayerSkin skin = PlayerWardrobeSystem.skinFromProtocol(playerSkin);
         WardrobeContext context = new WardrobeContext(
+                player,
                 skin,
                 wardrobeComponent,
-                attachmentList,
+                new ArrayList<>(),
                 playerModel,
                 new GradientTextureConfig(
                         playerModel.getGradientSet(),
@@ -63,23 +74,23 @@ public class PlayerWardrobeSystem extends EntityTickingSystem<EntityStore> {
             if (cosmeticData != null) {
                 CosmeticAsset cosmetic = CosmeticAsset.getAssetMap().getAsset(cosmeticData.getId());
                 if (cosmetic != null) {
-                    cosmetic.applyCosmetic(context, cosmeticData);
+                    cosmetic.applyCosmetic(context, group, cosmeticData);
                 }
             } else if (group.getCosmeticType() != null) {
-                BuiltinCosmetic builtinCosmetic = PlayerWardrobeSystem.createBuiltinCosmetic(group.getCosmeticType(), skin);
-                if (builtinCosmetic != null) {
-                    attachmentList.add(builtinCosmetic.toModelAttachment());
-                }
+//                BuiltinCosmetic builtinCosmetic = PlayerWardrobeSystem.createBuiltinCosmetic(group.getCosmeticType(), skin);
+//                if (builtinCosmetic != null) {
+//                    context.addAttachment(builtinCosmetic.toModelAttachment());
+//                }
             }
         }
 
         Model contextModel = context.getPlayerModel();
         TextureConfig textureConfig = context.getPlayerTexture();
         Model model = new Model(
-                contextModel.getModelAssetId(),
+                "Wardrobe_Player",
                 contextModel.getScale(),
                 contextModel.getRandomAttachmentIds(),
-                attachmentList.toArray(ModelAttachment[]::new), // Skin attachments, TODO: merge from model asset
+                context.getAttachments().toArray(ModelAttachment[]::new), // Skin attachments, TODO: merge from model asset
                 contextModel.getBoundingBox(),
                 contextModel.getModel(), // Model
                 textureConfig.getTexture(context.getPlayerTextureVariantId()), // Skin texture

@@ -39,6 +39,7 @@ public class TestCommand extends AbstractPlayerCommand {
         PlayerWardrobeComponent component = store.ensureAndGetComponent(ref, this.playerWardrobeComponentType);
         component.setCosmetic(CosmeticGroup.getAssetMap().getAsset("Cape"), new PlayerCosmetic("Wardrobe_Cape_Test", "Red"));
         component.setCosmetic(CosmeticGroup.getAssetMap().getAsset("FacialHair"), new PlayerCosmetic("Wardrobe_FacialHair_Test", "Brown"));
+        component.setCosmetic(CosmeticGroup.getAssetMap().getAsset("Haircut"), new PlayerCosmetic("Wardrobe_Haircut_Test", "Brown"));
         component.setCosmetic(CosmeticGroup.getAssetMap().getAsset("BodyCharacteristic"), new PlayerCosmetic("Wardrobe_BodyCharacteristic_Test"));
 //        component.setCosmetic(CosmeticType.CAPES, null);
 //        component.setDirty(true);
