@@ -7,12 +7,13 @@ import com.hypixel.hytale.common.util.StringCompareUtil;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.protocol.ClientCameraView;
-import com.hypixel.hytale.protocol.ServerCameraSettings;
+import com.hypixel.hytale.protocol.*;
 import com.hypixel.hytale.protocol.packets.camera.SetServerCamera;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
+import com.hypixel.hytale.server.core.modules.entity.component.HeadRotation;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
@@ -31,13 +32,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEventData> {
@@ -62,10 +57,10 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     @Override
     public void build(@Nonnull Ref<EntityStore> ref, @Nonnull UICommandBuilder commandBuilder, @Nonnull UIEventBuilder eventBuilder, @Nonnull Store<EntityStore> store) {
         commandBuilder.append("Wardrobe/Pages/Wardrobe.ui");
-        commandBuilder.append("Wardrobe/Pages/Buttons.ui");
+//        commandBuilder.append("Wardrobe/Pages/Buttons.ui");
 
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Rotate #RotateLeft", EventData.of("Direction", "Left"), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Rotate #RotateRight", EventData.of("Direction", "Right"), false);
+//        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Rotate #RotateLeft", EventData.of("Direction", "Left"), false);
+//        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Rotate #RotateRight", EventData.of("Direction", "Right"), false);
 
         for (int i = 0; i < categories.size(); i++) {
             WardrobeCategory category = categories.get(i);
@@ -96,7 +91,23 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
 
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#SearchField", EventData.of("@SearchQuery", "#SearchField.Value"), false);
 
-        playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.ThirdPerson, false, null));
+        HeadRotation headRotation = store.getComponent(ref, HeadRotation.getComponentType());
+        TransformComponent bodyRotation = store.getComponent(ref, TransformComponent.getComponentType());
+        float yaw = bodyRotation.getRotation().y + headRotation.getRotation().x;
+        cameraSettings.isFirstPerson = false;
+        cameraSettings.eyeOffset = true;
+        cameraSettings.displayCursor = true;
+        cameraSettings.positionDistanceOffsetType = PositionDistanceOffsetType.DistanceOffsetRaycast;
+        cameraSettings.distance = 3;
+        cameraSettings.positionOffset = new Position(0, 0, 0);
+        cameraSettings.positionLerpSpeed = 0.2F;
+        cameraSettings.rotationType = RotationType.Custom;
+        cameraSettings.rotation = new Direction((float) (yaw + Math.PI), 0, 0);
+        cameraSettings.rotationLerpSpeed = 0.2F;
+        cameraSettings.mouseInputType = MouseInputType.LookAtPlane;
+        cameraSettings.planeNormal = new Vector3f((float) Math.sin(yaw), 1, (float) Math.cos(yaw));
+
+        playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.Custom, false, cameraSettings));
     }
 
     @Override
@@ -114,15 +125,15 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         if (data.cosmetic != null)
             selectCosmetic(commandBuilder, eventBuilder, ref, store, Objects.requireNonNull(CosmeticAsset.getAssetMap().getAsset(data.cosmetic)));
 
-        if (data.direction != null) {
-//            TransformComponent transformComponent = store.getComponent(ref, TransformComponent.getComponentType());
-//            Teleport teleport = new Teleport(transformComponent.getTransform());
-//            teleport.setRotation(transformComponent.getRotation().add(1, 0, 0));
-//            store.putComponent(ref, Teleport.getComponentType(), teleport);
-            if (data.direction.equals("Right")) {
-            } else {
-            }
-        }
+//        if (data.direction != null) {
+//            TransformComponent transformComponent = store.ensureAndGetComponent(ref, TransformComponent.getComponentType());
+//            if (data.direction.equals("Right")) {
+//                transformComponent.setRotation(transformComponent.getRotation().add(0, 0.1F, 0));
+//            } else {
+//                transformComponent.setRotation(transformComponent.getRotation().add(0, -0.1F, 0));
+//            }
+//            store.putComponent(ref, TransformComponent.getComponentType(), transformComponent);
+//        }
 
         sendUpdate(commandBuilder, eventBuilder, false);
     }
@@ -130,7 +141,6 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     @Override
     public void onDismiss(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store) {
         super.onDismiss(ref, store);
-        PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
         playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.FirstPerson, false, null));
     }
 

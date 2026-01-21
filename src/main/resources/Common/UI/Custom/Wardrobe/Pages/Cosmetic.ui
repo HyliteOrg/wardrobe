@@ -30,9 +30,7 @@ Group {
   }
 
   TextButton #Button {
-    Padding: (Full: 6);
     Style: @LabelStyle;
-    FlexWeight: 5;
   }
 }
 
