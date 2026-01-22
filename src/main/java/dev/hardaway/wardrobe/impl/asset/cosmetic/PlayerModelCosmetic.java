@@ -5,9 +5,11 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeGroup;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
+import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.GradientTextureConfig;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.TextureConfig;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.VariantTextureConfig;
 
@@ -84,6 +86,10 @@ public class PlayerModelCosmetic extends CosmeticAsset {
     public List<String> getVariants() {
         if (textureConfig instanceof VariantTextureConfig variantTextureConfig) {
             return variantTextureConfig.getVariants().keySet().stream().toList();
+        }
+
+        if (textureConfig instanceof GradientTextureConfig gradientTextureConfig) {
+            return CosmeticsModule.get().getRegistry().getGradientSets().get(gradientTextureConfig.getGradientSet()).getGradients().keySet().stream().toList();
         }
 
         return List.of();

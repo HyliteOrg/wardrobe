@@ -7,12 +7,14 @@ import com.hypixel.hytale.protocol.Cosmetic;
 import com.hypixel.hytale.server.core.asset.type.item.config.ItemArmor;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeGroup;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
+import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.GradientTextureConfig;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.TextureConfig;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.VariantTextureConfig;
 
@@ -99,6 +101,10 @@ public class ModelAttachmentCosmetic extends CosmeticAsset {
     public List<String> getVariants() {
         if (textureConfig instanceof VariantTextureConfig variantTextureConfig) {
             return variantTextureConfig.getVariants().keySet().stream().toList();
+        }
+
+        if (textureConfig instanceof GradientTextureConfig gradientTextureConfig) {
+            return CosmeticsModule.get().getRegistry().getGradientSets().get(gradientTextureConfig.getGradientSet()).getGradients().keySet().stream().toList();
         }
 
         return List.of();

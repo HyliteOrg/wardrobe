@@ -54,6 +54,8 @@ public class WardrobeWearCommand extends AbstractPlayerCommand {
             } else variant = provided;
         }
 
+        if (variant == null && !cosmetic.getVariants().isEmpty()) variant = cosmetic.getVariants().getFirst();
+
         WardrobeGroup cosmeticGroup = cosmetic.getGroup();
 
         wardrobeComponent.setCosmetic(cosmeticGroup, new CosmeticSaveData(id, variant));

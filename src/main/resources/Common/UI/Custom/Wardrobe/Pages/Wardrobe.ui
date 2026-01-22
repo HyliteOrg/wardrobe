@@ -3,7 +3,7 @@ $Sounds = "../../Sounds.ui";
 
 @PartPreviewHeight = 149;
 @PartPreviewMargin = 10;
-@PartPreviewRows = 4.75;
+@PartPreviewRows = 3.5;
 
 @HeadlineLabelStyle = (
   LabelStyle(RenderBold: true, RenderUppercase: true, FontSize: 18, TextColor: #96a9be, VerticalAlignment: Start)
@@ -108,6 +108,32 @@ Group {
     LayoutMode: TopScrolling;
     ScrollbarStyle: $Common.@DefaultScrollbarStyle;
   }
+
+            Group #ColorsContainer {
+              LayoutMode: Top;
+
+              Group {
+                LayoutMode: Left;
+                Anchor: (Height: 25, Top: 30);
+
+                Label #ColorsLabel {
+                  Text: %client.myAvatar.color;
+                  Style: @HeadlineLabelStyle;
+                  Anchor: (Top: -3); // Since there seems to be some spacing at the top of the text we need to shift this a bit upwards
+                }
+
+                Group {
+                  FlexWeight: 1;
+                }
+              }
+
+              $Common.@ContentSeparator {}
+
+              Group #Colors {
+                Anchor: (Top: 10);
+                LayoutMode: Left;
+              }
+            }
   }
 }
 }
