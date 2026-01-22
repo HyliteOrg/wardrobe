@@ -14,7 +14,6 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmetic;
-import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.impl.asset.CosmeticSlotAsset;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.CosmeticAsset;
 import dev.hardaway.wardrobe.impl.system.PlayerWardrobeComponent;

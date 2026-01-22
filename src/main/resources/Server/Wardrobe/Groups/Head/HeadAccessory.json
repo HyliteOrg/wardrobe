@@ -1,5 +1,7 @@
 {
-  "NameKey": "client.myAvatar.tabs.HeadAccessory",
+  "TranslationProperties": {
+    "Name": "client.myAvatar.tabs.HeadAccessory"
+  },
   "CosmeticType": "HeadAccessory",
   "Category": "Head",
   "Icon": "Icons/Wardrobe/Groups/HeadAccessory@2x.png",

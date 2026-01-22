@@ -3,8 +3,8 @@ package dev.hardaway.wardrobe.impl.asset.cosmetic.appearance;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import dev.hardaway.wardrobe.api.cosmetic.CosmeticAppearance;
-import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.TextureConfig;
+import dev.hardaway.wardrobe.api.cosmetic.apperance.CosmeticAppearance;
+import dev.hardaway.wardrobe.api.cosmetic.apperance.TextureConfig;
 
 public class ModelCosmeticAppearance implements CosmeticAppearance {
 

@@ -1,5 +1,7 @@
 {
-  "NameKey": "client.myAvatar.tabs.General",
+  "TranslationProperties": {
+    "Name": "client.myAvatar.tabs.General"
+  },
   "Icon": "Icons/Wardrobe/Categories/General@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Categories/GeneralSelected@2x.png",
   "Order": 1

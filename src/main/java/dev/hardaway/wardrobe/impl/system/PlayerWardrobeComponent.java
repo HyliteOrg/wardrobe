@@ -80,7 +80,7 @@ public class PlayerWardrobeComponent implements PlayerWardrobe, Component<Entity
         }
 
         // TODO: fix api so i dont have to do this
-        CosmeticSaveData cosmeticSaveData = new CosmeticSaveData(cosmetic.getCosmeticId(), cosmetic.getVariantId());
+        CosmeticSaveData cosmeticSaveData = new CosmeticSaveData(cosmetic.getCosmeticId(), cosmetic.getVariantId(), cosmetic.getTextureId());
         PlayerCosmetic lastCosmetic = this.cosmetics.put(slot, cosmeticSaveData);
         if (lastCosmetic != null) {
             this.cosmeticIdSet.remove(lastCosmetic.getCosmeticId());

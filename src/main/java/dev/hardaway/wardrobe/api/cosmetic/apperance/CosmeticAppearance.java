@@ -1,7 +1,6 @@
-package dev.hardaway.wardrobe.api.cosmetic;
+package dev.hardaway.wardrobe.api.cosmetic.apperance;
 
 import com.hypixel.hytale.codec.lookup.BuilderCodecMapCodec;
-import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.TextureConfig;
 
 public interface CosmeticAppearance {
 

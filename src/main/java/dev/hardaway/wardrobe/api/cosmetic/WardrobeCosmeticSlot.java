@@ -11,6 +11,7 @@ public interface WardrobeCosmeticSlot extends WardrobeTab {
     static DefaultAssetMap<String, ? extends WardrobeCosmeticSlot> getAssetMap() {
         return CosmeticSlotAsset.getAssetMap(); // TODO: registry
     }
+
     WardrobeCategory getCategory();
 
     @Nullable

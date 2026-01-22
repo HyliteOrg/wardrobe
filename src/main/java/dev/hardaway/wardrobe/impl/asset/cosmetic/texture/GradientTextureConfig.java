@@ -3,17 +3,11 @@ package dev.hardaway.wardrobe.impl.asset.cosmetic.texture;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
-import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticAssetValidator;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
+import dev.hardaway.wardrobe.api.cosmetic.apperance.TextureConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class GradientTextureConfig implements TextureConfig {
 

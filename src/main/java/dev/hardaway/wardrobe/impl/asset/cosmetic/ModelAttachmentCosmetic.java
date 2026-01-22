@@ -8,9 +8,9 @@ import dev.hardaway.wardrobe.api.cosmetic.AppearanceCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeVisibility;
+import dev.hardaway.wardrobe.api.cosmetic.apperance.CosmeticAppearance;
+import dev.hardaway.wardrobe.api.cosmetic.apperance.TextureConfig;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
-import dev.hardaway.wardrobe.api.cosmetic.CosmeticAppearance;
-import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.TextureConfig;
 
 public class ModelAttachmentCosmetic extends CosmeticAsset implements AppearanceCosmetic {
 

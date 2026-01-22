@@ -1,5 +1,7 @@
 {
-  "NameKey": "client.myAvatar.tabs.Face",
+  "TranslationProperties": {
+    "Name": "client.myAvatar.tabs.Face"
+  },
   "CosmeticType": "Face",
   "Category": "General",
   "Icon": "Icons/Wardrobe/Groups/Face@2x.png",

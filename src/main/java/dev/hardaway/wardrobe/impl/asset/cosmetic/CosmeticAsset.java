@@ -9,7 +9,6 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.EnumCodec;
-import com.hypixel.hytale.codec.validation.Validators;
 import dev.hardaway.wardrobe.WardrobePlugin;
 import dev.hardaway.wardrobe.api.WardrobeTranslationProperties;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmetic;

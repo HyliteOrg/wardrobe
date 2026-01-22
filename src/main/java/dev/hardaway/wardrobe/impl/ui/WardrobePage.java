@@ -32,12 +32,12 @@ import dev.hardaway.wardrobe.api.cosmetic.AppearanceCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCategory;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
+import dev.hardaway.wardrobe.api.cosmetic.apperance.TextureConfig;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.impl.asset.CosmeticCategoryAsset;
 import dev.hardaway.wardrobe.impl.asset.CosmeticSlotAsset;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.CosmeticAsset;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.GradientTextureConfig;
-import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.TextureConfig;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.VariantTextureConfig;
 import dev.hardaway.wardrobe.impl.system.CosmeticSaveData;
 import dev.hardaway.wardrobe.impl.system.PlayerWardrobeComponent;
@@ -53,7 +53,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEventData> {
@@ -180,7 +179,8 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             }
 
 
-            wardrobeComponent.setCosmetic(selectedGroup, new CosmeticSaveData(cosmetic.getId(), textureId));
+            // TODO: cosmetic variants
+            wardrobeComponent.setCosmetic(selectedGroup, new CosmeticSaveData(cosmetic.getId(), "", textureId));
         }
 
         wardrobeComponent.rebuild();

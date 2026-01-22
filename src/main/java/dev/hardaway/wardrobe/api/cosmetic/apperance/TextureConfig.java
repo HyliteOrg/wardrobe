@@ -1,11 +1,8 @@
-package dev.hardaway.wardrobe.impl.asset.cosmetic.texture;
+package dev.hardaway.wardrobe.api.cosmetic.apperance;
 
 import com.hypixel.hytale.codec.lookup.BuilderCodecMapCodec;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 public interface TextureConfig {
 

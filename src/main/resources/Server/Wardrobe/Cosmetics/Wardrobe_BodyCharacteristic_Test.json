@@ -1,8 +1,20 @@
 {
   "Type": "PlayerModel",
-  "Group": "BodyCharacteristic",
-  "ModelAsset": "Player",
-  "TextureConfig": {
-    "Texture": "Characters/Player_Textures/Outlander_1.png"
+  "TranslationProperties": {
+    "Name": "wardrobe.cosmetics.Wardrobe_HeadAccessory_Kweebec_Mask.name",
+    "Description": "wardrobe.cosmetics.Wardrobe_HeadAccessory_Kweebec_Mask.description"
+  },
+  "CosmeticSlot": "BodyCharacteristic",
+  "RequiresPermission": "wardrobe.cosmetic.headaccessory.kweebecmask",
+  "HiddenCosmeticSlots": [
+    "Haricut",
+    "Ears",
+    "Face"
+  ],
+  "Appearance": {
+    "Model": "Kweebec_Sapling_Brown",
+    "TextureConfig": {
+      "Texture": "NPC/Intelligent/Kweebec_Sapling/Models/Model_Textures/Brown_Dark.png"
+    }
   }
 }

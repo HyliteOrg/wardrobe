@@ -1,5 +1,7 @@
 {
-  "NameKey": "client.myAvatar.tabs.Mouth",
+  "TranslationProperties": {
+    "Name": "client.myAvatar.tabs.Mouth"
+  },
   "CosmeticType": "Mouths",
   "Category": "General",
   "Icon": "Icons/Wardrobe/Groups/Mouth@2x.png",

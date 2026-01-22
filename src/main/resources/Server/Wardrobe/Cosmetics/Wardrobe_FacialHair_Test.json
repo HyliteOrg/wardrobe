@@ -1,9 +1,0 @@
-{
-  "Group": "FacialHair",
-  "Model": "Characters/Body_Attachments/Beards/DoubleBraid.blockymodel",
-  "TextureConfig": {
-    "Type": "Gradient",
-    "GradientSet": "Hair",
-    "GrayscaleTexture": "Characters/Body_Attachments/Beards/DoubleBraid_Greyscale.png"
-  }
-}

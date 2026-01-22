@@ -1,5 +1,7 @@
 {
-  "NameKey": "client.myAvatar.tabs.Overpants",
+  "TranslationProperties": {
+    "Name": "client.myAvatar.tabs.Overpants"
+  },
   "CosmeticType": "Overpants",
   "Category": "Legs",
   "Icon": "Icons/Wardrobe/Groups/Overpants@2x.png",

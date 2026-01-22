@@ -5,15 +5,12 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.validation.Validators;
-import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
+import dev.hardaway.wardrobe.api.cosmetic.apperance.TextureConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class VariantTextureConfig implements TextureConfig {
 

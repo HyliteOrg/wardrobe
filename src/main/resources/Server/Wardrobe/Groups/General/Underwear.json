@@ -1,5 +1,7 @@
 {
-  "NameKey": "client.myAvatar.tabs.Underwear",
+  "TranslationProperties": {
+    "Name": "client.myAvatar.tabs.Underwear"
+  },
   "CosmeticType": "Underwear",
   "Category": "General",
   "Icon": "Icons/Wardrobe/Groups/Underwear@2x.png",

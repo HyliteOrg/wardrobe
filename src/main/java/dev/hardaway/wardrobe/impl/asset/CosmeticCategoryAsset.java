@@ -70,7 +70,7 @@ public class CosmeticCategoryAsset implements WardrobeCategory, JsonAssetWithMap
 
     @Override
     public WardrobeTranslationProperties getTranslationProperties() {
-       return translationProperties;
+        return translationProperties;
     }
 
     @Override

@@ -13,7 +13,8 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.ser
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.wardrobe.api.cosmetic.CosmeticAppearance;
+import dev.hardaway.wardrobe.api.cosmetic.apperance.CosmeticAppearance;
+import dev.hardaway.wardrobe.api.cosmetic.apperance.TextureConfig;
 import dev.hardaway.wardrobe.impl.asset.CosmeticCategoryAsset;
 import dev.hardaway.wardrobe.impl.asset.CosmeticSlotAsset;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.CosmeticAsset;
@@ -23,7 +24,6 @@ import dev.hardaway.wardrobe.impl.asset.cosmetic.appearance.ModelCosmeticAppeara
 import dev.hardaway.wardrobe.impl.asset.cosmetic.appearance.VariantCosmeticAppearance;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.GradientTextureConfig;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.StaticTextureConfig;
-import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.TextureConfig;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.VariantTextureConfig;
 import dev.hardaway.wardrobe.impl.command.TestCommand;
 import dev.hardaway.wardrobe.impl.command.WardrobeCommand;

@@ -26,7 +26,6 @@ import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
-import dev.hardaway.wardrobe.impl.asset.CosmeticSlotAsset;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
