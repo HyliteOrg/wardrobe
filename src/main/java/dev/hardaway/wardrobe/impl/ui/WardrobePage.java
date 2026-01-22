@@ -14,6 +14,8 @@ import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.ui.Anchor;
+import com.hypixel.hytale.server.core.ui.Value;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
@@ -166,6 +168,11 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     public void buildCosmeticList(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, Ref<EntityStore> ref, Store<EntityStore> store, String searchQuery) {
         commandBuilder.clear("#Cosmetics");
         commandBuilder.clear("#Colors");
+        Anchor anchor = new Anchor();
+        anchor.setHeight(Value.of((int) (150*4.8 + 10 * (4.8-1) + 14)));
+        anchor.setTop(Value.of(10));
+        commandBuilder.setObject("#Cosmetics.Anchor", anchor);
+        commandBuilder.set("#ColorsContainer.Visible", false);
 
         List<WardrobeCosmetic> cosmetics = cosmeticMap.get(selectedGroup);
         if (!searchQuery.isEmpty()) {
@@ -197,25 +204,29 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                 // TODO: highlight if selected cosmetic
                 List<String> variants = cosmetic.getVariants();
                 if (!variants.isEmpty()) {
+                    anchor.setHeight(Value.of((int) (150*3.5 + 10 * (3.5-1) + 14)));
+                    commandBuilder.setObject("#Cosmetics.Anchor", anchor);
+                    commandBuilder.set("#ColorsContainer.Visible", true);
+
                     for (int c = 0; c < variants.size(); c++) {
                         String name = variants.get(c);
                         String[] baseColor = null;
 
-                        if (cosmetic instanceof ModelAttachmentCosmetic modelAttachmentCosmetic) {
-                            if (modelAttachmentCosmetic.getTextureConfig() instanceof VariantTextureConfig variantTextureConfig) {
-                                baseColor = variantTextureConfig.getVariants().get(name).getBaseColor();
+                        if (cosmetic instanceof ModelAttachmentCosmetic m) {
+                            if (m.getTextureConfig() instanceof VariantTextureConfig v) {
+                                baseColor = v.getVariants().get(name).getBaseColor();
                             }
 
-                            if (modelAttachmentCosmetic.getTextureConfig() instanceof GradientTextureConfig gradientTextureConfig) {
-                                baseColor = CosmeticsModule.get().getRegistry().getGradientSets().get(gradientTextureConfig.getGradientSet()).getGradients().get(name).getBaseColor();
+                            if (m.getTextureConfig() instanceof GradientTextureConfig g) {
+                                baseColor = CosmeticsModule.get().getRegistry().getGradientSets().get(g.getGradientSet()).getGradients().get(name).getBaseColor();
                             }
-                        } else if (cosmetic instanceof PlayerModelCosmetic playerModelCosmetic) {
-                            if (playerModelCosmetic.getTextureConfig() instanceof VariantTextureConfig variantTextureConfig) {
-                                baseColor = variantTextureConfig.getVariants().get(name).getBaseColor();
+                        } else if (cosmetic instanceof PlayerModelCosmetic p) {
+                            if (p.getTextureConfig() instanceof VariantTextureConfig v) {
+                                baseColor = v.getVariants().get(name).getBaseColor();
                             }
 
-                            if (playerModelCosmetic.getTextureConfig() instanceof GradientTextureConfig gradientTextureConfig) {
-                                baseColor = CosmeticsModule.get().getRegistry().getGradientSets().get(gradientTextureConfig.getGradientSet()).getGradients().get(name).getBaseColor();
+                            if (p.getTextureConfig() instanceof GradientTextureConfig g) {
+                                baseColor = CosmeticsModule.get().getRegistry().getGradientSets().get(g.getGradientSet()).getGradients().get(name).getBaseColor();
                             }
                         }
 
@@ -224,6 +235,10 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                         String colorSelector = "#Colors[" + c + "]";
                         commandBuilder.append("#Colors", "Wardrobe/Pages/ColorOption.ui");
                         commandBuilder.set(colorSelector + " #Button #Colors.Background", "#" + baseColor[0]);
+                        for (int n = 0; n < baseColor.length; n++) {
+                            commandBuilder.append(colorSelector + " #Button #Colors", "Wardrobe/Pages/Color.ui");
+                            commandBuilder.set(colorSelector + " #Button #Colors[" + n + "].Background", baseColor[n]);
+                        }
                         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, colorSelector + " #Button", EventData.of("TextureId", name), false);
 
                         if (wornCosmetic.getTextureId().equals(name)) {

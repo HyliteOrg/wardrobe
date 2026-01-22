@@ -3,10 +3,16 @@ $Sounds = "../../Sounds.ui";
 
 @PartPreviewHeight = 149;
 @PartPreviewMargin = 10;
-@PartPreviewRows = 3.5;
+@PartPreviewRows = 4.75;
 
 @HeadlineLabelStyle = (
-  LabelStyle(RenderBold: true, RenderUppercase: true, FontSize: 18, TextColor: #96a9be, VerticalAlignment: Start)
+  LabelStyle(
+    RenderBold: true,
+    RenderUppercase: true,
+    FontSize: 18,
+    TextColor: #96a9be,
+    VerticalAlignment: Start
+  )
 );
 
 Group {
@@ -19,123 +25,126 @@ Group {
 
   Anchor: (Width: 716);
 
-  #Title {
-  $Common.@Title #NameLabel {
-  @Text = %client.myAvatar.title;
-}
-}
+    #Title {
+      $Common.@Title #NameLabel {
+        @Text = %client.myAvatar.title;
+      }
+    }
 
-  #Content {
-  LayoutMode: Left;
-  Padding: (Horizontal: 10, Top: 2, Bottom: 5);
-
-  Group #Categories {
-    Anchor: (Width: 65, Left: 2);
-    Padding: (Top: 10);
-    LayoutMode: Top;
-  }
-
-  $Common.@VerticalSeparator {}
-
-  Group #PartListContainer {
-  LayoutMode: Left;
-
-  Group #Groups {
-  Anchor: (Width: 65, Left: 2);
-  Padding: (Top: 10);
-  LayoutMode: Top;
-}
-
-  $Common.@VerticalSeparator {}
-
-  Group {
-    FlexWeight: 1;
-    LayoutMode: Top;
-    Padding: (Horizontal: 20, Top: 16);
-    Anchor: (Width: 553 + 10);
-
-    Group {
+    #Content {
       LayoutMode: Left;
-      Anchor: (Height: 25);
+      Padding: (Horizontal: 10, Top: 2, Bottom: 5);
 
-      Label #CategoryName {
-      Style: @HeadlineLabelStyle;
-      Anchor: (Top: -3);
-      Text: "";
-    }
-
-      Group #CategoryLabelArrow {
-      Anchor: (Width: 6, Height: 10, Top: 4, Horizontal: 8);
-      Background: (TexturePath: "../../Common/ContainerTitleArrow.png");
-      Visible: true;
-    }
-
-      Label #SubCategoryName {
-      Style: @HeadlineLabelStyle;
-      Anchor: (Top: -3);
-      Text: "";
-    }
-
-      Group {
-        FlexWeight: 1;
+      Group #Categories {
+        Anchor: (Width: 65, Left: 2);
+        Padding: (Top: 10);
+        LayoutMode: Top;
       }
-    }
 
-    $Common.@ContentSeparator {}
+      $Common.@VerticalSeparator {}
 
-      Group #Filters {
+      Group #PartListContainer {
         LayoutMode: Left;
-        Anchor: (Top: 10);
 
-        TextField #SearchField {
-          Anchor: (Height: 32);
-          FlexWeight: 1;
-          PlaceholderText: %client.general.searchField.placeholder;
-          Style: (FontSize: 15);
-          PlaceholderStyle: (TextColor: #4b576c, FontSize: 15);
-          Padding: (Horizontal: 12, Left: 28);
-          Decoration: (
-            Default: (
-              Background: (TexturePath: "../Icons/SearchFieldPatch.png", Border: 8),
-              Icon: (Texture: "../Icons/SearchFieldIcon.png", Width: 15, Height: 15, Offset: 8)
-            )
-          );
+        Group #Groups {
+          Anchor: (Width: 65, Left: 2);
+          Padding: (Top: 10);
+          LayoutMode: Top;
         }
-      }
 
-    Group #Cosmetics {
-    Anchor: (Height: @PartPreviewHeight * @PartPreviewRows + @PartPreviewMargin * (@PartPreviewRows - 1) + 14, Top: 10);
-    LayoutMode: TopScrolling;
-    ScrollbarStyle: $Common.@DefaultScrollbarStyle;
-  }
+        $Common.@VerticalSeparator {}
 
-            Group #ColorsContainer {
-              LayoutMode: Top;
+        Group {
+          FlexWeight: 1;
+          LayoutMode: Top;
+          Padding: (Horizontal: 20, Top: 16);
+          Anchor: (Width: 553 + 10);
 
-              Group {
-                LayoutMode: Left;
-                Anchor: (Height: 25, Top: 30);
+          Group {
+            LayoutMode: Left;
+            Anchor: (Height: 25);
 
-                Label #ColorsLabel {
-                  Text: %client.myAvatar.color;
-                  Style: @HeadlineLabelStyle;
-                  Anchor: (Top: -3); // Since there seems to be some spacing at the top of the text we need to shift this a bit upwards
-                }
+            Label #CategoryName {
+              Style: @HeadlineLabelStyle;
+              Anchor: (Top: -3);
+              Text: "";
+            }
 
-                Group {
-                  FlexWeight: 1;
-                }
-              }
+            Group #CategoryLabelArrow {
+              Anchor: (Width: 6, Height: 10, Top: 4, Horizontal: 8);
+              Background: (TexturePath: "../../Common/ContainerTitleArrow.png");
+              Visible: true;
+            }
 
-              $Common.@ContentSeparator {}
+            Label #SubCategoryName {
+              Style: @HeadlineLabelStyle;
+              Anchor: (Top: -3);
+              Text: "";
+            }
 
-              Group #Colors {
-                Anchor: (Top: 10);
-                LayoutMode: Left;
+            Group {
+              FlexWeight: 1;
+            }
+          }
+
+          $Common.@ContentSeparator {}
+
+          Group #Filters {
+            LayoutMode: Left;
+            Anchor: (Top: 10);
+
+            TextField #SearchField {
+              Anchor: (Height: 32);
+              FlexWeight: 1;
+              PlaceholderText: %client.general.searchField.placeholder;
+              Style: (FontSize: 15);
+              PlaceholderStyle: (TextColor: #4b576c, FontSize: 15);
+              Padding: (Horizontal: 12, Left: 28);
+              Decoration: (
+                Default: (
+                  Background: (
+                    TexturePath: "../Icons/SearchFieldPatch.png",
+                    Border: 8
+                  ),
+                  Icon: (
+                    Texture: "../Icons/SearchFieldIcon.png",
+                    Width: 15,
+                    Height: 15,
+                    Offset: 8
+                  )
+                )
+              );
+            }
+          }
+
+          Group #Cosmetics {
+            LayoutMode: TopScrolling;
+            ScrollbarStyle: $Common.@DefaultScrollbarStyle;
+          }
+
+          Group #ColorsContainer {
+            LayoutMode: Top;
+            Visible: true;
+
+            Group {
+              LayoutMode: Left;
+              Anchor: (Height: 25, Top: 30);
+
+              Label #ColorsLabel {
+                Text: %client.myAvatar.color;
+                Style: @HeadlineLabelStyle;
               }
             }
+
+            $Common.@ContentSeparator {}
+
+            Group #Colors {
+              Anchor: (Top: 10);
+              LayoutMode: Left;
+            }
+          }
+        }
+      }
+    }
   }
-}
-}
-}
 }
