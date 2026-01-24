@@ -4,16 +4,14 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.component.Component;
+import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import dev.hardaway.wardrobe.WardrobePlugin;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.player.PlayerWardrobe;
 
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PlayerWardrobeComponent implements PlayerWardrobe, Component<EntityStore> {
@@ -97,5 +95,9 @@ public class PlayerWardrobeComponent implements PlayerWardrobe, Component<Entity
     @Override
     public Component<EntityStore> clone() {
         return new PlayerWardrobeComponent(this.cosmetics);
+    }
+
+    public static ComponentType<EntityStore, PlayerWardrobeComponent> getComponentType() {
+        return WardrobePlugin.get().getPlayerWardrobeComponentType();
     }
 }

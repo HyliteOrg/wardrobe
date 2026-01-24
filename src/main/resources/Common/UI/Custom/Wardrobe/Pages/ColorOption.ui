@@ -26,6 +26,10 @@ Group {
       MaskTexturePath: "../Icons/ColorOptionMask.png";
     }
 
+    AssetImage #Icon {
+      Anchor: (Width: 44, Height: 44);
+    }
+
     Group {
       Anchor: (Width: 30, Height: 30);
       Background: "../Icons/ColorOptionFrame.png";

@@ -100,7 +100,7 @@ public class WardrobePlugin extends JavaPlugin {
         );
 
         this.getCommandRegistry().registerCommand(new TestCommand(this.playerWardrobeComponentType));
-        this.getCommandRegistry().registerCommand(new WardrobeCommand(this.playerWardrobeComponentType));
+        this.getCommandRegistry().registerCommand(new WardrobeCommand());
 
     }
 

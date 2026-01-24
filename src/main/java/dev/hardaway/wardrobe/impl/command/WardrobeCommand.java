@@ -1,7 +1,6 @@
 package dev.hardaway.wardrobe.impl.command;
 
 
-import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.GameMode;
@@ -20,14 +19,12 @@ import javax.annotation.Nonnull;
 
 public class WardrobeCommand extends AbstractPlayerCommand {
 
-    private final ComponentType<EntityStore, PlayerWardrobeComponent> playerWardrobeComponentType;
-
-    public WardrobeCommand(ComponentType<EntityStore, PlayerWardrobeComponent> wardrobeComponentType) {
+    public WardrobeCommand() {
         super("wardrobe", "Customise your avatar's cosmetics");
         this.setPermissionGroup(GameMode.Adventure);
-        this.playerWardrobeComponentType = wardrobeComponentType;
-        this.addSubCommand(new WardrobeRemoveCommand(wardrobeComponentType));
-        this.addSubCommand(new WardrobeWearCommand(wardrobeComponentType));
+        this.addSubCommand(new WardrobeRemoveCommand());
+        this.addSubCommand(new WardrobeWearCommand());
+        this.addSubCommand(new WardrobeResetCommand());
     }
 
     @Override
@@ -35,6 +32,6 @@ public class WardrobeCommand extends AbstractPlayerCommand {
         Player player = store.getComponent(ref, Player.getComponentType());
 
         if (player != null)
-            player.getPageManager().openCustomPage(ref, store, new WardrobePage(playerRef, CustomPageLifetime.CanDismiss, this.playerWardrobeComponentType));
+            player.getPageManager().openCustomPage(ref, store, new WardrobePage(playerRef, CustomPageLifetime.CanDismiss, PlayerWardrobeComponent.getComponentType()));
     }
 }

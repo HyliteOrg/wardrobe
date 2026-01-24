@@ -1,6 +1,5 @@
 package dev.hardaway.wardrobe.impl.command;
 
-import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.GameMode;
@@ -22,21 +21,19 @@ import javax.annotation.Nonnull;
 
 public class WardrobeRemoveCommand extends AbstractPlayerCommand {
 
-    private final ComponentType<EntityStore, PlayerWardrobeComponent> playerWardrobeComponentType;
     private final RequiredArg<String> cosmeticArg;
     private final FlagArg isGroup;
 
-    public WardrobeRemoveCommand(ComponentType<EntityStore, PlayerWardrobeComponent> wardrobeComponentType) {
+    public WardrobeRemoveCommand() {
         super("remove", "Take off cosmetics");
         this.setPermissionGroup(GameMode.Adventure);
-        this.playerWardrobeComponentType = wardrobeComponentType;
         this.cosmeticArg = this.withRequiredArg("cosmetic", "The cosmetic or cosmetic group to remove", ArgTypes.STRING);
         this.isGroup = this.withFlagArg("group", "If the specified id is of a cosmetic group");
     }
 
     @Override
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
-        PlayerWardrobeComponent wardrobeComponent = store.ensureAndGetComponent(ref, this.playerWardrobeComponentType);
+        PlayerWardrobeComponent wardrobeComponent = store.ensureAndGetComponent(ref, PlayerWardrobeComponent.getComponentType());
         String id = cosmeticArg.get(context);
 
         String group;

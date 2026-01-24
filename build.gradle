@@ -6,8 +6,8 @@ plugins {
 import org.gradle.internal.os.OperatingSystem
 
 ext {
-    if (project.hasProperty('hytale_home')) {
-        hytaleHome = project.findProperty('hytale_home')
+    if (project.hasProperty('hytaleHome')) {
+        hytaleHome = project.findProperty('hytaleHome')
     }
     else {
         def os = OperatingSystem.current()
