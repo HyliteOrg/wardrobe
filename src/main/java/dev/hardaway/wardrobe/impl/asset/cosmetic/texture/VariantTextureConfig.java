@@ -9,13 +9,13 @@ import dev.hardaway.wardrobe.api.cosmetic.apperance.TextureConfig;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class VariantTextureConfig implements TextureConfig {
 
     public static final BuilderCodec<VariantTextureConfig> CODEC = BuilderCodec.builder(VariantTextureConfig.class, VariantTextureConfig::new)
-            .append(new KeyedCodec<>("Variants", new MapCodec<>(Entry.CODEC, HashMap::new), true), (t, value) -> t.variants = value, t -> t.variants).add()
+            .append(new KeyedCodec<>("Variants", new MapCodec<>(Entry.CODEC, LinkedHashMap::new), true), (t, value) -> t.variants = value, t -> t.variants).add()
             .build();
 
     private Map<String, Entry> variants;
