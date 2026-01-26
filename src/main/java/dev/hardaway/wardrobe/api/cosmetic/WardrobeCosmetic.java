@@ -1,9 +1,12 @@
 package dev.hardaway.wardrobe.api.cosmetic;
 
-import dev.hardaway.wardrobe.api.WardrobePermissionHolder;
 import dev.hardaway.wardrobe.api.WardrobeTranslatable;
+import dev.hardaway.wardrobe.api.cosmetic.variant.CosmeticColorEntry;
+import dev.hardaway.wardrobe.api.cosmetic.variant.CosmeticVariantEntry;
 
 import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
 
 public interface WardrobeCosmetic extends Cosmetic, WardrobeTranslatable {
 
@@ -14,5 +17,7 @@ public interface WardrobeCosmetic extends Cosmetic, WardrobeTranslatable {
     @Nullable
     String getIconPath();
 
-//    void createWardrobeEntry();
+    Map<String, CosmeticVariantEntry> getVariantEntries();
+
+    List<CosmeticColorEntry> getColorEntries(@Nullable String variantId);
 }

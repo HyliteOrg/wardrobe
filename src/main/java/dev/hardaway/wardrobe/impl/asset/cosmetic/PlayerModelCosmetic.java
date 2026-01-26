@@ -4,6 +4,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import dev.hardaway.wardrobe.api.WardrobeTranslationProperties;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.AppearanceCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
@@ -11,7 +12,18 @@ import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeVisibility;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.CosmeticAppearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
+import dev.hardaway.wardrobe.api.cosmetic.variant.CosmeticColorEntry;
+import dev.hardaway.wardrobe.api.cosmetic.variant.CosmeticVariantEntry;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
+import dev.hardaway.wardrobe.impl.asset.cosmetic.appearance.VariantCosmeticAppearance;
+import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.GradientTextureConfig;
+import dev.hardaway.wardrobe.impl.asset.cosmetic.texture.VariantTextureConfig;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosmetic {
 
@@ -66,5 +78,49 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
                 model.getPhobia(),
                 model.getPhobiaModelAssetId()
         ));
+    }
+
+    // TODO: create after decoding
+    @Override
+    public Map<String, CosmeticVariantEntry> getVariantEntries() {
+        String[] variants = this.appearance.collectVariants();
+        if (variants.length == 0) return Map.of();
+
+        if (this.appearance instanceof VariantCosmeticAppearance v) {
+            Map<String, CosmeticVariantEntry> entries = new LinkedHashMap<>();
+            for (String variantId : variants) {
+                VariantCosmeticAppearance.Entry entry = v.getVariants().get(variantId);
+                entries.put(variantId, new CosmeticVariantEntry(
+                        variantId,
+                        entry.getTranslationProperties(),
+                        entry.getIconPath()
+                ));
+            }
+            return entries;
+        }
+
+        return Map.of();
+    }
+
+    @Override
+    public List<CosmeticColorEntry> getColorEntries(@Nullable String variantId) {
+        TextureConfig textureConfig = this.appearance.getTextureConfig(variantId);
+        String[] textures = textureConfig.collectVariants();
+        if (textures.length == 0) return List.of();
+
+        List<CosmeticColorEntry> entries = new ArrayList<>();
+        for (String textureId : textures) {
+            String[] colors;
+            if (textureConfig instanceof VariantTextureConfig vt) {
+                colors = vt.getVariants().get(textureId).getColors();
+            } else if (textureConfig instanceof GradientTextureConfig gt) {
+                colors = CosmeticsModule.get().getRegistry().getGradientSets()
+                        .get(gt.getGradientSet()).getGradients().get(textureId).getBaseColor();
+            } else {
+                continue;
+            }
+            entries.add(new CosmeticColorEntry(textureId, colors));
+        }
+        return entries;
     }
 }
