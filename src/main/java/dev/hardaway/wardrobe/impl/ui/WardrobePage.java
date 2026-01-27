@@ -127,9 +127,10 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             case Discard -> {
                 if (baseWardrobe != null) {
                     store.putComponent(ref, PlayerWardrobe.getComponentType(), (PlayerWardrobeComponent) baseWardrobe);
-                    baseWardrobe.rebuild();
+                } else if (wardrobe != null) {
+                    wardrobe.clearCosmetics();
+                    wardrobe.rebuild();
                 }
-                else if (wardrobe != null) wardrobe.clearCosmetics();
 
                 shouldClose = true;
                 close();
