@@ -119,6 +119,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             case Reset -> {
                 if (wardrobe != null) {
                     wardrobe.clearCosmetics();
+                    wardrobe.rebuild();
                     buildCosmetics(commandBuilder, eventBuilder, ref, store);
                     shouldClose = baseWardrobe == null;
                 }
