@@ -1,0 +1,3 @@
+items.Mirror.name = Mirror
+items.Mirror.description = Allows an Avatar to customise their appearance.
+items.Mirror.interaction = Press [{key}] to customise your appearance

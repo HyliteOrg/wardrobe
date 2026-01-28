@@ -21,7 +21,7 @@ $Sounds = "../../Sounds.ui";
 @DefaultTooltipBackground = (TexturePath: "../../Common/TooltipDefaultBackground.png", Border: 24);
 
 Group {
-  Anchor: (Top: 110, Left: 30, MaxWidth: 1880, Height: 924);
+  Anchor: (Top: 110, Left: -20, MaxWidth: 1880, Height: 924);
   LayoutMode: Left;
   Padding: (Horizontal: 30);
 
@@ -173,7 +173,7 @@ Group {
   }
 
   Group {
-    Anchor: (Left: 150, Bottom: 8);
+    Anchor: (Left: 20, Bottom: 8);
 
     Group {
       Anchor: (Bottom: 0, Height: 36);

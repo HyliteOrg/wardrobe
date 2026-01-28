@@ -1,0 +1,90 @@
+{
+  "TranslationProperties": {
+    "Name": "wardrobe.items.Mirror.name",
+    "Description": "wardrobe.items.Mirror.description"
+  },
+  "MaxStack": 1,
+  "ItemSoundSetId": "ISS_Items_Metal",
+  "PlayerAnimationsId": "Block",
+  "Recipe": {
+    "Input": [
+      {
+        "Quantity": 5,
+        "ResourceTypeId": "Metal_Bars"
+      },
+      {
+        "Quantity": 3,
+        "ItemId": "Ingredient_Crystal_White"
+      }
+    ],
+    "TimeSeconds": 3,
+    "BenchRequirement": [
+      {
+        "Categories": [
+          "Furniture_Misc"
+        ],
+        "Id": "Furniture_Bench"
+      }
+    ]
+  },
+  "BlockType": {
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Miscellaneous/Mirror.png",
+        "Weight": 1
+      }
+    ],
+    "DrawType": "Model",
+    "VariantRotation": "NESW",
+    "BlockParticleSetId": "Metal",
+    "ParticleColor": "#defdff",
+    "Flags": {
+      "IsUsable": true
+    },
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          "Open_Wardrobe"
+        ]
+      }
+    },
+    "Support": {
+      "Down": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "HitboxType": "Door",
+    "BlockSoundSetId": "Glass",
+    "CustomModel": "Blocks/Miscellaneous/Mirror.blockymodel",
+    "Material": "Solid",
+    "InteractionHitboxType": "Door",
+    "InteractionHint": "wardrobe.items.Mirror.interaction",
+    "PlacementSettings": {
+      "RotationMode": "BlockNormal",
+      "WallPlacementOverrideBlockId": "Mirror_Wall"
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks"
+      }
+    }
+  },
+  "Icon": "Icons/ItemsGenerated/Mirror.png",
+  "IconProperties": {
+    "Scale": 0.5,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      0,
+      -25
+    ]
+  },
+  "Categories": [
+    "Furniture.Furniture"
+  ]
+}

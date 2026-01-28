@@ -1,0 +1,69 @@
+{
+  "BlockType": {
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Miscellaneous/Mirror.png",
+        "Weight": 1
+      }
+    ],
+    "VariantRotation": "NESW",
+    "BlockParticleSetId": "Metal",
+    "ParticleColor": "#defdff",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          "Open_Wardrobe"
+        ]
+      }
+    },
+    "HitboxType": "Painting_1x2",
+    "BlockSoundSetId": "Glass",
+    "CustomModel": "Blocks/Miscellaneous/Mirror_Wall.blockymodel",
+    "InteractionHitboxType": "Painting_1x2",
+    "InteractionHint": "wardrobe.items.Mirror.interaction",
+    "PlacementSettings": {
+      "RotationMode": "BlockNormal",
+      "FloorPlacementOverrideBlockId": "Mirror",
+      "AllowRotationKey": false
+    },
+    "Support": {
+      "BlockSides": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "Flags": {
+      "IsUsable": true
+    },
+    "Material": "Solid",
+    "DrawType": "Model",
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks",
+        "ItemId": "Mirror"
+      }
+    }
+  },
+  "Quality": "Hidden",
+  "TranslationProperties": {
+    "Name": "wardrobe.items.Mirror.name",
+    "Description": "wardrobe.items.Mirror.description"
+  },
+  "IconProperties": {
+    "Scale": 0.55,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      10,
+      -35
+    ]
+  },
+  "MaxStack": 1,
+  "ItemSoundSetId": "ISS_Items_Metal",
+  "Icon": "Icons/ItemsGenerated/Mirror_Wall.png",
+  "PlayerAnimationsId": "Block"
+}
