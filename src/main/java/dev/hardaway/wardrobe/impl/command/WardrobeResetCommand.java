@@ -16,13 +16,13 @@ import javax.annotation.Nonnull;
 public class WardrobeResetCommand extends AbstractPlayerCommand {
 
     public WardrobeResetCommand() {
-        super("reset", "Reset all Wardrobe related data");
+        super("reset", "server.commands.wardrobe.reset.description");
         this.setPermissionGroup(GameMode.Adventure);
     }
 
     @Override
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
         store.removeComponentIfExists(ref, PlayerWardrobe.getComponentType());
-        context.sendMessage(Message.raw("Wardrobe data reset"));
+        context.sendMessage(Message.raw("Your Wardrobe data has been reset"));
     }
 }

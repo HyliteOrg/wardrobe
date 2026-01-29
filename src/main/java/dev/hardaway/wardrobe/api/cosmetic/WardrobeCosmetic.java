@@ -12,6 +12,8 @@ public interface WardrobeCosmetic extends Cosmetic, WardrobeTranslatable {
 
     WardrobeVisibility getWardrobeVisibility();
 
+    String getCosmeticSlotId();
+
     String[] getRequiredCosmeticIds();
 
     @Nullable

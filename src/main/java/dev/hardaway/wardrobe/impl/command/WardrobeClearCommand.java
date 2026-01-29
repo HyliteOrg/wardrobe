@@ -10,24 +10,23 @@ import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayer
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import dev.hardaway.wardrobe.api.cosmetic.Cosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmetic;
+import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.player.PlayerWardrobe;
+import dev.hardaway.wardrobe.impl.asset.CosmeticSlotAsset;
 import dev.hardaway.wardrobe.impl.asset.cosmetic.CosmeticAsset;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
-import java.util.Objects;
 
-public class WardrobeRemoveCommand extends AbstractPlayerCommand {
+public class WardrobeClearCommand extends AbstractPlayerCommand {
 
-    private final RequiredArg<CosmeticAsset> cosmeticArg;
+    private final RequiredArg<CosmeticSlotAsset> cosmeticSlotArg;
 
-    public WardrobeRemoveCommand() {
-        super("remove", "server.commands.wardrobe.remove.description");
+    public WardrobeClearCommand() {
+        super("clear", "server.commands.wardrobe.clear.description");
         this.setPermissionGroup(GameMode.Adventure);
-        this.cosmeticArg = this.withRequiredArg("cosmetic", "server.commands.wardrobe.remove.args.cosmetic.description", WardrobeCommand.COSMETIC_ARGUMENT_TYPE);
+        this.cosmeticSlotArg = this.withRequiredArg("slot", "The cosmetic slot to remove", WardrobeCommand.COSMETIC_SLOT_ARGUMENT_TYPE);
     }
 
     @Override
@@ -38,12 +37,15 @@ public class WardrobeRemoveCommand extends AbstractPlayerCommand {
             return;
         }
 
-        WardrobeCosmetic cosmetic = this.cosmeticArg.get(context);
-        for (Map.Entry<String, PlayerCosmetic> cosmeticEntry : wardrobeComponent.getCosmeticMap().entrySet()) {
-            if (Objects.equals(cosmeticEntry.getValue().getCosmeticId(), cosmetic.getId())) {
-                wardrobeComponent.removeCosmetic(cosmeticEntry.getKey());
-                context.sendMessage(Message.join(Message.raw("Removed '"), cosmetic.getTranslationProperties().getName(), Message.raw("' from your avatar")));
-            }
+        WardrobeCosmeticSlot cosmeticSlot = this.cosmeticSlotArg.get(context);
+        PlayerCosmetic cosmeticData = wardrobeComponent.getCosmetic(cosmeticSlot);
+        if (cosmeticData == null) {
+            context.sendMessage(Message.join(Message.raw("No cosmetics found in the '"), cosmeticSlot.getTranslationProperties().getName(), Message.raw("' slot")));
+            return;
         }
+
+
+        wardrobeComponent.removeCosmetic(cosmeticSlot.getId());
+        context.sendMessage(Message.join(Message.raw("Cleared cosmetic from the '"), cosmeticSlot.getTranslationProperties().getName(), Message.raw("' slot")));
     }
 }

@@ -47,6 +47,11 @@ public class PlayerWardrobeComponent implements PlayerWardrobe, Component<Entity
     }
 
     @Override
+    public Map<String, PlayerCosmetic> getCosmeticMap() {
+        return Collections.unmodifiableMap(this.cosmetics);
+    }
+
+    @Override
     public Collection<PlayerCosmetic> getCosmetics() {
         return Collections.unmodifiableCollection(this.cosmetics.values());
     }

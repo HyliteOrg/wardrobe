@@ -1,6 +1,7 @@
 package dev.hardaway.wardrobe.impl.asset.cosmetic.builtin;
 
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPart;
 import dev.hardaway.wardrobe.api.cosmetic.Cosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
@@ -13,13 +14,13 @@ import java.util.Map;
 
 public class HytaleCosmetic implements Cosmetic {
 
-    private final String slot;
+    private final CosmeticType type;
     private final PlayerSkinPart part;
     protected final Map<String, PlayerSkinPart.Variant> variantMap;
 
-    public HytaleCosmetic(String slot, PlayerSkinPart part) {
+    public HytaleCosmetic(CosmeticType type, PlayerSkinPart part) {
+        this.type = type;
         this.part = part;
-        this.slot = slot;
 
         if (this.part.getVariants() != null) {
             this.variantMap = Collections.unmodifiableMap(this.part.getVariants());
@@ -30,16 +31,11 @@ public class HytaleCosmetic implements Cosmetic {
 
     @Override
     public String getId() {
-        return "Hytale" + this.getCosmeticSlotId() + ":" + part.getId();
+        return "Hytale:" + this.type.name() + "." + part.getId();
     }
 
     public PlayerSkinPart getPart() {
         return part;
-    }
-
-    @Override
-    public String getCosmeticSlotId() {
-        return slot;
     }
 
     protected ModelAttachment createAttachment(WardrobeContext context, WardrobeCosmeticSlot slot, PlayerCosmetic playerCosmetic) {

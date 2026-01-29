@@ -7,8 +7,6 @@ public interface Cosmetic extends WardrobePermissionHolder {
 
     String getId();
 
-    String getCosmeticSlotId();
-
     void applyCosmetic(WardrobeContext context, WardrobeCosmeticSlot slot, PlayerCosmetic playerCosmetic);
 
 }

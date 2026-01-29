@@ -1,14 +1,15 @@
 package dev.hardaway.wardrobe.impl.asset.cosmetic.builtin;
 
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPart;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 
 public class HytaleBodyCharacteristicCosmetic extends HytaleCosmetic {
-    public HytaleBodyCharacteristicCosmetic(String slot, PlayerSkinPart part) {
-        super(slot, part);
+    public HytaleBodyCharacteristicCosmetic(CosmeticType type, PlayerSkinPart part) {
+        super(type, part);
     }
 
     @Override

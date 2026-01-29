@@ -8,11 +8,14 @@ import dev.hardaway.wardrobe.impl.system.PlayerWardrobeComponent;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
+import java.util.Map;
 
 public interface PlayerWardrobe {
     static ComponentType<EntityStore, PlayerWardrobeComponent> getComponentType() {
         return PlayerWardrobeComponent.getComponentType();
     }
+
+    Map<String, PlayerCosmetic> getCosmeticMap();
 
     Collection<PlayerCosmetic> getCosmetics();
 

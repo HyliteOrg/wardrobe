@@ -2,6 +2,7 @@ package dev.hardaway.wardrobe.impl.asset.cosmetic.builtin;
 
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticRegistry;
+import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPart;
 import dev.hardaway.wardrobe.api.cosmetic.Cosmetic;
@@ -13,8 +14,8 @@ import dev.hardaway.wardrobe.impl.asset.cosmetic.ModelAttachmentCosmetic;
 import java.util.Objects;
 
 public class HytaleHaircutCosmetic extends HytaleCosmetic {
-    public HytaleHaircutCosmetic(String slot, PlayerSkinPart part) {
-        super(slot, part);
+    public HytaleHaircutCosmetic(CosmeticType type, PlayerSkinPart part) {
+        super(type, part);
     }
 
     @Override

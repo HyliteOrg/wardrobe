@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.api.cosmetic.Cosmetic;
+import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.AppearanceCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.CosmeticAppearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
@@ -30,12 +31,11 @@ public class WardrobeWearCommand extends AbstractPlayerCommand {
     private final OptionalArg<String> colorArg;
 
     public WardrobeWearCommand() {
-        super("wear", "Wear a cosmetic");
+        super("wear", "server.commands.wardrobe.wear.description");
         this.setPermissionGroup(GameMode.Adventure);
-
-        this.cosmeticArg = this.withRequiredArg("cosmetic", "The cosmetic to apply", ArgTypes.STRING);
-        this.variantArg = this.withOptionalArg("variant", "The cosmetic's variant to use", ArgTypes.STRING);
-        this.colorArg = this.withOptionalArg("color", "The cosmetic color to use", ArgTypes.STRING);
+        this.cosmeticArg = this.withRequiredArg("cosmetic", "server.commands.wardrobe.wear.args.cosmetic.description", ArgTypes.STRING);
+        this.variantArg = this.withOptionalArg("variant", "server.commands.wardrobe.wear.args.variant.description", ArgTypes.STRING);
+        this.colorArg = this.withOptionalArg("color", "server.commands.wardrobe.wear.args.color.description", ArgTypes.STRING);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class WardrobeWearCommand extends AbstractPlayerCommand {
         PlayerWardrobe wardrobe = store.ensureAndGetComponent(ref, PlayerWardrobe.getComponentType());
 
         String cosmeticId = cosmeticArg.get(context);
-        Cosmetic cosmetic = CosmeticAsset.getAssetMap().getAsset(cosmeticId); // TODO: registry
+        WardrobeCosmetic cosmetic = CosmeticAsset.getAssetMap().getAsset(cosmeticId); // TODO: registry
 
         if (cosmetic == null) {
             context.sendMessage(Message.raw("Failed to find cosmetic with id \"{id}\"!").param("id", cosmeticId));
