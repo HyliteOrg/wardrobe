@@ -51,8 +51,8 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     private PlayerWardrobe baseWardrobe;
     private boolean shouldClose = true;
 
-    public WardrobePage(@Nonnull PlayerRef playerRef, @Nonnull CustomPageLifetime lifetime) {
-        super(playerRef, lifetime, PageEventData.CODEC);
+    public WardrobePage(@Nonnull PlayerRef playerRef) {
+        super(playerRef, CustomPageLifetime.CanDismiss, PageEventData.CODEC);
     }
 
     @Override

@@ -1,0 +1,68 @@
+{
+  "TranslationProperties": {
+    "Name": "server.items.Wardrobe_Cosmetic_Mirror.name",
+    "Description": "server.items.Wardrobe_Cosmetic_Mirror.description"
+  },
+  "Parent": "Wardrobe_Cosmetic_Mirror",
+  "Variant": true,
+  "Icon": "Icons/ItemsGenerated/Wardrobe_Cosmetic_Mirror_Wall.png",
+  "IconProperties": {
+    "Scale": 0.55,
+    "Rotation": [
+      22.5,
+      45,
+      22.5
+    ],
+    "Translation": [
+      10,
+      -35
+    ]
+  },
+  "BlockType": {
+    "PlacementSettings": {
+      "RotationMode": "BlockNormal",
+      "FloorPlacementOverrideBlockId": "Wardrobe_Cosmetic_Mirror",
+      "AllowRotationKey": false
+    },
+    "CustomModel": "Blocks/Miscellaneous/Wardrobe/Cosmetic_Mirror/Mirror_Wall.blockymodel",
+    "CustomModelTexture": [
+      {
+        "Texture": "Blocks/Miscellaneous/Wardrobe/Cosmetic_Mirror/Mirror.png",
+        "Weight": 1
+      }
+    ],
+    "Material": "Solid",
+    "DrawType": "Model",
+    "VariantRotation": "NESW",
+    "BlockParticleSetId": "Metal",
+    "ParticleColor": "#defdff",
+    "Interactions": {
+      "Use": {
+        "Interactions": [
+          "Open_Wardrobe"
+        ]
+      }
+    },
+    "HitboxType": "Painting_1x2",
+    "BlockSoundSetId": "Glass",
+    "InteractionHitboxType": "Painting_1x2",
+    "InteractionHint": "server.items.Wardrobe_Cosmetic_Mirror.interaction",
+
+    "Support": {
+      "BlockSides": [
+        {
+          "FaceType": "Full"
+        }
+      ]
+    },
+    "Flags": {
+      "IsUsable": true
+    },
+    "Gathering": {
+      "Breaking": {
+        "GatherType": "Rocks",
+        "ItemId": "Wardrobe_Cosmetic_Mirror"
+      }
+    }
+  }
+}

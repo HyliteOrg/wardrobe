@@ -1,7 +1,7 @@
 {
   "TranslationProperties": {
-    "Name": "wardrobe.items.Mirror.name",
-    "Description": "wardrobe.items.Mirror.description"
+    "Name": "server.items.Wardrobe_Cosmetic_Mirror.name",
+    "Description": "server.items.Wardrobe_Cosmetic_Mirror.description"
   },
   "MaxStack": 1,
   "ItemSoundSetId": "ISS_Items_Metal",
@@ -30,7 +30,7 @@
   "BlockType": {
     "CustomModelTexture": [
       {
-        "Texture": "Blocks/Miscellaneous/Mirror.png",
+        "Texture": "Blocks/Miscellaneous/Wardrobe/Cosmetic_Mirror/Mirror.png",
         "Weight": 1
       }
     ],
@@ -57,13 +57,13 @@
     },
     "HitboxType": "Door",
     "BlockSoundSetId": "Glass",
-    "CustomModel": "Blocks/Miscellaneous/Mirror.blockymodel",
+    "CustomModel": "Blocks/Miscellaneous/Wardrobe/Cosmetic_Mirror/Mirror.blockymodel",
     "Material": "Solid",
     "InteractionHitboxType": "Door",
-    "InteractionHint": "wardrobe.items.Mirror.interaction",
+    "InteractionHint": "server.items.Wardrobe_Cosmetic_Mirror.interaction",
     "PlacementSettings": {
       "RotationMode": "BlockNormal",
-      "WallPlacementOverrideBlockId": "Mirror_Wall"
+      "WallPlacementOverrideBlockId": "Wardrobe_Cosmetic_Mirror_Wall"
     },
     "Gathering": {
       "Breaking": {
@@ -71,7 +71,7 @@
       }
     }
   },
-  "Icon": "Icons/ItemsGenerated/Mirror.png",
+  "Icon": "Icons/ItemsGenerated/Wardrobe_Cosmetic_Mirror.png",
   "IconProperties": {
     "Scale": 0.5,
     "Rotation": [

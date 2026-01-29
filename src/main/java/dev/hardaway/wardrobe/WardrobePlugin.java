@@ -62,6 +62,8 @@ public class WardrobePlugin extends JavaPlugin {
 
     @Override
     protected void setup() {
+        OpenCustomUIInteraction.registerSimple(this, WardrobePage.class, "Wardrobe", WardrobePage::new);
+
         this.getCodecRegistry(TextureConfig.CODEC)
                 .register(Priority.DEFAULT, "Static", StaticTextureConfig.class, StaticTextureConfig.CODEC)
                 .register(Priority.NORMAL, "Gradient", GradientTextureConfig.class, GradientTextureConfig.CODEC)
@@ -114,9 +116,6 @@ public class WardrobePlugin extends JavaPlugin {
         this.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticSlotAsset.class, WardrobePlugin::onSlotsUpdated);
         this.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticCategoryAsset.class, WardrobePlugin::onCategoriesUpdated);
 
-        OpenCustomUIInteraction.registerCustomPageSupplier(this, WardrobePage.class, "Wardrobe", (_, _, playerRef, _) ->
-                new WardrobePage(playerRef, CustomPageLifetime.CanDismiss)
-        );
 
         this.getCommandRegistry().registerCommand(new WardrobeCommand());
 
