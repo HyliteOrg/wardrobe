@@ -65,6 +65,7 @@ def createServerRunArguments(String srcDir) {
     }
 
     return "--allow-op " +
+            "--disable-file-watcher " +
             "--disable-sentry " +
             "--assets=\"${hytaleHome}/install/${project.hytale_patchline}/package/game/latest/Assets.zip\" " +
             "--mods=\"${srcDir}\""
@@ -79,7 +80,7 @@ idea.project.settings.runConfigurations {
 
         mainClass = "com.hypixel.hytale.Main"
         moduleName = project.idea.module.name + ".main"
-        programParameters = createServerRunArguments(layout.buildDirectory.dir("resources/main").get().asFile.absolutePath)
+        programParameters = createServerRunArguments(layout.buildDirectory.dir("resources").get().asFile.absolutePath)
         workingDirectory = serverRunDir
     }
 }
