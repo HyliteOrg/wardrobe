@@ -71,7 +71,7 @@ public class HytaleCosmetic implements Cosmetic {
             }
         }
 
-        if (!context.getHiddenTypes().contains(this.type) && this.part.getHeadAccessoryType() == PlayerSkinPart.HeadAccessoryType.FullyCovering) {
+        if (this.part.getHeadAccessoryType() == PlayerSkinPart.HeadAccessoryType.FullyCovering) {
             context.hideSlots("Haircut");
         }
 

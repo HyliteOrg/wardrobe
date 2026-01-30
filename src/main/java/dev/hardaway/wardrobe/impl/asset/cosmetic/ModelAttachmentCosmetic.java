@@ -157,7 +157,7 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
                     break;
 
                 if (cosmetic instanceof HytaleCosmetic hytaleCosmetic) {
-                    if (!context.getHiddenTypes().contains(hytaleCosmetic.getType()) && hytaleCosmetic.getPart().getHeadAccessoryType() == PlayerSkinPart.HeadAccessoryType.HalfCovering) {
+                    if (hytaleCosmetic.getPart().getHeadAccessoryType() == PlayerSkinPart.HeadAccessoryType.HalfCovering) {
                         overlapFound = true;
                         break;
                     }

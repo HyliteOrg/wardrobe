@@ -88,7 +88,7 @@ public class WardrobeSystems {
                     if (cosmetic != null) {
                         context.getCosmeticMap().put(group.getId(), cosmetic);
                     }
-                } else if (group.getHytaleCosmeticType() != null) {
+                } else if (group.getHytaleCosmeticType() != null && !context.getHiddenTypes().contains(group.getHytaleCosmeticType())) {
                     HytaleCosmetic hytaleCosmetic = WardrobeUtil.createHytaleCosmetic(group.getHytaleCosmeticType(), cosmeticSkin);
                     if (hytaleCosmetic != null && !context.getHiddenTypes().contains(hytaleCosmetic.getType())) {
                         context.getCosmeticMap().put(group.getId(), hytaleCosmetic);

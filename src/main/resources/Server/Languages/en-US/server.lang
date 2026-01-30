@@ -1,9 +1,9 @@
 items.Wardrobe_Cosmetic_Mirror.name = Cosmetics Mirror
 items.Wardrobe_Cosmetic_Mirror.description = Used to customize your appearance.
 items.Wardrobe_Cosmetic_Mirror.interaction = Press [{key}] to customize your appearance
-commands.parsing.argtype.asset.wardrobe.cosmetic.name = "Wardrobe Cosmetic"
+commands.parsing.argtype.asset.wardrobe.cosmetic.name = Wardrobe Cosmetic
 commands.parsing.argtype.asset.wardrobe.cosmetic.usage = ""
-commands.parsing.argtype.asset.wardrobe.slot.name = "Wardrobe Cosmetic Slot"
+commands.parsing.argtype.asset.wardrobe.slot.name = Wardrobe Cosmetic Slot
 commands.parsing.argtype.asset.wardrobe.slot.usage = ""
 commands.wardrobe.description = Open the Wardrobe menu
 commands.wardrobe.remove.description = Remove a Wardrobe cosmetic

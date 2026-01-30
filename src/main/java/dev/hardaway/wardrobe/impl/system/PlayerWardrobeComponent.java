@@ -2,7 +2,10 @@ package dev.hardaway.wardrobe.impl.system;
 
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.codecs.EnumCodec;
+import com.hypixel.hytale.codec.codecs.array.ArrayCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
+import com.hypixel.hytale.codec.codecs.set.SetCodec;
 import com.hypixel.hytale.component.Component;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
@@ -22,11 +25,15 @@ public class PlayerWardrobeComponent implements PlayerWardrobe, Component<Entity
                     PlayerWardrobeComponent::setCosmetics,
                     t -> t.cosmetics
             ).add()
+            .append(new KeyedCodec<>("HiddenCosmeticTypes", new SetCodec<>(new EnumCodec<>(CosmeticType.class), HashSet::new, false), false),
+                    (t, value) -> t.hiddenCosmeticTypes = value,
+                    t -> t.hiddenCosmeticTypes
+            ).add()
             .build();
 
     private Map<String, CosmeticSaveData> cosmetics;
     private Set<String> cosmeticIdSet;
-    private final Set<CosmeticType> hiddenCosmeticTypes;
+    private Set<CosmeticType> hiddenCosmeticTypes;
     private boolean dirty;
 
     public PlayerWardrobeComponent() {
