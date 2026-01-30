@@ -15,3 +15,4 @@ commands.wardrobe.wear.description = Wear a Wardrobe cosmetic
 commands.wardrobe.wear.args.cosmetic.description = The cosmetic to wear
 commands.wardrobe.wear.args.variant.description = The cosmetic variant to use
 commands.wardrobe.wear.args.color.description = The cosmetic color to use
+ui.wardrobe.hide.description = Hide Default Cosmetic

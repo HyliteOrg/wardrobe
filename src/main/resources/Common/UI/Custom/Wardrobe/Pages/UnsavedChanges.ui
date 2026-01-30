@@ -27,13 +27,13 @@ Group {
 
       Label {
         Style: (HorizontalAlignment: Center, TextColor: #d3dee3, FontSize: 28, RenderBold: true, RenderUppercase: true);
-        Text: "Unsaved Changes";
+        Text: %client.myAvatar.unsavedChangesDialog.title;
       }
 
       Label {
         Anchor: (Top: 6);
         Style: (HorizontalAlignment: Center, FontSize: 18, RenderBold: true, Wrap: true, TextColor: #d3dee3);
-        Text: "You have made changes to your Avatar which haven't been saved yet.";
+        Text: %client.myAvatar.unsavedChangesDialog.text;
       }
     }
 

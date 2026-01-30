@@ -148,7 +148,7 @@ Group {
                            ChangedSound: (SoundPath: $Sounds.@Tick, Volume: 6)
                          )
                        );
-                TooltipText: "Hide Default Cosmetic";
+                TooltipText: %server.ui.wardrobe.hide.description;
                 TextTooltipStyle: @ButtonTextTooltipStyle;
               }
             }
