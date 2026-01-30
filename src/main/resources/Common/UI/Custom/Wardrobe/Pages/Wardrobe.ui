@@ -12,13 +12,11 @@ $Sounds = "../../Sounds.ui";
 );
 
 @ButtonTextTooltipStyle = TextTooltipStyle(
-  Background: @DefaultTooltipBackground,
+  Background: (TexturePath: "../../Common/TooltipDefaultBackground.png", Border: 24),
   MaxWidth: 400,
   LabelStyle: (Wrap: true, FontSize: 16),
   Padding: 24
 );
-
-@DefaultTooltipBackground = (TexturePath: "../../Common/TooltipDefaultBackground.png", Border: 24);
 
 Group {
   Anchor: (Top: 110, Left: -10, MaxWidth: 1880, Height: 924);
@@ -233,7 +231,25 @@ Group {
       $Common.@TextButton #Save {
         @Sounds = $Sounds.@SaveSettings;
         @Text = %client.general.button.save;
-        @Anchor = Anchor(MinWidth: $Common.@DefaultButtonMinWidth);
+        @Anchor = Anchor(Right: 8, MinWidth: $Common.@DefaultButtonMinWidth);
+      }
+
+      Group {
+        Anchor: (Width: 4, Right: 8);
+        Background: (Color: #a6afba(0.20));
+      }
+
+      $Common.@SecondaryButton #Camera {
+        @Sounds = $Sounds.@ButtonsLight;
+        @Anchor = Anchor(Right: 8);
+        Visible: false;
+        TooltipText: %server.ui.wardrobe.camera.description;
+        TextTooltipStyle: @ButtonTextTooltipStyle;
+
+         Group {
+          Background: "../Icons/CameraSwitchIcon.png";
+          Anchor: (Width: 24, Height: 21);
+        }
       }
     }
   }

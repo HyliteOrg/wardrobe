@@ -2,41 +2,6 @@ $AC = "Wardrobe.ui";
 $Common = "../../Common.ui";
 $Sounds = "../../Sounds.ui";
 
-@LabelStyle = (
-  Default: (
-    Background: #2f3a4f
-  ),
-  Hovered: (
-    Background: #39455d
-  ),
-  Sounds: (
-    Activate: (SoundPath: $Sounds.@ButtonsLightActivate, Volume: 6),
-    MouseHover: (SoundPath: $Sounds.@ButtonsLightHover, Volume: 6)
-  )
-);
-
-@SelectedLabelStyle = (
-  Default: (
-    Background: #2f3a4f
-  ),
-  Hovered: (
-    Background: #39455d
-  )
-);
-
-@PartPreviewWidth = 92;
-@PartPreviewHeight = 149;
-@PartPreviewMargin = 10;
-@PartPreviewRows = 3;
-@PartPreviewsPerRow = 5;
-@PartPreviewBackgroundColor = #2f3a4f;
-@PartPreviewBackgroundColorHovered = #39455d;
-
-@PartPreviewFrameBackground = PatchStyle(TexturePath: "PartFrame.png");
-@PartPreviewSelectedFrameBackground = PatchStyle(TexturePath: "PartFrameSelected.png");
-@PartPreviewSelectedBackground = PatchStyle(TexturePath: "PartBackgroundSelected.png");
-@PartPreviewSelectedFrameSize = Anchor(Width: 99, Height: 155, Left: -4, Top: -4);
-
 Group {
   Padding: (Horizontal: 4, Vertical: 4);
 
@@ -44,7 +9,18 @@ Group {
     Anchor: (Width: 92, Height: 149);
     MaskTexturePath: "../Icons/PartMask.png";
     Background: "../Icons/PartFrame.png";
-    Style: @LabelStyle;
+    Style: (
+             Default: (
+               Background: #2f3a4f
+             ),
+             Hovered: (
+               Background: #39455d
+             ),
+             Sounds: (
+               Activate: (SoundPath: $Sounds.@ButtonsLightActivate, Volume: 6),
+               MouseHover: (SoundPath: $Sounds.@ButtonsLightHover, Volume: 6)
+             )
+           );
     TextTooltipStyle: $AC.@ButtonTextTooltipStyle;
   }
 

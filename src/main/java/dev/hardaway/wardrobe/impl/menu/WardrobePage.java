@@ -50,13 +50,26 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     private final WardrobeMenu menu;
     private final Position position;
     private final int rotationIndex;
+    private final ServerCameraSettings cameraSettings;
     private boolean shouldClose = true;
 
     public WardrobePage(@Nonnull PlayerRef playerRef, PlayerWardrobeComponent wardrobe, @Nullable Position position, int rotationIndex) {
         super(playerRef, CustomPageLifetime.CanDismiss, PageEventData.CODEC);
         this.menu = new WardrobeMenu(playerRef.getUuid(), wardrobe);
         this.position = position;
-        this.rotationIndex = rotationIndex;
+        if (this.position != null) {
+            this.position.x += 0.5;
+            this.position.y += 1.5;
+            this.position.z += 0.5;
+        }
+
+        this.rotationIndex = rotationIndex+2;
+        this.cameraSettings = new ServerCameraSettings();
+        cameraSettings.isFirstPerson = false;
+        cameraSettings.positionLerpSpeed = 0.2F;
+        cameraSettings.rotationType = RotationType.Custom;
+        cameraSettings.rotationLerpSpeed = 0.2F;
+        cameraSettings.displayCursor = true;
     }
 
     @Override
@@ -70,8 +83,12 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Discard", MenuAction.Discard.getEvent(), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Save", MenuAction.Save.getEvent(), false);
 
+        if (position != null) {
+            commandBuilder.set("#Camera.Visible", true);
+            eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Camera", MenuAction.Camera.getEvent(), false);
+        }
 
-        setupCamera(ref, store);
+        changeCamera(ref, store);
     }
 
     @Override
@@ -131,6 +148,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                 shouldClose = true;
                 close();
             }
+            case Camera -> changeCamera(ref, store);
         }
 
         shouldClose = menu.getWardrobe().equals(menu.getBaseWardrobe());
@@ -152,33 +170,28 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.FirstPerson, false, null));
     }
 
-    private void setupCamera(Ref<EntityStore> ref, Store<EntityStore> store) {
-        TransformComponent bodyRotation = store.getComponent(ref, TransformComponent.getComponentType());
-        float yaw = bodyRotation.getRotation().y;
+    private void changeCamera(Ref<EntityStore> ref, Store<EntityStore> store) {
+        float rotation;
 
-        ServerCameraSettings cameraSettings = new ServerCameraSettings();
-        cameraSettings.isFirstPerson = false;
-        cameraSettings.displayCursor = true;
-        if (position != null) {
-            position.x += 0.5;
-            position.y += 1.5;
-            position.z += 0.5;
+        if (cameraSettings.displayCursor && position != null) {
+            cameraSettings.displayCursor = false;
             cameraSettings.position = position;
             cameraSettings.positionType = PositionType.Custom;
-            yaw = (float) (Math.PI/2 * (rotationIndex+2));
-            cameraSettings.displayCursor = false;
+            rotation = (float) (Math.PI/2 * rotationIndex);
         } else {
-            cameraSettings.positionDistanceOffsetType = PositionDistanceOffsetType.DistanceOffsetRaycast;
+            TransformComponent bodyRotation = store.getComponent(ref, TransformComponent.getComponentType());
+            rotation = bodyRotation.getRotation().y;
+
+            cameraSettings.displayCursor = true;
+            cameraSettings.positionType = PositionType.AttachedToPlusOffset;
             cameraSettings.eyeOffset = true;
             cameraSettings.distance = 2.5F;
-            cameraSettings.planeNormal = new Vector3f((float) Math.sin(yaw), -2, (float) Math.cos(yaw));
+            cameraSettings.positionDistanceOffsetType = PositionDistanceOffsetType.DistanceOffsetRaycast;
             cameraSettings.mouseInputType = MouseInputType.LookAtPlane;
+            cameraSettings.planeNormal = new Vector3f((float) Math.sin(rotation), -2, (float) Math.cos(rotation));
         }
 
-        cameraSettings.positionLerpSpeed = 0.2F;
-        cameraSettings.rotationType = RotationType.Custom;
-        cameraSettings.rotation = new Direction(yaw, 0, 0);
-        cameraSettings.rotationLerpSpeed = 0.2F;
+        cameraSettings.rotation = new Direction(rotation, 0, 0);
 
         playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.Custom, false, cameraSettings));
     }
@@ -423,7 +436,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     }
 
     public enum MenuAction {
-        Reset, Discard, Save;
+        Reset, Discard, Save, Camera;
 
         private final EventData eventData;
 
