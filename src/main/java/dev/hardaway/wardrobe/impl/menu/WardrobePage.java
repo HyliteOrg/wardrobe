@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
+import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.ui.Anchor;
 import com.hypixel.hytale.server.core.ui.DropdownEntryInfo;
 import com.hypixel.hytale.server.core.ui.LocalizableString;
@@ -68,7 +69,8 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         cameraSettings.isFirstPerson = false;
         cameraSettings.positionLerpSpeed = 0.2F;
         cameraSettings.rotationType = RotationType.Custom;
-        cameraSettings.rotationLerpSpeed = 0.2F;
+        cameraSettings.rotationLerpSpeed = 1;
+        cameraSettings.mouseInputType = MouseInputType.LookAtPlane;
         cameraSettings.displayCursor = true;
     }
 
@@ -84,7 +86,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Save", MenuAction.Save.getEvent(), false);
 
         if (position != null) {
-            commandBuilder.set("#Camera.Visible", true);
+            commandBuilder.set("#Mirror.Visible", true);
             eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Camera", MenuAction.Camera.getEvent(), false);
         }
 
@@ -171,29 +173,38 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     }
 
     private void changeCamera(Ref<EntityStore> ref, Store<EntityStore> store) {
+        TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
         float rotation;
 
         if (cameraSettings.displayCursor && position != null) {
+            rotation = (float) ((Math.PI / 2) * rotationIndex);
+
             cameraSettings.displayCursor = false;
-            cameraSettings.position = position;
             cameraSettings.positionType = PositionType.Custom;
-            rotation = (float) (Math.PI/2 * rotationIndex);
+            cameraSettings.position = position;
+
+            store.getExternalData().getWorld().execute(() -> {
+                transform.getRotation().setY((float) (rotation + Math.PI));
+                Teleport teleport = Teleport.createForPlayer(transform.getTransform());
+                store.addComponent(ref, Teleport.getComponentType(), teleport);
+            });
         } else {
-            TransformComponent bodyRotation = store.getComponent(ref, TransformComponent.getComponentType());
-            rotation = bodyRotation.getRotation().y;
+            rotation = transform.getRotation().y;
 
             cameraSettings.displayCursor = true;
             cameraSettings.positionType = PositionType.AttachedToPlusOffset;
+
             cameraSettings.eyeOffset = true;
-            cameraSettings.distance = 2.5F;
+            cameraSettings.distance = 3F;
             cameraSettings.positionDistanceOffsetType = PositionDistanceOffsetType.DistanceOffsetRaycast;
-            cameraSettings.mouseInputType = MouseInputType.LookAtPlane;
-            cameraSettings.planeNormal = new Vector3f((float) Math.sin(rotation), -2, (float) Math.cos(rotation));
+            cameraSettings.planeNormal = new Vector3f((float) Math.sin(rotation), -2f, (float) Math.cos(rotation));
         }
 
         cameraSettings.rotation = new Direction(rotation, 0, 0);
 
-        playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.Custom, false, cameraSettings));
+        playerRef.getPacketHandler().writeNoCache(
+                new SetServerCamera(ClientCameraView.Custom, false, cameraSettings)
+        );
     }
 
     private void buildWardrobeTabs(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, Ref<EntityStore> ref, Store<EntityStore> store) {
