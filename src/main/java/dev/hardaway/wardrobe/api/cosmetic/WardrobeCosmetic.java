@@ -1,17 +1,16 @@
 package dev.hardaway.wardrobe.api.cosmetic;
 
-import dev.hardaway.wardrobe.api.menu.WardrobeVisibility;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticOptionEntry;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry;
-import dev.hardaway.wardrobe.api.property.WardrobeTranslatable;
+import dev.hardaway.wardrobe.api.property.WardrobeProperties;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-public interface WardrobeCosmetic extends Cosmetic, WardrobeTranslatable {
+public interface WardrobeCosmetic extends Cosmetic {
 
-    WardrobeVisibility getWardrobeVisibility();
+    WardrobeProperties getProperties();
 
     String getCosmeticSlotId();
 

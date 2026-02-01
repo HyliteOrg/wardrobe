@@ -10,8 +10,9 @@ import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.AppearanceCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
-import dev.hardaway.wardrobe.api.menu.WardrobeVisibility;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticOptionEntry;
+import dev.hardaway.wardrobe.api.property.WardrobeProperties;
+import dev.hardaway.wardrobe.api.property.WardrobeVisibility;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.property.WardrobeTranslationProperties;
@@ -39,8 +40,8 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
     private PlayerModelCosmetic() {
     }
 
-    public PlayerModelCosmetic(String id, WardrobeTranslationProperties translationProperties, WardrobeVisibility wardrobeVisibility, String cosmeticSlotId, String iconPath, String permissionNode, Appearance appearance) {
-        super(id, translationProperties, wardrobeVisibility, cosmeticSlotId, iconPath, permissionNode);
+    public PlayerModelCosmetic(String id, String[] hiddenCosmeticSlots, String cosmeticSlotId, WardrobeProperties properties, Appearance appearance) {
+        super(id, cosmeticSlotId, hiddenCosmeticSlots, properties);
         this.appearance = appearance;
     }
 
@@ -92,8 +93,7 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
                 VariantAppearance.Entry entry = v.getVariants().get(variantId);
                 entries.put(variantId, new CosmeticOptionEntry(
                         variantId,
-                        entry.getTranslationProperties(),
-                        entry.getIconPath()
+                        entry.getProperties()
                 ));
             }
             return entries;
@@ -110,16 +110,19 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
 
         List<CosmeticVariantEntry> entries = new ArrayList<>();
         for (String textureId : textures) {
+            WardrobeProperties properties;
             String[] colors;
             if (textureConfig instanceof VariantTextureConfig vt) {
+                properties = vt.getVariants().get(textureId).getProperties();
                 colors = vt.getVariants().get(textureId).getColors();
             } else if (textureConfig instanceof GradientTextureConfig gt) {
+                properties = new WardrobeProperties(new WardrobeTranslationProperties(textureId, ""), WardrobeVisibility.ALWAYS, null, null);
                 colors = CosmeticsModule.get().getRegistry().getGradientSets()
                         .get(gt.getGradientSet()).getGradients().get(textureId).getBaseColor();
             } else {
                 continue;
             }
-            entries.add(new CosmeticVariantEntry(textureId, colors));
+            entries.add(new CosmeticColorEntry(textureId, colors));
         }
         return entries;
     }
