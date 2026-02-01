@@ -18,4 +18,3 @@ commands.wardrobe.wear.args.variant.description = The cosmetic variant to use
 uwardrobe.ui.hide.tooltip = Hide Default Cosmetic
 wardrobe.ui.camera.tooltip = Toggle Mirror View
 wardrobe.ui.variants.label = Variants
-wardrobe.category.Cape.name = Cape
