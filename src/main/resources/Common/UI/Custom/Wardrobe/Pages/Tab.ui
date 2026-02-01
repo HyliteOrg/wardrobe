@@ -7,7 +7,6 @@ Group {
   Background: (TexturePath: "../Icons/CategoryIconBackground.png");
 
   Button #Button {
-    Anchor: Anchor(Width: 66, Height: 50);
     Style: (
     Sounds: $Sounds.@ButtonsLight
     );
@@ -17,12 +16,11 @@ Group {
 
     Group #Selected {
       Visible: false;
-
       AssetImage #Icon {
       }
 
       Group {
-        Anchor: Anchor(Width: 67, Height: 33, Left: -2);
+        Anchor: Anchor(Height: 33, Left: -11);
         Background: "../Icons/SelectedCategoryArrow.png";
       }
     }
