@@ -26,10 +26,10 @@ public class CosmeticCategoryAsset implements WardrobeCategory, JsonAssetWithMap
                     (asset) -> asset.data
             )
 
-            .append(new KeyedCodec<>("Properties", WardrobeProperties.CODEC),
+            .append(new KeyedCodec<>("Properties", WardrobeProperties.CODEC, true),
                     (t, value) -> t.properties = value,
                     t -> t.properties
-            ).add()
+            ).addValidator(Validators.nonNull()).add()
 
             .append(new KeyedCodec<>("SelectedIcon", Codec.STRING, true),
                     (t, value) -> t.selectedIcon = value,

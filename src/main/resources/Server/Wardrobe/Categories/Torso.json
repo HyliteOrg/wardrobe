@@ -1,8 +1,10 @@
 {
-  "TranslationProperties": {
-    "Name": "client.myAvatar.tabs.Torso"
+  "Properties": {
+    "Translation": {
+      "Name": "client.myAvatar.tabs.Torso"
+    },
+    "Icon": "Icons/Wardrobe/Categories/Torso@2x.png"
   },
-  "Icon": "Icons/Wardrobe/Categories/Torso@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Categories/TorsoSelected@2x.png",
   "Order": 2
 }

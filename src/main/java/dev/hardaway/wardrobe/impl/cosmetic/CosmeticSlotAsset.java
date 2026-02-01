@@ -31,10 +31,10 @@ public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap
                     (asset) -> asset.data
             )
 
-            .append(new KeyedCodec<>("Properties", WardrobeProperties.CODEC),
+            .append(new KeyedCodec<>("Properties", WardrobeProperties.CODEC, true),
                     (t, value) -> t.properties = value,
                     t -> t.properties
-            ).add()
+            ).addValidator(Validators.nonNull()).add()
 
             .append(new KeyedCodec<>("CosmeticType", new EnumCodec<>(CosmeticType.class)),
                     (t, value) -> t.cosmeticType = value,

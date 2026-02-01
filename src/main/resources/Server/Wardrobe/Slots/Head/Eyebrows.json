@@ -1,10 +1,12 @@
 {
-  "TranslationProperties": {
-    "Name": "client.myAvatar.tabs.Eyebrows"
+  "Properties": {
+    "Translation": {
+      "Name": "client.myAvatar.tabs.Eyebrows"
+    },
+    "Icon": "Icons/Wardrobe/Slots/Eyebrows@2x.png"
   },
   "CosmeticType": "Eyebrows",
   "Category": "Head",
-  "Icon": "Icons/Wardrobe/Slots/Eyebrows@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Slots/EyebrowsSelected@2x.png",
   "Order": 1
 }

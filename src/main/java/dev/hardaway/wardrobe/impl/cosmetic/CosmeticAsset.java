@@ -8,6 +8,7 @@ import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.validation.Validators;
 import dev.hardaway.wardrobe.WardrobePlugin;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmetic;
@@ -21,10 +22,10 @@ import java.util.function.Supplier;
 public abstract class CosmeticAsset implements WardrobeCosmetic, JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticAsset>> {
 
     public static final BuilderCodec<CosmeticAsset> ABSTRACT_CODEC = BuilderCodec.abstractBuilder(CosmeticAsset.class)
-            .append(new KeyedCodec<>("Properties", Codec.STRING, true),
-                    (t, value) -> t.cosmeticSlotId = value,
-                    t -> t.cosmeticSlotId
-            ).add()
+            .append(new KeyedCodec<>("Properties", WardrobeProperties.CODEC, true),
+                    (t, value) -> t.properties = value,
+                    t -> t.properties
+            ).addValidator(Validators.nonNull()).add()
 
             .append(new KeyedCodec<>("CosmeticSlot", Codec.STRING, true),
                     (t, value) -> t.cosmeticSlotId = value,

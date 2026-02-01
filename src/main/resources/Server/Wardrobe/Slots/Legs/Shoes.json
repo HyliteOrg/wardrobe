@@ -1,10 +1,12 @@
 {
-  "TranslationProperties": {
-    "Name": "client.myAvatar.tabs.Shoes"
+  "Properties": {
+    "Translation": {
+      "Name": "client.myAvatar.tabs.Shoes"
+    },
+    "Icon": "Icons/Wardrobe/Slots/Shoes@2x.png"
   },
   "CosmeticType": "Shoes",
   "Category": "Legs",
-  "Icon": "Icons/Wardrobe/Slots/Shoes@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Slots/ShoesSelected@2x.png",
   "Order": 2
 }
