@@ -27,15 +27,15 @@ import java.util.List;
 public class WardrobeWearCommand extends AbstractPlayerCommand {
 
     private final RequiredArg<String> cosmeticArg;
+    private final OptionalArg<String> optionArg;
     private final OptionalArg<String> variantArg;
-    private final OptionalArg<String> colorArg;
 
     public WardrobeWearCommand() {
         super("wear", "server.commands.wardrobe.wear.description");
         this.setPermissionGroup(GameMode.Adventure);
         this.cosmeticArg = this.withRequiredArg("cosmetic", "server.commands.wardrobe.wear.args.cosmetic.description", ArgTypes.STRING);
-        this.variantArg = this.withOptionalArg("variant", "server.commands.wardrobe.wear.args.variant.description", ArgTypes.STRING);
-        this.colorArg = this.withOptionalArg("color", "server.commands.wardrobe.wear.args.color.description", ArgTypes.STRING);
+        this.optionArg = this.withOptionalArg("variant", "server.commands.wardrobe.wear.args.option.description", ArgTypes.STRING);
+        this.variantArg = this.withOptionalArg("color", "server.commands.wardrobe.wear.args.variant.description", ArgTypes.STRING);
     }
 
     @Override
@@ -68,10 +68,10 @@ public class WardrobeWearCommand extends AbstractPlayerCommand {
             Appearance appearance = appearanceCosmetic.getAppearance();
             List<String> variants = List.of(appearance.collectVariants());
 
-            if (variantArg.provided(context)) {
-                String provided = variantArg.get(context);
+            if (optionArg.provided(context)) {
+                String provided = optionArg.get(context);
                 if (!variants.contains(provided)) {
-                    context.sendMessage(Message.raw("Failed to find variant \"{id}\" for this cosmetic!").param("id", provided));
+                    context.sendMessage(Message.raw("Failed to find option \"{id}\" for this cosmetic!").param("id", provided));
                     return;
                 }
                 variant = provided;
@@ -83,10 +83,10 @@ public class WardrobeWearCommand extends AbstractPlayerCommand {
                 TextureConfig textureConfig = appearance.getTextureConfig(variant);
                 List<String> textures = List.of(textureConfig.collectVariants());
 
-                if (colorArg.provided(context)) {
-                    String provided = colorArg.get(context);
+                if (variantArg.provided(context)) {
+                    String provided = variantArg.get(context);
                     if (!textures.contains(provided)) {
-                        context.sendMessage(Message.raw("Failed to find color \"{id}\" for this cosmetic!").param("id", provided));
+                        context.sendMessage(Message.raw("Failed to find variant \"{id}\" for this cosmetic!").param("id", provided));
                         return;
                     }
                     texture = provided;

@@ -1,11 +1,11 @@
 package dev.hardaway.wardrobe;
 
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticRegistry;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
-import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
-import com.hypixel.hytale.server.core.cosmetics.PlayerSkin;
-import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPart;
+import com.hypixel.hytale.protocol.packets.interface_.Notification;
+import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
+import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.cosmetics.*;
+import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -107,5 +107,14 @@ public class WardrobeUtil {
             case HAIRCUTS, EYEBROWS, FACIAL_HAIR, HEAD_ACCESSORY, FACE_ACCESSORY, EAR_ACCESSORY, UNDERTOPS, OVERTOPS,
                  GLOVES, PANTS, OVERPANTS, SHOES, CAPES -> true;
         };
+    }
+
+    public static void sendError(PlayerRef playerRef) {
+        Notification notification = new Notification();
+        notification.style = NotificationStyle.Warning;
+        notification.message = Message.raw("Error rebuilding wardrobe").getFormattedMessage();
+        notification.secondaryMessage = Message.raw("Some cosmetics were invalid").getFormattedMessage();
+        notification.icon = "Icons/AssetNotifications/IconAlert.png";
+        playerRef.getPacketHandler().writeNoCache(notification);
     }
 }

@@ -49,25 +49,25 @@ public class HytaleCosmetic implements Cosmetic {
         @Nullable String gradientId = null;
 
         if (!this.variantMap.isEmpty()) {
-            PlayerSkinPart.Variant variant = this.variantMap.get(playerCosmetic.getVariantId());
+            PlayerSkinPart.Variant variant = this.variantMap.get(playerCosmetic.getOptionId());
             model = variant.getModel();
 
             if (variant.getTextures() != null) {
-                texture = variant.getTextures().get(playerCosmetic.getTextureId()).getTexture();
+                texture = variant.getTextures().get(playerCosmetic.getVariantId()).getTexture();
             } else {
                 texture = variant.getGreyscaleTexture();
                 gradientSet = this.part.getGradientSet();
-                gradientId = playerCosmetic.getTextureId();
+                gradientId = playerCosmetic.getVariantId();
             }
         } else {
             model = this.part.getModel();
 
             if (this.part.getTextures() != null) {
-                texture = this.part.getTextures().get(playerCosmetic.getTextureId()).getTexture();
+                texture = this.part.getTextures().get(playerCosmetic.getVariantId()).getTexture();
             } else {
                 texture = this.part.getGreyscaleTexture();
                 gradientSet = this.part.getGradientSet();
-                gradientId = playerCosmetic.getTextureId();
+                gradientId = playerCosmetic.getVariantId();
             }
         }
 

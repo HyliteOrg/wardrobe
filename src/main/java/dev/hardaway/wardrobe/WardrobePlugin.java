@@ -8,15 +8,11 @@ import com.hypixel.hytale.codec.lookup.Priority;
 import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.protocol.BlockPosition;
 import com.hypixel.hytale.protocol.Position;
-import com.hypixel.hytale.protocol.packets.interface_.Notification;
-import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
-import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.asset.HytaleAssetStore;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.server.OpenCustomUIInteraction;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
-import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
@@ -124,14 +120,5 @@ public class WardrobePlugin extends JavaPlugin {
                 return value;
             }
         };
-    }
-
-    public static void sendError(PlayerRef playerRef) {
-        Notification notification = new Notification();
-        notification.style = NotificationStyle.Warning;
-        notification.message = Message.raw("Error rebuilding wardrobe").getFormattedMessage();
-        notification.secondaryMessage = Message.raw("Some cosmetics were invalid").getFormattedMessage();
-        notification.icon = "Icons/AssetNotifications/IconAlert.png";
-        playerRef.getPacketHandler().writeNoCache(notification);
     }
 }

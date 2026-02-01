@@ -14,7 +14,7 @@ import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.AppearanceCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
 import dev.hardaway.wardrobe.api.menu.WardrobeVisibility;
-import dev.hardaway.wardrobe.api.menu.variant.CosmeticColorEntry;
+import dev.hardaway.wardrobe.api.menu.variant.CosmeticOptionEntry;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.property.WardrobeTranslationProperties;
@@ -86,15 +86,15 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
 
     // TODO: create after decoding
     @Override
-    public Map<String, CosmeticVariantEntry> getVariantEntries() {
+    public Map<String, CosmeticOptionEntry> getOptionEntries() {
         String[] variants = this.appearance.collectVariants();
         if (variants.length == 0) return Map.of();
 
         if (this.appearance instanceof VariantAppearance v) {
-            Map<String, CosmeticVariantEntry> entries = new LinkedHashMap<>();
+            Map<String, CosmeticOptionEntry> entries = new LinkedHashMap<>();
             for (String variantId : variants) {
                 VariantAppearance.Entry entry = v.getVariants().get(variantId);
-                entries.put(variantId, new CosmeticVariantEntry(
+                entries.put(variantId, new CosmeticOptionEntry(
                         variantId,
                         entry.getTranslationProperties(),
                         entry.getIconPath()
@@ -107,12 +107,12 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
     }
 
     @Override
-    public List<CosmeticColorEntry> getColorEntries(@Nullable String variantId) {
+    public List<CosmeticVariantEntry> getVariantEntries(@Nullable String variantId) {
         TextureConfig textureConfig = this.appearance.getTextureConfig(variantId);
         String[] textures = textureConfig.collectVariants();
         if (textures.length == 0) return List.of();
 
-        List<CosmeticColorEntry> entries = new ArrayList<>();
+        List<CosmeticVariantEntry> entries = new ArrayList<>();
         for (String textureId : textures) {
             String[] colors;
             if (textureConfig instanceof VariantTextureConfig vt) {
@@ -123,14 +123,9 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
             } else {
                 continue;
             }
-            entries.add(new CosmeticColorEntry(textureId, colors));
+            entries.add(new CosmeticVariantEntry(textureId, colors));
         }
         return entries;
-    }
-
-    @Override
-    public String[] getHiddenCosmeticSlotIds() { // TODO: what??
-        return new String[0];
     }
 
     @Override
@@ -177,12 +172,12 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
             }
         }
 
-        TextureConfig textureConfig = appearance.getTextureConfig(playerCosmetic.getVariantId());
+        TextureConfig textureConfig = appearance.getTextureConfig(playerCosmetic.getOptionId());
         context.addAttachment(slot.getId(), new ModelAttachment(
-                appearance.getModel(playerCosmetic.getVariantId()),
-                textureConfig.getTexture(playerCosmetic.getTextureId()),
+                appearance.getModel(playerCosmetic.getOptionId()),
+                textureConfig.getTexture(playerCosmetic.getVariantId()),
                 textureConfig.getGradientSet(),
-                textureConfig.getGradientSet() != null ? playerCosmetic.getTextureId() : null,
+                textureConfig.getGradientSet() != null ? playerCosmetic.getVariantId() : null,
                 1.0
         ));
     }

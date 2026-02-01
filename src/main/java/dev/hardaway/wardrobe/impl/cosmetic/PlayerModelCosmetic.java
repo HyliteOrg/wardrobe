@@ -11,7 +11,7 @@ import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.AppearanceCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
 import dev.hardaway.wardrobe.api.menu.WardrobeVisibility;
-import dev.hardaway.wardrobe.api.menu.variant.CosmeticColorEntry;
+import dev.hardaway.wardrobe.api.menu.variant.CosmeticOptionEntry;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.property.WardrobeTranslationProperties;
@@ -52,8 +52,8 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
     @Override
     public void applyCosmetic(WardrobeContext context, WardrobeCosmeticSlot slot, PlayerCosmetic playerCosmetic) {
         super.applyCosmetic(context, slot, playerCosmetic);
-        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(this.getAppearance().getModel(playerCosmetic.getVariantId()));
-        TextureConfig textureConfig = this.getAppearance().getTextureConfig(playerCosmetic.getVariantId());
+        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(this.getAppearance().getModel(playerCosmetic.getOptionId()));
+        TextureConfig textureConfig = this.getAppearance().getTextureConfig(playerCosmetic.getOptionId());
 
         Model model = Model.createUnitScaleModel(modelAsset);
         context.setPlayerModel(new Model(
@@ -63,9 +63,9 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
                 model.getAttachments(),
                 model.getBoundingBox(),
                 model.getModel(),
-                textureConfig.getTexture(playerCosmetic.getTextureId()),
+                textureConfig.getTexture(playerCosmetic.getVariantId()),
                 textureConfig.getGradientSet(),
-                textureConfig.getGradientSet() != null ? playerCosmetic.getTextureId() : null,
+                textureConfig.getGradientSet() != null ? playerCosmetic.getVariantId() : null,
                 model.getEyeHeight(),
                 model.getCrouchOffset(),
                 model.getAnimationSetMap(),
@@ -82,15 +82,15 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
 
     // TODO: create after decoding
     @Override
-    public Map<String, CosmeticVariantEntry> getVariantEntries() {
+    public Map<String, CosmeticOptionEntry> getOptionEntries() {
         String[] variants = this.appearance.collectVariants();
         if (variants.length == 0) return Map.of();
 
         if (this.appearance instanceof VariantAppearance v) {
-            Map<String, CosmeticVariantEntry> entries = new LinkedHashMap<>();
+            Map<String, CosmeticOptionEntry> entries = new LinkedHashMap<>();
             for (String variantId : variants) {
                 VariantAppearance.Entry entry = v.getVariants().get(variantId);
-                entries.put(variantId, new CosmeticVariantEntry(
+                entries.put(variantId, new CosmeticOptionEntry(
                         variantId,
                         entry.getTranslationProperties(),
                         entry.getIconPath()
@@ -103,12 +103,12 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
     }
 
     @Override
-    public List<CosmeticColorEntry> getColorEntries(@Nullable String variantId) {
+    public List<CosmeticVariantEntry> getVariantEntries(@Nullable String variantId) {
         TextureConfig textureConfig = this.appearance.getTextureConfig(variantId);
         String[] textures = textureConfig.collectVariants();
         if (textures.length == 0) return List.of();
 
-        List<CosmeticColorEntry> entries = new ArrayList<>();
+        List<CosmeticVariantEntry> entries = new ArrayList<>();
         for (String textureId : textures) {
             String[] colors;
             if (textureConfig instanceof VariantTextureConfig vt) {
@@ -119,7 +119,7 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
             } else {
                 continue;
             }
-            entries.add(new CosmeticColorEntry(textureId, colors));
+            entries.add(new CosmeticVariantEntry(textureId, colors));
         }
         return entries;
     }

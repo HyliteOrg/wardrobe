@@ -3,7 +3,7 @@ package dev.hardaway.wardrobe.api.player;
 public interface PlayerCosmetic {
     String getCosmeticId();
 
-    String getVariantId();
+    String getOptionId();
 
-    String getTextureId();
+    String getVariantId();
 }

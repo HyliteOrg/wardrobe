@@ -139,7 +139,7 @@ Group {
                          ChangedSound: (SoundPath: $Sounds.@Tick, Volume: 6)
                        )
                      );
-              TooltipText: %server.ui.wardrobe.hide.description;
+              TooltipText: %server.ui.wardrobe.hide.tooltip;
               TextTooltipStyle: @ButtonTextTooltipStyle;
             }
           }
@@ -149,7 +149,7 @@ Group {
             ScrollbarStyle: $Common.@DefaultScrollbarStyle;
           }
 
-          Group #ColorsContainer {
+          Group #VariantsContainer {
             LayoutMode: Top;
             Visible: false;
 
@@ -157,21 +157,21 @@ Group {
               LayoutMode: Left;
               Anchor: (Height: 25, Top: 30);
 
-              Label #ColorsLabel {
-                Text: %client.myAvatar.color;
+              Label #VariantsLabel {
+                Text: %server.ui.wardrobe.variants.label;
                 Style: @HeadlineLabelStyle;
               }
             }
 
             $Common.@ContentSeparator {}
 
-            Group #Colors {
+            Group #Variants {
               Anchor: (Top: 10);
               LayoutMode: Top;
             }
           }
 
-          Group #VariantsContainer {
+          Group #OptionsContainer {
             LayoutMode: Top;
             Anchor: (Top: 24);
             Visible: false;
@@ -180,7 +180,7 @@ Group {
               LayoutMode: Left;
               Anchor: (Height: 25);
 
-              Label #VariantsLabel {
+              Label #OptionsLabel {
                 Text: %client.myAvatar.baseProperties.options;
                 Style: @HeadlineLabelStyle;
                 Anchor: (Top: -3); // Since there seems to be some spacing at the top of the text we need to shift this a bit upwards
@@ -189,7 +189,7 @@ Group {
 
             $Common.@ContentSeparator {}
 
-            DropdownBox #VariantsDropdown {
+            DropdownBox #OptionsDropdown {
               Anchor: (Width: 250, Top: 10, Height: 32, Left: 0);
               Style: $Common.@DefaultDropdownBoxStyle;
             }
@@ -246,7 +246,7 @@ Group {
         $Common.@SecondaryButton #Camera {
           @Sounds = $Sounds.@ButtonsLight;
           @Anchor = Anchor(Right: 8);
-          TooltipText: %server.ui.wardrobe.camera.description;
+          TooltipText: %server.ui.wardrobe.camera.tooltip;
           TextTooltipStyle: @ButtonTextTooltipStyle;
 
            Group {

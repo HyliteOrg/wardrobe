@@ -1,4 +1,4 @@
-$AC = "Wardrobe.ui";
+$Wardrobe = "Wardrobe.ui";
 $Common = "../../Common.ui";
 $Sounds = "../../Sounds.ui";
 
@@ -21,13 +21,13 @@ Group {
                MouseHover: (SoundPath: $Sounds.@ButtonsLightHover, Volume: 6)
              )
            );
-    TextTooltipStyle: $AC.@ButtonTextTooltipStyle;
+    TextTooltipStyle: $Wardrobe.@ButtonTextTooltipStyle;
   }
 
   Group #Locked {
     Visible: false;
     Anchor: (Top: 50);
-    Background: "../Icons/TileLocked.png";
+    Background: "../Icons/PartLocked.png";
   }
 
   Group #Selected {

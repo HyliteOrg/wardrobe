@@ -1,7 +1,7 @@
 package dev.hardaway.wardrobe.api.cosmetic;
 
 import dev.hardaway.wardrobe.api.menu.WardrobeVisibility;
-import dev.hardaway.wardrobe.api.menu.variant.CosmeticColorEntry;
+import dev.hardaway.wardrobe.api.menu.variant.CosmeticOptionEntry;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry;
 import dev.hardaway.wardrobe.api.property.WardrobeTranslatable;
 
@@ -20,7 +20,7 @@ public interface WardrobeCosmetic extends Cosmetic, WardrobeTranslatable {
     @Nullable
     String getIconPath();
 
-    Map<String, CosmeticVariantEntry> getVariantEntries();
+    Map<String, CosmeticOptionEntry> getOptionEntries();
 
-    List<CosmeticColorEntry> getColorEntries(@Nullable String variantId);
+    List<CosmeticVariantEntry> getVariantEntries(@Nullable String variantId);
 }

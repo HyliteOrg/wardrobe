@@ -12,15 +12,15 @@ public final class CosmeticSaveData implements PlayerCosmetic {
 
     public static final BuilderCodec<CosmeticSaveData> CODEC = BuilderCodec.builder(CosmeticSaveData.class, CosmeticSaveData::new)
             .append(new KeyedCodec<>("Id", Codec.STRING, true), (t, value) -> t.id = value, t -> t.id).add()
+            .append(new KeyedCodec<>("Option", Codec.STRING), (t, value) -> t.optionId = value, t -> t.optionId).add()
             .append(new KeyedCodec<>("Variant", Codec.STRING), (t, value) -> t.variantId = value, t -> t.variantId).add()
-            .append(new KeyedCodec<>("Texture", Codec.STRING), (t, value) -> t.textureId = value, t -> t.textureId).add()
             .build();
 
     private String id;
     @Nullable
-    private String variantId;
+    private String optionId;
     @Nullable
-    private String textureId;
+    private String variantId;
 
     public CosmeticSaveData() {
     }
@@ -29,22 +29,22 @@ public final class CosmeticSaveData implements PlayerCosmetic {
         this(id, null, null);
     }
 
-    public CosmeticSaveData(String id, String variantId, String textureId) {
+    public CosmeticSaveData(String id, @Nullable String optionId, @Nullable String variantId) {
         this.id = id;
+        this.optionId = optionId;
         this.variantId = variantId;
-        this.textureId = textureId;
     }
 
     public String getCosmeticId() {
         return id;
     }
 
-    public String getVariantId() {
-        return variantId;
+    public String getOptionId() {
+        return optionId;
     }
 
-    public String getTextureId() {
-        return textureId;
+    public String getVariantId() {
+        return variantId;
     }
 
 }

@@ -27,7 +27,7 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.WardrobeUtil;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmetic;
 import dev.hardaway.wardrobe.api.menu.WardrobeTab;
-import dev.hardaway.wardrobe.api.menu.variant.CosmeticColorEntry;
+import dev.hardaway.wardrobe.api.menu.variant.CosmeticOptionEntry;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.property.WardrobeTranslationProperties;
@@ -46,7 +46,7 @@ import java.util.function.Predicate;
 public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEventData> {
 
     private static final int COSMETICS_PER_ROW = 5;
-    private static final int OPTIONS_PER_ROW = 13;
+    private static final int VARIANTS_PER_ROW = 13;
 
     private final WardrobeMenu menu;
     private final Position position;
@@ -117,10 +117,10 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             buildCosmetics(commandBuilder, eventBuilder, ref, store);
         }
 
-        if (data.cosmetic != null || data.variant != null || data.texture != null) {
+        if (data.cosmetic != null || data.option != null || data.variant != null) {
             menu.selectCosmetic(
                     data.cosmetic != null ? CosmeticAsset.getAssetMap().getAsset(data.cosmetic) : null,
-                    data.variant, data.texture
+                    data.option, data.variant
             );
             buildCosmetics(commandBuilder, eventBuilder, ref, store);
         }
@@ -253,11 +253,11 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
 
     private void buildCosmetics(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, Ref<EntityStore> ref, Store<EntityStore> store) {
         commandBuilder.clear("#Cosmetics");
-        commandBuilder.clear("#Colors");
+        commandBuilder.clear("#Variants");
 
-        commandBuilder.set("#ColorsContainer.Visible", false);
         commandBuilder.set("#VariantsContainer.Visible", false);
-        commandBuilder.set("#VariantsDropdown.Visible", false);
+        commandBuilder.set("#OptionsContainer.Visible", false);
+        commandBuilder.set("#OptionsDropdown.Visible", false);
 
         Anchor anchor = new Anchor();
         anchor.setTop(Value.of(10));
@@ -311,12 +311,12 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             if (worn != null && cosmetic.getId().equals(worn.getCosmeticId())) {
                 commandBuilder.set(selector + " #Selected.Visible", true);
                 boolean options = buildOptions(commandBuilder, eventBuilder, worn, cosmetic);
-                boolean colors = buildColors(commandBuilder, eventBuilder, worn, cosmetic);
+                boolean colors = buildVariants(commandBuilder, eventBuilder, worn, cosmetic);
                 if (options || colors) anchorHeight = (int) (150 * 3.5 + 10 * (3.5 - 1) + 14);
             }
 
-            if (worn != null && worn.getVariantId() != null) {
-                CosmeticVariantEntry entry = cosmetic.getVariantEntries().get(worn.getVariantId());
+            if (worn != null && worn.getOptionId() != null) {
+                CosmeticOptionEntry entry = cosmetic.getOptionEntries().get(worn.getOptionId());
                 if (entry != null) {
                     String variantIconPath = entry.iconPath();
                     if (variantIconPath != null) {
@@ -333,7 +333,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
 
                         if (newTranslation != null) {
                             tooltip.insert("\n");
-                            tooltip.insert(Message.raw("Variant: ").color(Color.LIGHT_GRAY).italic(true));
+                            tooltip.insert(Message.raw("Option: ").color(Color.LIGHT_GRAY).italic(true));
                             tooltip.insert(newTranslation.getName().color(Color.LIGHT_GRAY).italic(true));
 
                             if (newTranslation.getDescriptionKey() != null) {
@@ -357,66 +357,68 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     }
 
     private boolean buildOptions(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, PlayerCosmetic wornCosmetic, WardrobeCosmetic cosmetic) {
-        Map<String, CosmeticVariantEntry> variantEntries = cosmetic.getVariantEntries();
-        if (variantEntries.isEmpty()) return false;
+        Map<String, CosmeticOptionEntry> optionEntries = cosmetic.getOptionEntries();
+        if (optionEntries.isEmpty()) return false;
 
-        commandBuilder.set("#VariantsContainer.Visible", true);
+        commandBuilder.set("#OptionsContainer.Visible", true);
 
         ObjectArrayList<DropdownEntryInfo> entries = new ObjectArrayList<>();
-        for (CosmeticVariantEntry variant : variantEntries.values()) {
+        for (CosmeticOptionEntry option : optionEntries.values()) {
             entries.add(new DropdownEntryInfo(
                     LocalizableString.fromMessageId(
-                            variant.translationProperties().getName().getMessageId()
+                            option.translationProperties().getName().getMessageId()
                     ),
-                    variant.id()
+                    option.id()
             ));
         }
 
-        commandBuilder.set("#VariantsDropdown.Visible", true);
-        commandBuilder.set("#VariantsDropdown.Entries", entries);
-        commandBuilder.set("#VariantsDropdown.Value", wornCosmetic.getVariantId());
+        commandBuilder.set("#OptionsDropdown.Visible", true);
+        commandBuilder.set("#OptionsDropdown.Entries", entries);
+        commandBuilder.set("#OptionsDropdown.Value", wornCosmetic.getOptionId());
 
         eventBuilder.addEventBinding(
                 CustomUIEventBindingType.ValueChanged,
-                "#VariantsDropdown",
-                EventData.of("@Variant", "#VariantsDropdown.Value")
+                "#OptionsDropdown",
+                EventData.of("@Variant", "#OptionsDropdown.Value")
         );
 
         return true;
     }
 
-    private boolean buildColors(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, PlayerCosmetic wornCosmetic, WardrobeCosmetic cosmetic) {
-        List<CosmeticColorEntry> colorEntries = cosmetic.getColorEntries(wornCosmetic.getVariantId());
-        if (colorEntries.isEmpty()) return false;
+    private boolean buildVariants(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, PlayerCosmetic wornCosmetic, WardrobeCosmetic cosmetic) {
+        List<CosmeticVariantEntry> variantEntries = cosmetic.getVariantEntries(wornCosmetic.getOptionId());
+        if (variantEntries.isEmpty()) return false;
 
-        commandBuilder.set("#ColorsContainer.Visible", true);
+        commandBuilder.set("#VariantsContainer.Visible", true);
 
         int row = -1;
-        for (int i = 0; i < colorEntries.size(); i++) {
-            CosmeticColorEntry colorEntry = colorEntries.get(i);
-            if (i % OPTIONS_PER_ROW == 0) {
-                commandBuilder.append("#Colors", "Wardrobe/Pages/Row.ui");
+        for (int i = 0; i < variantEntries.size(); i++) {
+            CosmeticVariantEntry variant = variantEntries.get(i);
+            if (i % VARIANTS_PER_ROW == 0) {
+                commandBuilder.append("#Variants", "Wardrobe/Pages/Row.ui");
                 row++;
             }
 
-            commandBuilder.append("#Colors[" + row + "] #Row", "Wardrobe/Pages/ColorOption.ui");
-            String selector = "#Colors[" + row + "] #Row[" + (i % OPTIONS_PER_ROW) + "]";
+            commandBuilder.append("#Variants[" + row + "] #Row", "Wardrobe/Pages/Variant.ui");
+            String selector = "#Variants[" + row + "] #Row[" + (i % VARIANTS_PER_ROW) + "]";
 
-            String[] baseColor = colorEntry.colors();
+            commandBuilder.set(selector + " #Button.TooltipText", variant.id()); // TODO: actual translatable name
 
-            for (int c = 0; c < baseColor.length; c++) {
-                String color = baseColor[c];
+            String[] colors = variant.colors();
+
+            for (int c = 0; c < colors.length; c++) {
+                String color = colors[c];
                 commandBuilder.append(selector + " #Button #Colors", "Wardrobe/Pages/Color.ui");
                 commandBuilder.set(selector + " #Button #Colors[" + c + "].Background", color);
             }
 
-            if (colorEntry.id().equals(wornCosmetic.getTextureId()))
+            if (variant.id().equals(wornCosmetic.getVariantId()))
                 commandBuilder.set(selector + " #Button #SelectedHighlight.Visible", true);
 
             eventBuilder.addEventBinding(
                     CustomUIEventBindingType.Activating,
                     selector + " #Button",
-                    EventData.of("Texture", colorEntry.id()),
+                    EventData.of("Variant", variant.id()),
                     false
             );
         }
@@ -430,8 +432,8 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                 .append(new KeyedCodec<>("Categories", Codec.STRING), (e, v) -> e.category = v, e -> e.category).add()
                 .append(new KeyedCodec<>("Slots", Codec.STRING), (e, v) -> e.slot = v, e -> e.slot).add()
                 .append(new KeyedCodec<>("Cosmetic", Codec.STRING), (e, v) -> e.cosmetic = v, e -> e.cosmetic).add()
-                .append(new KeyedCodec<>("@Variant", Codec.STRING), (e, v) -> e.variant = v, e -> e.variant).add()
-                .append(new KeyedCodec<>("Texture", Codec.STRING), (e, v) -> e.texture = v, e -> e.texture).add()
+                .append(new KeyedCodec<>("@Variant", Codec.STRING), (e, v) -> e.option = v, e -> e.option).add()
+                .append(new KeyedCodec<>("Variant", Codec.STRING), (e, v) -> e.variant = v, e -> e.variant).add()
                 .append(new KeyedCodec<>("@HideType", Codec.BOOLEAN), (e, v) -> e.hideType = v, e -> e.hideType).add()
                 .append(new KeyedCodec<>("Action", new EnumCodec<>(MenuAction.class)), (e, v) -> e.action = v, e -> e.action).add()
                 .build();
@@ -440,8 +442,8 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         private String category;
         private String slot;
         private String cosmetic;
+        private String option;
         private String variant;
-        private String texture;
         private Boolean hideType;
         private MenuAction action;
     }

@@ -129,7 +129,7 @@ public class WardrobeMenu {
         selectedSlot = slotId;
     }
 
-    public void selectCosmetic(@Nullable Cosmetic cosmetic, @Nullable String variant, @Nullable String texture) {
+    public void selectCosmetic(@Nullable Cosmetic cosmetic, @Nullable String option, @Nullable String variant) {
         PlayerCosmetic worn = wardrobe.getCosmetic(selectedSlot);
 
         if (cosmetic != null && worn != null && cosmetic.getId().equals(worn.getCosmeticId())) {
@@ -145,24 +145,24 @@ public class WardrobeMenu {
 
         if (cosmetic instanceof AppearanceCosmetic a) {
             Appearance appearance = a.getAppearance();
-            List<String> variants = List.of(appearance.collectVariants());
+            List<String> options = List.of(appearance.collectVariants());
+
+            if (option == null || !options.contains(option)) {
+                option = worn != null && (worn.getOptionId() != null && options.contains(worn.getOptionId()))
+                        ? worn.getOptionId()
+                        : options.isEmpty() ? null : options.getFirst();
+            }
+
+            List<String> variants = List.of(appearance.getTextureConfig(option).collectVariants());
 
             if (variant == null || !variants.contains(variant)) {
                 variant = worn != null && (worn.getVariantId() != null && variants.contains(worn.getVariantId()))
                         ? worn.getVariantId()
                         : variants.isEmpty() ? null : variants.getFirst();
             }
-
-            List<String> textures = List.of(appearance.getTextureConfig(variant).collectVariants());
-
-            if (texture == null || !textures.contains(texture)) {
-                texture = worn != null && (worn.getTextureId() != null && textures.contains(worn.getTextureId()))
-                        ? worn.getTextureId()
-                        : textures.isEmpty() ? null : textures.getFirst();
-            }
         }
 
-        wardrobe.setCosmetic(selectedSlot, new CosmeticSaveData(cosmetic.getId(), variant, texture));
+        wardrobe.setCosmetic(selectedSlot, new CosmeticSaveData(cosmetic.getId(), option, variant));
         wardrobe.rebuild();
     }
 

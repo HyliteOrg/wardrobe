@@ -8,13 +8,13 @@ import javax.annotation.Nullable;
 public class HytalePlayerCosmetic implements PlayerCosmetic {
 
     private final String cosmeticId;
+    private final String optionId;
     private final String variantId;
-    private final String textureId;
 
     public HytalePlayerCosmetic(PlayerSkin.PlayerSkinPartId partId) {
         this.cosmeticId = partId.getAssetId();
-        this.variantId = partId.getVariantId();
-        this.textureId = partId.getTextureId();
+        this.optionId = partId.getVariantId();
+        this.variantId = partId.getTextureId();
     }
 
     @Override
@@ -23,12 +23,12 @@ public class HytalePlayerCosmetic implements PlayerCosmetic {
     }
 
     @Nullable
-    public String getVariantId() {
-        return variantId;
+    public String getOptionId() {
+        return optionId;
     }
 
     @Override
-    public String getTextureId() {
-        return textureId;
+    public String getVariantId() {
+        return variantId;
     }
 }

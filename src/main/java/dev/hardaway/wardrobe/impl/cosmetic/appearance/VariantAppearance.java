@@ -30,7 +30,8 @@ public class VariantAppearance implements Appearance {
 
     @Override
     public TextureConfig getTextureConfig(String cosmeticVariantId) {
-        return variants.get(cosmeticVariantId).getTextureConfig();
+        Entry entry = variants.get(cosmeticVariantId);
+        return entry == null ? null : entry.getTextureConfig();
     }
 
     @Override

@@ -1,12 +1,6 @@
 package dev.hardaway.wardrobe.impl.player;
 
-import com.hypixel.hytale.component.AddReason;
-import com.hypixel.hytale.component.ArchetypeChunk;
-import com.hypixel.hytale.component.CommandBuffer;
-import com.hypixel.hytale.component.ComponentType;
-import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.RemoveReason;
-import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.RefChangeSystem;
 import com.hypixel.hytale.component.system.RefSystem;
@@ -38,16 +32,12 @@ import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytalePlayerCosmetic;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class PlayerWardrobeSystems {
     public static class Tick extends EntityTickingSystem<EntityStore> {
 
-        // TODO: rebuild on asset reload and equipment update
+        // TODO: rebuild on asset reload
         @Override
         public void tick(float v, int i, @Nonnull ArchetypeChunk<EntityStore> chunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
             PlayerWardrobeComponent wardrobe = chunk.getComponent(i, PlayerWardrobeComponent.getComponentType());
@@ -121,8 +111,7 @@ public class PlayerWardrobeSystems {
                     PlayerCosmetic cosmeticData = wardrobeComponent.getCosmetic(slotId);
                     if (cosmeticData == null && cosmetic instanceof HytaleCosmetic) {
                         PlayerSkin.PlayerSkinPartId part = WardrobeUtil.getSkinPartForType(slot.getHytaleCosmeticType(), cosmeticSkin);
-                        if (part == null)
-                            return;
+                        if (part == null) return;
 
                         cosmeticData = new HytalePlayerCosmetic(part);
                     }

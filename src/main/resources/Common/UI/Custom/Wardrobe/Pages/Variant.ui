@@ -1,6 +1,5 @@
+$Wardrobe = "Wardrobe.ui";
 $Sounds = "../../Sounds.ui";
-
-@ColorsPerRow = 13;
 
 Group {
   Padding: (Horizontal: 3, Vertical: 3);
@@ -15,9 +14,10 @@ Group {
       )
     );
     Anchor: (Width: 30, Height: 30, Bottom: 8);
+    TextTooltipStyle: $Wardrobe.@ButtonTextTooltipStyle;
 
     Group #SelectedHighlight {
-      Anchor: (Width: 36, Height: 36, Top: -3, Left: -3);
+      Anchor: (Width: 36, Height: 36);
       Background: "../Icons/ColorOptionSelected.png";
       Visible: false;
     }
@@ -29,7 +29,8 @@ Group {
     }
 
     AssetImage #Icon {
-      Anchor: (Width: 44, Height: 44);
+      Anchor: (Width: 30, Height: 30);
+      MaskTexturePath: "../Icons/ColorOptionMask.png";
     }
 
     Group {
