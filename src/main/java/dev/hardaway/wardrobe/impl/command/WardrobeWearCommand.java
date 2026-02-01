@@ -26,14 +26,14 @@ import java.util.List;
 
 public class WardrobeWearCommand extends AbstractPlayerCommand {
 
-    private final RequiredArg<String> cosmeticArg;
+    private final RequiredArg<CosmeticAsset> cosmeticArg;
     private final OptionalArg<String> optionArg;
     private final OptionalArg<String> variantArg;
 
     public WardrobeWearCommand() {
         super("wear", "server.commands.wardrobe.wear.description");
         this.setPermissionGroup(GameMode.Adventure);
-        this.cosmeticArg = this.withRequiredArg("cosmetic", "server.commands.wardrobe.wear.args.cosmetic.description", ArgTypes.STRING);
+        this.cosmeticArg = this.withRequiredArg("cosmetic", "server.commands.wardrobe.wear.args.cosmetic.description", WardrobeCommand.COSMETIC_ARGUMENT_TYPE);
         this.optionArg = this.withOptionalArg("variant", "server.commands.wardrobe.wear.args.option.description", ArgTypes.STRING);
         this.variantArg = this.withOptionalArg("color", "server.commands.wardrobe.wear.args.variant.description", ArgTypes.STRING);
     }
@@ -48,13 +48,7 @@ public class WardrobeWearCommand extends AbstractPlayerCommand {
     ) {
         PlayerWardrobe wardrobe = store.ensureAndGetComponent(ref, PlayerWardrobeComponent.getComponentType());
 
-        String cosmeticId = cosmeticArg.get(context);
-        WardrobeCosmetic cosmetic = CosmeticAsset.getAssetMap().getAsset(cosmeticId); // TODO: registry
-
-        if (cosmetic == null) {
-            context.sendMessage(Message.raw("Failed to find cosmetic with id \"{id}\"!").param("id", cosmeticId));
-            return;
-        }
+        WardrobeCosmetic cosmetic = cosmeticArg.get(context);
 
         if (!cosmetic.getProperties().hasPermission(playerRef.getUuid())) {
             context.sendMessage(Message.raw("You do not have permission to use this cosmetic."));
@@ -71,7 +65,7 @@ public class WardrobeWearCommand extends AbstractPlayerCommand {
             if (optionArg.provided(context)) {
                 String provided = optionArg.get(context);
                 if (!variants.contains(provided)) {
-                    context.sendMessage(Message.raw("Failed to find option \"{id}\" for this cosmetic!").param("id", provided));
+                    context.sendMessage(Message.raw("Failed to find option '{id}' for this cosmetic!").param("id", provided));
                     return;
                 }
                 variant = provided;
@@ -86,7 +80,7 @@ public class WardrobeWearCommand extends AbstractPlayerCommand {
                 if (variantArg.provided(context)) {
                     String provided = variantArg.get(context);
                     if (!textures.contains(provided)) {
-                        context.sendMessage(Message.raw("Failed to find variant \"{id}\" for this cosmetic!").param("id", provided));
+                        context.sendMessage(Message.raw("Failed to find variant '{id}' for this cosmetic!").param("id", provided));
                         return;
                     }
                     texture = provided;
@@ -97,9 +91,9 @@ public class WardrobeWearCommand extends AbstractPlayerCommand {
         }
 
         String slotId = cosmetic.getCosmeticSlotId();
-        wardrobe.setCosmetic(slotId, new CosmeticSaveData(cosmeticId, variant, texture));
+        wardrobe.setCosmetic(slotId, new CosmeticSaveData(cosmetic.getId(), variant, texture));
         wardrobe.rebuild();
 
-        context.sendMessage(Message.raw("Cosmetic worn."));
+        context.sendMessage(Message.raw("Cosmetic worn on your avatar."));
     }
 }

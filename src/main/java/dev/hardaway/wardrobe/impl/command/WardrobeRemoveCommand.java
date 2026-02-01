@@ -32,18 +32,22 @@ public class WardrobeRemoveCommand extends AbstractPlayerCommand {
 
     @Override
     protected void execute(@Nonnull CommandContext context, @Nonnull Store<EntityStore> store, @Nonnull Ref<EntityStore> ref, @Nonnull PlayerRef playerRef, @Nonnull World world) {
-        PlayerWardrobe wardrobeComponent = store.getComponent(ref, PlayerWardrobeComponent.getComponentType());
-        if (wardrobeComponent == null) {
-            context.sendMessage(Message.raw("No Wardrobe data found"));
+        PlayerWardrobe wardrobe = store.getComponent(ref, PlayerWardrobeComponent.getComponentType());
+        if (wardrobe == null) {
+            context.sendMessage(Message.raw("No Wardrobe found on your avatar"));
             return;
         }
 
         WardrobeCosmetic cosmetic = this.cosmeticArg.get(context);
-        for (Map.Entry<String, PlayerCosmetic> cosmeticEntry : wardrobeComponent.getCosmeticMap().entrySet()) {
+        for (Map.Entry<String, PlayerCosmetic> cosmeticEntry : wardrobe.getCosmeticMap().entrySet()) {
             if (Objects.equals(cosmeticEntry.getValue().getCosmeticId(), cosmetic.getId())) {
-                wardrobeComponent.removeCosmetic(cosmeticEntry.getKey());
-                context.sendMessage(Message.join(Message.raw("Removed '"), cosmetic.getProperties().getTranslationProperties().getName(), Message.raw("' from your avatar")));
+                wardrobe.removeCosmetic(cosmeticEntry.getKey());
+                wardrobe.rebuild();
+                context.sendMessage(Message.join(Message.raw("Removed the '"), cosmetic.getProperties().getTranslationProperties().getName(), Message.raw("' cosmetic from your avatar")));
+                return;
             }
         }
+
+        context.sendMessage(Message.join(Message.raw("Failed to find the '"), cosmetic.getProperties().getTranslationProperties().getName(), Message.raw("' cosmetic on your avatar")));
     }
 }
