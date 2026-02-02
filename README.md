@@ -9,9 +9,9 @@
 ![](https://media.forgecdn.net/attachments/1502/730/hyvider.png)
 
 # Overview
-Wardrobe is a customizable cosmetics mod for Hytale that implements new asset types, allowing creators to add customizable cosmetics without needing to add new armor items!
+Wardrobe is a customizable cosmetics mod for Hytale that lets creators add customizable cosmetics in Asset Packs without needing to add new armor items!
 
-Cosmetics support every feature Hytale cosmetics use, such as gradient set colors, texture variants, model options, and more! Asset Packs can even add new cosmetic slots and categories, in case your cosmetic doesn't fit into the default ones. Cosmetic appearances can also display different appearances depending on Armor and other Cosmetics, incase there's any overlap!
+Cosmetics support every feature Hytale cosmetics use, such as gradient set colors, texture variants, model options, and more! Asset Packs can even add new cosmetic slots and categories, in case your cosmetic doesn't fit into the default ones. Cosmetic appearances can also display different appearances depending on Armor and other Cosmetics the player is wearing.
 
 Players are able to access a familiar avatar customization screen by crafting and interacting with the new Cosmetics Mirror block or by using the command `/wardrobe`.
 
@@ -25,7 +25,7 @@ With Wardrobe's extensible API, developers can create addons to add specialized 
 # Create New Cosmetics
 Wardrobe is an extremely flexible and customizable cosmetic system. It recreates the Hytale cosmetic system as close as possible, meaning all cosmetics support the same features that Hytale cosmetics support with a few differences.
 
-These features include (but not limited to):
+These features include (but are not limited to):
 - Texture Variants (Variants)
 - Appearance Variants (Model Options)
 - Gradient Set Colors
@@ -50,7 +50,9 @@ Most cosmetics in Wardrobe and Hytale are Model Attachments. These are simple co
 ![](https://media.forgecdn.net/attachments/1502/730/hyvider.png)
 
 # The Wardrobe Menu
-Players can access the Wardrobe Menu through the new Cosmetics Mirror! The Cosmetics Mirror can be crafted with **five Metal Bars** (of any type) and **three White Crystal Shards**. It can be placed on the ground or on the wall, and upon interacting with it, the new Wardrobe Menu will open where you can customize your avatar to your hearts' content!
+Players can access the Wardrobe Menu through the new Cosmetics Mirror! The Cosmetics Mirror can be crafted with **five Metal Bars** (of any type) and **three White Crystal Shards**. It can be placed on the ground or on the wall, and upon interacting with it, the new Wardrobe Menu will open where you can customize your avatar to your heart's content!
+
+The menu is also accessible by using the `/wardrobe` command in chat. Server administrators can change the permissions of this command using the permission node `hardaway.wardrobe.commands.wardrobe`.
 
 &nbsp;
 ![](https://media.forgecdn.net/attachments/1509/156/hyrafting-png.png)
@@ -58,11 +60,9 @@ Players can access the Wardrobe Menu through the new Cosmetics Mirror! The Cosme
 
 The Wardrobe Menu looks very familiar! It's meant to look just like the Hytale Avatar Editor, so players already know their way around it. Creators can add new categories and cosmetic slots in Asset Packs, along with Cosmetic Variants and Options. Cosmetic Variants allow a player to customize the texture / color of their Cosmetic, while Options allow for more advanced appearances like different model configurations.
 
-Next to the search bar is also a `Hide Default Cosmetics` button. When toggled, your Official Hytale Cosmetic will be hidden from your player, in case it doesn't fit your custom avatar's style.
+Note: Official Hytale Cosmetics are not included in Wardrobe's menu and cannot be changed in-game. When you join a server, your equipped Hytale Cosmetics are treated as your default appearance. Wardrobe Cosmetics will override any Hytale Cosmetics occupying the same slot.
 
-Note: _Official Hytale Cosmetics can be mixed with Wardrobe Cosmetics, but Official Hytale Cosmetics are restricted to the cosmetics on your avatar when you join. Players who want to change or use an Official Hytale Cosmetic must leave the server to change their avatar, then rejoin. Official Hytale Cosmetics are considered the Default Cosmetic in the Wardrobe Menu._
-
-The menu is also accessible by using the `/wardrobe` command in chat. Server administrators can change the permissions of this command using the permission node `hardaway.wardrobe.commands.wardrobe`.
+There is also a `Hide Default Cosmetic` button next to the search bar. When toggled, the Hytale Cosmetic occupying that slot will be hidden, in case it doesn't fit your custom avatar's style. Some cosmetics, such as Faces, Eyes, Ears, Underwear, and Body Characteristics, cannot be hidden with this button. Creators making player model cosmetics that do not support these types should consider using the `HiddenCosmeticSlots` field to hide them.
 
 &nbsp;
 ![](https://media.forgecdn.net/attachments/1509/157/hyverview-png.png)
@@ -77,7 +77,7 @@ Define your cosmetics in JSON files, point them to your models and textures, and
 
 The system is built to be flexible and powerful. You can add simple cosmetics with single-texture models, or complex ones with multiple variants, color options, armor-aware appearances, and overlap detection. Cosmetics can also hide conflicting slots or be restricted to players with specific permissions.
 
-## Model Attachements
+## Model Attachments
 
 A simple Model Attachment cosmetic with one model and one texture:
 
@@ -87,7 +87,7 @@ A simple Model Attachment cosmetic with one model and one texture:
     "Translation": {
       "Name": "example.Example_HeadAccessory_My_Example_Accessory.name"
     },
-    "Icon": "Icons/Wardrobe/Cosmetics/HeadAccessory/Example_HeadAccessory_My_Example_Accessory.png",
+    "Icon": "Icons/Wardrobe/Cosmetics/HeadAccessory/Example_HeadAccessory_My_Example_Accessory.png"
   },
   "CosmeticSlot": "HeadAccessory",
   "Appearance": {
@@ -128,7 +128,7 @@ Like gradient sets, these variants show under the `Variants` section in the Ward
     "TextureConfig": {
       "Type": "Variant",
       "Variants": {
-        "Orange": {
+        "Red": {
           "Texture": "Characters/Wardrobe/Cosmetics/HeadAccessory/Example_HeadAccessory_My_Example_Accessory/Red.png",
           "WardrobeColor": ["#ff0000"]
         },
@@ -163,12 +163,12 @@ To offer completely different models as options, use a variant appearance. These
           "Texture": "Characters/Wardrobe/Cosmetics/Example_Cape_My_Example_Cape/Neck.png"
         }
       },
-      "No_Neck": {
+      "NoNeck": {
         "Properties": {
           "Translation": {
             "Name": "example.Example_Cape_My_Example_Cape.NoNeck.name"
           },
-          "Icon": "Icons/Wardrobe/Cosmetics/Horns/Ram.png",
+          "Icon": "Icons/Wardrobe/Cosmetics/Example_Cape_My_Example_Cape/NoNeck.png"
         },
         "Model": "Characters/Wardrobe/Cosmetics/Example_Cape_My_Example_Cape/NoNeck.blockymodel",
         "TextureConfig": {
@@ -187,16 +187,21 @@ With Player Models, the `Model` field is a `ModelAsset` id instead of a `blockym
 
 These cosmetics should try to always be in the `BodyCharacteristic` slot to reduce potential conflictions. Player Model cosmetics completely override a player model base, meaning any other Player Model cosmetics attached in different slots may fight over which model gets shown.
 
-```json
+```json5
 {
   "Type": "PlayerModel",
   "Properties": {
     "Translation": {
       "Name": "example.Example_BodyCharacteristic_Kweebec.name"
     },
-    "Icon": "Icons/Wardrobe/Cosmetics/BodyCharacteristic/Example_BodyCharacteristic_Kweebec.png",
+    "Icon": "Icons/Wardrobe/Cosmetics/BodyCharacteristic/Example_BodyCharacteristic_Kweebec.png"
   },
   "CosmeticSlot": "BodyCharacteristic",
+  "HiddenCosmeticSlots": [
+    "Haircut",
+    "Ears",
+    "Face"
+  ],
   "Appearance": {
     "Model": "Kweebec_Sapling_Brown", // This is referencing the file Server/Models/Intelligent/Kweebec/Kweebec_Sapling_Brown.json
     "TextureConfig": {
