@@ -62,7 +62,7 @@ Next to the search bar is also a `Hide Default Cosmetics` button. When toggled, 
 
 Note: _Official Hytale Cosmetics can be mixed with Wardrobe Cosmetics, but Official Hytale Cosmetics are restricted to the cosmetics on your avatar when you join. Players who want to change or use an Official Hytale Cosmetic must leave the server to change their avatar, then rejoin. Official Hytale Cosmetics are considered the Default Cosmetic in the Wardrobe Menu._
 
-The menu is also accessible by using the `/wardrobe` command in chat. Server administrators can change the permissions of this command using the permission node `hardaway.wardrobe.wardrobe`.
+The menu is also accessible by using the `/wardrobe` command in chat. Server administrators can change the permissions of this command using the permission node `hardaway.wardrobe.commands.wardrobe`.
 
 &nbsp;
 ![](https://media.forgecdn.net/attachments/1509/157/hyverview-png.png)
@@ -105,7 +105,7 @@ Cosmetics also support using a grayscale texture with gradient sets. These are b
 ```json
 {
   "Appearance": {
-    "Model": "haracters/Wardrobe/Cosmetics/HeadAccessory/Example_HeadAccessory_My_Example_Accessory/My_Example_Accessory.blockymodel",
+    "Model": "Characters/Wardrobe/Cosmetics/HeadAccessory/Example_HeadAccessory_My_Example_Accessory/My_Example_Accessory.blockymodel",
     "TextureConfig": {
       "Type": "Gradient",
       "GrayscaleTexture": "Characters/Wardrobe/Cosmetics/HeadAccessory/Example_HeadAccessory_My_Example_Accessory/My_Example_Accessory_Grayscale.png",
