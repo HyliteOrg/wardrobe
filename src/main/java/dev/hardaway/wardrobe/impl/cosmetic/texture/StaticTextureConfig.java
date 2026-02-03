@@ -3,6 +3,7 @@ package dev.hardaway.wardrobe.impl.cosmetic.texture;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
 
 import javax.annotation.Nonnull;
@@ -11,10 +12,12 @@ import javax.annotation.Nullable;
 public class StaticTextureConfig implements TextureConfig {
 
     public static final BuilderCodec<StaticTextureConfig> CODEC = BuilderCodec.builder(StaticTextureConfig.class, StaticTextureConfig::new)
-            .append(new KeyedCodec<>("Texture", Codec.STRING),
+            .append(new KeyedCodec<>("Texture", Codec.STRING, true),
                     (t, value) -> t.texture = value,
                     t -> t.texture
-            ).add()
+            )
+            .addValidator(CommonAssetValidator.TEXTURE_CHARACTER)
+            .add()
 
             .build();
 

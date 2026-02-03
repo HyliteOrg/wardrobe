@@ -31,8 +31,8 @@ import dev.hardaway.wardrobe.api.menu.variant.CosmeticOptionEntry;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.property.WardrobeTranslationProperties;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticAsset;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlotAsset;
+import dev.hardaway.wardrobe.impl.cosmetic.Cosmetic;
+import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlot;
 import dev.hardaway.wardrobe.impl.player.PlayerWardrobeComponent;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
@@ -119,7 +119,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
 
         if (data.cosmetic != null || data.option != null || data.variant != null) {
             menu.selectCosmetic(
-                    data.cosmetic != null ? CosmeticAsset.getAssetMap().getAsset(data.cosmetic) : null,
+                    data.cosmetic != null ? Cosmetic.getAssetMap().getAsset(data.cosmetic) : null,
                     data.option, data.variant
             );
             buildCosmetics(commandBuilder, eventBuilder, ref, store);
@@ -241,7 +241,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     }
 
     private void buildCheckbox(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder) {
-        CosmeticSlotAsset slot = CosmeticSlotAsset.getAssetMap().getAsset(menu.getSelectedSlot());
+        CosmeticSlot slot = CosmeticSlot.getAssetMap().getAsset(menu.getSelectedSlot());
         if (slot != null && slot.getHytaleCosmeticType() != null && WardrobeUtil.canBeHidden(slot.getHytaleCosmeticType())) {
             commandBuilder.set("#HideType.Visible", true);
             commandBuilder.set("#HideType.Value", menu.getWardrobe().getHiddenCosmeticTypes().contains(slot.getHytaleCosmeticType()));

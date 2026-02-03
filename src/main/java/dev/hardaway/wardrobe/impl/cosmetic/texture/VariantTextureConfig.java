@@ -5,8 +5,10 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.validation.Validators;
+import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
 import dev.hardaway.wardrobe.api.property.WardrobeProperties;
+import dev.hardaway.wardrobe.api.property.validator.WardrobeValidators;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,15 +46,21 @@ public class VariantTextureConfig implements TextureConfig {
                 .append(new KeyedCodec<>("Properties", WardrobeProperties.CODEC, true),
                         (t, value) -> t.properties = value,
                         t -> t.properties
-                ).add()
+                )
+                .addValidator(Validators.nonNull())
+                .add()
 
                 .append(new KeyedCodec<>("Texture", Codec.STRING, true),
                         (t, value) -> t.texture = value, t -> t.texture
-                ).add()
+                )
+                .addValidator(CommonAssetValidator.TEXTURE_CHARACTER)
+                .add()
 
                 .append(new KeyedCodec<>("WardrobeColor", Codec.STRING_ARRAY, true),
                         (t, value) -> t.colors = value, t -> t.colors
-                ).addValidator(Validators.nonNullArrayElements()).add()
+                )
+                .addValidator(WardrobeValidators.COLOR)
+                .add()
 
                 .build();
 

@@ -3,25 +3,39 @@ package dev.hardaway.wardrobe.api.property;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.Message;
 
 public class WardrobeTranslationProperties {
     public static final BuilderCodec<WardrobeTranslationProperties> CODEC = BuilderCodec.builder(WardrobeTranslationProperties.class, WardrobeTranslationProperties::new)
             .append(
-                    new KeyedCodec<>("Name", Codec.STRING),
+                    new KeyedCodec<>("Name", Codec.STRING, true),
                     (data, s) -> data.nameKey = s,
                     data -> data.nameKey
-            ).addValidator(Validators.nonNull()).add()
+            )
+            .metadata(new UIEditor(
+                    new UIEditor.LocalizationKeyField(
+                            "server.wardrobe.{assetId}.name"
+                    )
+            ))
+            .addValidator(Validators.nonEmptyString())
+            .add()
 
             .append(
                     new KeyedCodec<>("Description", Codec.STRING),
                     (data, s) -> data.descriptionKey = s,
                     data -> data.descriptionKey
-            ).addValidator(Validators.nonNull()).add()
+            )
+            .metadata(new UIEditor(
+                    new UIEditor.LocalizationKeyField(
+                            "server.wardrobe.{assetId}.description"
+                    )
+            ))
+            .add()
             .build();
 
-    private String nameKey = "";
+    private String nameKey;
     private String descriptionKey = "";
 
     WardrobeTranslationProperties() {

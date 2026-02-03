@@ -1,13 +1,14 @@
 package dev.hardaway.wardrobe.impl.cosmetic;
 
+import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPart;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
-import dev.hardaway.wardrobe.api.cosmetic.Cosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
@@ -30,25 +31,35 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ModelAttachmentCosmetic extends CosmeticAsset implements AppearanceCosmetic {
+public class ModelAttachmentCosmetic extends Cosmetic implements AppearanceCosmetic {
 
-    public static final BuilderCodec<ModelAttachmentCosmetic> CODEC = BuilderCodec.builder(ModelAttachmentCosmetic.class, ModelAttachmentCosmetic::new, CosmeticAsset.ABSTRACT_CODEC)
-            .append(new KeyedCodec<>("OverlapCosmeticSlots", Codec.STRING_ARRAY),
-                    (t, value) -> t.overlapCosmeticSlotIds = value,
-                    t -> t.overlapCosmeticSlotIds
+    public static final BuilderCodec<ModelAttachmentCosmetic> CODEC = AssetBuilderCodec.builder(ModelAttachmentCosmetic.class, ModelAttachmentCosmetic::new, Cosmetic.ABSTRACT_CODEC)
+            .appendInherited(new KeyedCodec<>("OverlapCosmeticSlots", Codec.STRING_ARRAY),
+                    (c, value) -> c.overlapCosmeticSlotIds = value,
+                    c -> c.overlapCosmeticSlotIds,
+                    (c, p) -> c.overlapCosmeticSlotIds = p.overlapCosmeticSlotIds
             ).add()
-            .append(new KeyedCodec<>("Appearance", Appearance.CODEC, true),
-                    (t, value) -> t.appearance = value,
-                    t -> t.appearance
+
+            .appendInherited(new KeyedCodec<>("Appearance", Appearance.CODEC, true),
+                    (c, value) -> c.appearance = value,
+                    c -> c.appearance,
+                    (c, p) -> c.appearance = p.appearance
+            )
+            .addValidator(Validators.nonNull())
+            .add()
+
+            .appendInherited(new KeyedCodec<>("OverlapAppearance", Appearance.CODEC),
+                    (c, value) -> c.overlapAppearance = value,
+                    c -> c.appearance,
+                    (c, p) -> c.overlapAppearance = p.overlapAppearance
             ).add()
-            .append(new KeyedCodec<>("OverlapAppearance", Appearance.CODEC),
-                    (t, value) -> t.overlapAppearance = value,
-                    t -> t.appearance
-            ).add()
-            .append(new KeyedCodec<>("ArmorAppearance", Appearance.CODEC, false),
+
+            .appendInherited(new KeyedCodec<>("ArmorAppearance", Appearance.CODEC, false),
                     (t, value) -> t.armorAppearance = value,
-                    t -> t.armorAppearance
+                    t -> t.armorAppearance,
+                    (c, p) -> c.armorAppearance = p.armorAppearance
             ).add()
+
             .build();
 
     private String[] overlapCosmeticSlotIds = new String[0];
@@ -150,7 +161,7 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
             }
         } else if (this.getOverlapAppearance() != null) {
             boolean overlapFound = false;
-            for (Cosmetic cosmetic : context.getCosmeticMap().values()) {
+            for (dev.hardaway.wardrobe.api.cosmetic.Cosmetic cosmetic : context.getCosmeticMap().values()) {
                 if (overlapFound)
                     break;
 

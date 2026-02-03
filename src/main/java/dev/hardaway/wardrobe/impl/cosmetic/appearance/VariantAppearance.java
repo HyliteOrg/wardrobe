@@ -4,9 +4,11 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
+import com.hypixel.hytale.codec.validation.Validators;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
 import dev.hardaway.wardrobe.api.property.WardrobeProperties;
+import dev.hardaway.wardrobe.api.property.validator.WardrobeValidators;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -14,8 +16,9 @@ import java.util.Map;
 public class VariantAppearance implements Appearance {
 
     public static final BuilderCodec<VariantAppearance> CODEC = BuilderCodec.builder(VariantAppearance.class, VariantAppearance::new)
-            .append(new KeyedCodec<>("Variants", new MapCodec<>(VariantAppearance.Entry.CODEC, LinkedHashMap::new), true), (t, value) -> t.variants = value, t -> t.variants).add()
-            .build();
+            .append(new KeyedCodec<>("Variants", new MapCodec<>(VariantAppearance.Entry.CODEC, LinkedHashMap::new), true),
+                    (a, value) -> a.variants = value, a -> a.variants
+            ).add().build();
 
     private Map<String, Entry> variants;
 
@@ -42,19 +45,24 @@ public class VariantAppearance implements Appearance {
     public static class Entry {
 
         public static final BuilderCodec<VariantAppearance.Entry> CODEC = BuilderCodec.builder(VariantAppearance.Entry.class, VariantAppearance.Entry::new)
-
                 .append(new KeyedCodec<>("Properties", WardrobeProperties.CODEC, true),
                         (t, value) -> t.properties = value,
                         t -> t.properties
-                ).add()
+                )
+                .addValidator(Validators.nonNull())
+                .add()
 
                 .append(new KeyedCodec<>("Model", Codec.STRING, true),
                         (t, value) -> t.model = value, t -> t.model
-                ).add()
+                )
+                .addValidator(WardrobeValidators.APPEARANCE_MODEL)
+                .add()
 
                 .append(new KeyedCodec<>("TextureConfig", TextureConfig.CODEC, true),
                         (t, value) -> t.textureConfig = value, t -> t.textureConfig
-                ).add()
+                )
+                .addValidator(Validators.nonNull())
+                .add()
 
                 .build();
 

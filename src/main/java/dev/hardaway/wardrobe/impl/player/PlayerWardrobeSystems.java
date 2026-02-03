@@ -21,12 +21,11 @@ import com.hypixel.hytale.server.core.modules.entity.player.PlayerSkinComponent;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.WardrobeUtil;
-import dev.hardaway.wardrobe.api.cosmetic.Cosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.player.PlayerWardrobe;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticAsset;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlotAsset;
+import dev.hardaway.wardrobe.impl.cosmetic.Cosmetic;
+import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlot;
 import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytaleCosmetic;
 import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytalePlayerCosmetic;
 
@@ -87,11 +86,11 @@ public class PlayerWardrobeSystems {
 
             // Populate the applied cosmetics map
             PlayerSkin cosmeticSkin = WardrobeUtil.skinFromProtocol(skin);
-            Map<String, ? extends WardrobeCosmeticSlot> slots = CosmeticSlotAsset.getAssetMap().getAssetMap();
+            Map<String, ? extends WardrobeCosmeticSlot> slots = CosmeticSlot.getAssetMap().getAssetMap();
             for (WardrobeCosmeticSlot group : slots.values()) {
                 PlayerCosmetic playerCosmetic = wardrobeComponent.getCosmetic(group);
                 if (playerCosmetic != null) {
-                    Cosmetic cosmetic = CosmeticAsset.getAssetMap().getAsset(playerCosmetic.getCosmeticId()); // TODO: replace with registry
+                    dev.hardaway.wardrobe.api.cosmetic.Cosmetic cosmetic = Cosmetic.getAssetMap().getAsset(playerCosmetic.getCosmeticId()); // TODO: replace with registry
                     if (cosmetic != null) {
                         context.getCosmeticMap().put(group.getId(), cosmetic);
                     }

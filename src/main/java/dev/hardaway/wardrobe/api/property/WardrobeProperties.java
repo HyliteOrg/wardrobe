@@ -3,8 +3,11 @@ package dev.hardaway.wardrobe.api.property;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIRebuildCaches;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.permissions.PermissionsModule;
+import dev.hardaway.wardrobe.api.property.validator.WardrobeValidators;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,19 +20,37 @@ public class WardrobeProperties {
                     new KeyedCodec<>("Translation", WardrobeTranslationProperties.CODEC, true),
                     (data, s) -> data.translationProperties = s,
                     data -> data.translationProperties
-            ).addValidator(Validators.nonNull()).add()
+            )
+            .addValidator(Validators.nonNull())
+            .add()
 
             .append(
                     new KeyedCodec<>("Visibility", WardrobeVisibility.CODEC),
                     (data, s) -> data.visibility = s,
                     data -> data.visibility
-            ).add()
+            )
+            .documentation("Enum used to specify when the element will be visible in menus.")
+            .add()
 
             .append(
                     new KeyedCodec<>("Icon", Codec.STRING),
                     (data, s) -> data.icon = s,
                     data -> data.icon
-            ).add()
+            )
+            .addValidator(WardrobeValidators.ICON)
+            .metadata(new UIEditor(new UIEditor.Icon(
+                    "Icons/ModelsGenerated/{assetId}.png", 64, 64
+            )))
+            .metadata(new UIRebuildCaches(UIRebuildCaches.ClientCache.ITEM_ICONS))
+            .add()
+
+//            .append(
+//                    new KeyedCodec<>("IconProperties", AssetIconProperties.CODEC),
+//                    (p, i) -> p.iconProperties = i,
+//                    (item) -> item.iconProperties
+//            )
+//            .metadata(UIDisplayMode.HIDDEN)
+//            .add() // TODO: proper asset editor icon
 
             .append(
                     new KeyedCodec<>("PermissionNode", Codec.STRING),

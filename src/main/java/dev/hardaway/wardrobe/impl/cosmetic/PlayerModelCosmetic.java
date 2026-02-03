@@ -2,6 +2,7 @@ package dev.hardaway.wardrobe.impl.cosmetic;
 
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
@@ -26,13 +27,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosmetic {
+public class PlayerModelCosmetic extends Cosmetic implements AppearanceCosmetic {
 
-    public static final BuilderCodec<PlayerModelCosmetic> CODEC = BuilderCodec.builder(PlayerModelCosmetic.class, PlayerModelCosmetic::new, CosmeticAsset.ABSTRACT_CODEC)
+    public static final BuilderCodec<PlayerModelCosmetic> CODEC = BuilderCodec.builder(PlayerModelCosmetic.class, PlayerModelCosmetic::new, Cosmetic.ABSTRACT_CODEC)
             .append(new KeyedCodec<>("Appearance", Appearance.CODEC, true),
                     (t, value) -> t.appearance = value,
                     t -> t.appearance
-            ).add()
+            )
+            .addValidator(Validators.nonNull())
+            .add()
             .build();
 
     private Appearance appearance;

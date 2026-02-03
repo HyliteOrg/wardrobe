@@ -19,32 +19,44 @@ import dev.hardaway.wardrobe.api.property.WardrobeProperties;
 import javax.annotation.Nonnull;
 import java.util.function.Supplier;
 
-public abstract class CosmeticAsset implements WardrobeCosmetic, JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticAsset>> {
+public abstract class Cosmetic implements WardrobeCosmetic, JsonAssetWithMap<String, DefaultAssetMap<String, Cosmetic>> {
 
-    public static final BuilderCodec<CosmeticAsset> ABSTRACT_CODEC = BuilderCodec.abstractBuilder(CosmeticAsset.class)
-            .append(new KeyedCodec<>("Properties", WardrobeProperties.CODEC, true),
-                    (t, value) -> t.properties = value,
-                    t -> t.properties
-            ).addValidator(Validators.nonNull()).add()
+    public static final BuilderCodec<Cosmetic> ABSTRACT_CODEC = BuilderCodec.abstractBuilder(Cosmetic.class)
+//            .metadata(new UIEditorPreview(UIEditorPreview.PreviewType.MODEL)) TODO: proper model preview & icon
 
-            .append(new KeyedCodec<>("CosmeticSlot", Codec.STRING, true),
-                    (t, value) -> t.cosmeticSlotId = value,
-                    t -> t.cosmeticSlotId
-            ).add()
-            .append(new KeyedCodec<>("HiddenCosmeticSlots", Codec.STRING_ARRAY),
-                    (t, value) -> t.hiddenCosmeticSlots = value,
-                    t -> t.hiddenCosmeticSlots
-            ).add()
+            .appendInherited(new KeyedCodec<>("Properties", WardrobeProperties.CODEC, true),
+                    (c, value) -> c.properties = value,
+                    c -> c.properties,
+                    (c, p) -> c.properties = p.properties
+            )
+            .addValidator(Validators.nonNull())
+            .add()
+
+            .appendInherited(new KeyedCodec<>("CosmeticSlot", Codec.STRING, true),
+                    (c, value) -> c.cosmeticSlotId = value,
+                    c -> c.cosmeticSlotId,
+                    (c, p) -> c.cosmeticSlotId = p.cosmeticSlotId
+            )
+            .addValidator(CosmeticSlot.VALIDATOR_CACHE.getValidator().late())
+            .add()
+
+            .appendInherited(new KeyedCodec<>("HiddenCosmeticSlots", Codec.STRING_ARRAY),
+                    (c, value) -> c.hiddenCosmeticSlots = value,
+                    c -> c.hiddenCosmeticSlots,
+                    (c, p) -> c.hiddenCosmeticSlots = p.hiddenCosmeticSlots
+            )
+            .addValidator(CosmeticSlot.VALIDATOR_CACHE.getArrayValidator().late())
+            .add()
 
             .build();
 
-    public static final AssetCodecMapCodec<String, CosmeticAsset> CODEC = new AssetCodecMapCodec<>(
+    public static final AssetCodecMapCodec<String, Cosmetic> CODEC = new AssetCodecMapCodec<>(
             Codec.STRING, (t, k) -> t.id = k, t -> t.id, (t, data) -> t.data = data, t -> t.data, true
     );
 
-    public static final Supplier<AssetStore<String, CosmeticAsset, DefaultAssetMap<String, CosmeticAsset>>> ASSET_STORE = WardrobePlugin.createAssetStore(CosmeticAsset.class);
+    public static final Supplier<AssetStore<String, Cosmetic, DefaultAssetMap<String, Cosmetic>>> ASSET_STORE = WardrobePlugin.createAssetStore(Cosmetic.class);
 
-    public static DefaultAssetMap<String, CosmeticAsset> getAssetMap() {
+    public static DefaultAssetMap<String, Cosmetic> getAssetMap() {
         return ASSET_STORE.get().getAssetMap();
     }
 
@@ -55,10 +67,10 @@ public abstract class CosmeticAsset implements WardrobeCosmetic, JsonAssetWithMa
     private String[] hiddenCosmeticSlots = new String[0];
     private WardrobeProperties properties;
 
-    protected CosmeticAsset() {
+    protected Cosmetic() {
     }
 
-    public CosmeticAsset(String id, String cosmeticSlotId, String[] hiddenCosmeticSlots, WardrobeProperties properties) {
+    public Cosmetic(String id, String cosmeticSlotId, String[] hiddenCosmeticSlots, WardrobeProperties properties) {
         this.id = id;
         this.cosmeticSlotId = cosmeticSlotId;
         this.hiddenCosmeticSlots = hiddenCosmeticSlots;

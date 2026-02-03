@@ -2,7 +2,6 @@ package dev.hardaway.wardrobe.impl.menu;
 
 import com.hypixel.hytale.common.util.StringCompareUtil;
 import dev.hardaway.wardrobe.WardrobeUtil;
-import dev.hardaway.wardrobe.api.cosmetic.Cosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
@@ -10,9 +9,9 @@ import dev.hardaway.wardrobe.api.cosmetic.appearance.AppearanceCosmetic;
 import dev.hardaway.wardrobe.api.menu.WardrobeCategory;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.property.WardrobeVisibility;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticAsset;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticCategoryAsset;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlotAsset;
+import dev.hardaway.wardrobe.impl.cosmetic.Cosmetic;
+import dev.hardaway.wardrobe.impl.cosmetic.CosmeticCategory;
+import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlot;
 import dev.hardaway.wardrobe.impl.player.CosmeticSaveData;
 import dev.hardaway.wardrobe.impl.player.PlayerWardrobeComponent;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -40,7 +39,7 @@ public class WardrobeMenu {
         this.wardrobe = wardrobe;
         this.baseWardrobe = wardrobe.clone();
 
-        this.categories = CosmeticCategoryAsset.getAssetMap().getAssetMap().values().stream()
+        this.categories = CosmeticCategory.getAssetMap().getAssetMap().values().stream()
                 .filter(c -> c.getProperties().hasPermission(playerId))
                 .sorted(Comparator.comparing(WardrobeCategory::getTabOrder))
                 .toList();
@@ -58,7 +57,7 @@ public class WardrobeMenu {
             slotMap.put(category.getId(), new ArrayList<>());
         }
 
-        CosmeticSlotAsset.getAssetMap().getAssetMap().values().stream()
+        CosmeticSlot.getAssetMap().getAssetMap().values().stream()
                 .filter(g -> g.getProperties().hasPermission(playerId))
                 .sorted(Comparator.comparing(WardrobeCosmeticSlot::getTabOrder))
                 .forEach(slot -> {
@@ -68,10 +67,10 @@ public class WardrobeMenu {
     }
 
     private void buildCosmetics() {
-        CosmeticAsset.getAssetMap().getAssetMap().values().stream()
+        Cosmetic.getAssetMap().getAssetMap().values().stream()
                 .filter(c -> c.getProperties().getWardrobeVisibility() != WardrobeVisibility.NEVER)
                 .filter(c -> c.getProperties().getWardrobeVisibility() != WardrobeVisibility.PERMISSION || c.getProperties().hasPermission(playerId))
-                .sorted(Comparator.comparing(Cosmetic::getId))
+                .sorted(Comparator.comparing(dev.hardaway.wardrobe.api.cosmetic.Cosmetic::getId))
                 .forEach(c -> cosmeticMap.computeIfAbsent(c.getCosmeticSlotId(), k -> new ArrayList<>()).add(c));
     }
 
@@ -129,7 +128,7 @@ public class WardrobeMenu {
         selectedSlot = slotId;
     }
 
-    public void selectCosmetic(@Nullable Cosmetic cosmetic, @Nullable String option, @Nullable String variant) {
+    public void selectCosmetic(@Nullable dev.hardaway.wardrobe.api.cosmetic.Cosmetic cosmetic, @Nullable String option, @Nullable String variant) {
         PlayerCosmetic worn = wardrobe.getCosmetic(selectedSlot);
 
         if (cosmetic != null && worn != null && cosmetic.getId().equals(worn.getCosmeticId())) {
@@ -140,7 +139,7 @@ public class WardrobeMenu {
 
         if (cosmetic == null) {
             if (worn == null) return;
-            cosmetic = Objects.requireNonNull(CosmeticAsset.getAssetMap().getAsset(worn.getCosmeticId())); // TODO: registry
+            cosmetic = Objects.requireNonNull(Cosmetic.getAssetMap().getAsset(worn.getCosmeticId())); // TODO: registry
         }
 
         if (cosmetic instanceof AppearanceCosmetic a) {
@@ -167,7 +166,7 @@ public class WardrobeMenu {
     }
 
     public void toggleCosmeticType() {
-        CosmeticSlotAsset slot = CosmeticSlotAsset.getAssetMap().getAsset(getSelectedSlot());
+        CosmeticSlot slot = CosmeticSlot.getAssetMap().getAsset(getSelectedSlot());
         if (slot != null && slot.getHytaleCosmeticType() != null && WardrobeUtil.canBeHidden(slot.getHytaleCosmeticType())) {
             wardrobe.toggleCosmeticType(slot.getHytaleCosmeticType());
             wardrobe.rebuild();

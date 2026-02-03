@@ -1,29 +1,31 @@
 package dev.hardaway.wardrobe.impl.cosmetic;
 
 import com.hypixel.hytale.assetstore.AssetExtraInfo;
+import com.hypixel.hytale.assetstore.AssetKeyValidator;
 import com.hypixel.hytale.assetstore.AssetStore;
 import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
-import com.hypixel.hytale.assetstore.codec.AssetCodec;
+import com.hypixel.hytale.assetstore.codec.ContainedAssetCodec;
 import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.codecs.EnumCodec;
-import com.hypixel.hytale.codec.validation.Validators;
+import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.protocol.ItemArmorSlot;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import dev.hardaway.wardrobe.WardrobePlugin;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.menu.WardrobeCategory;
 import dev.hardaway.wardrobe.api.property.WardrobeProperties;
+import dev.hardaway.wardrobe.api.property.validator.WardrobeValidators;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticSlotAsset>> {
+public class CosmeticSlot implements WardrobeCosmeticSlot, JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticSlot>> {
 
-    public static final AssetCodec<String, CosmeticSlotAsset> CODEC = AssetBuilderCodec
-            .builder(CosmeticSlotAsset.class, CosmeticSlotAsset::new,
+    public static final AssetBuilderCodec<String, CosmeticSlot> CODEC = AssetBuilderCodec
+            .builder(CosmeticSlot.class, CosmeticSlot::new,
                     Codec.STRING,
                     (t, k) -> t.id = k,
                     (t) -> t.id,
@@ -34,7 +36,9 @@ public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap
             .append(new KeyedCodec<>("Properties", WardrobeProperties.CODEC, true),
                     (t, value) -> t.properties = value,
                     t -> t.properties
-            ).addValidator(Validators.nonNull()).add()
+            )
+            .addValidator(WardrobeValidators.PROPERTIES_ICON)
+            .add()
 
             .append(new KeyedCodec<>("CosmeticType", new EnumCodec<>(CosmeticType.class)),
                     (t, value) -> t.cosmeticType = value,
@@ -49,22 +53,31 @@ public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap
             .append(new KeyedCodec<>("Category", Codec.STRING, true),
                     (t, value) -> t.category = value,
                     t -> t.category
-            ).addValidator(Validators.nonEmptyString()).add()
+            )
+            .addValidator(CosmeticCategory.VALIDATOR_CACHE.getValidator().late())
+            .add()
 
             .append(new KeyedCodec<>("SelectedIcon", Codec.STRING, true),
                     (t, value) -> t.selectedIcon = value,
                     t -> t.selectedIcon
-            ).addValidator(Validators.nonEmptyString()).add()
+            )
+            .addValidator(WardrobeValidators.ICON)
+            .add()
 
             .append(new KeyedCodec<>("Order", Codec.INTEGER),
                     (t, value) -> t.order = value,
                     t -> t.order
-            ).add().build();
+            )
+            .add()
 
+            .build();
 
-    public static final Supplier<AssetStore<String, CosmeticSlotAsset, DefaultAssetMap<String, CosmeticSlotAsset>>> ASSET_STORE = WardrobePlugin.createAssetStore(CosmeticSlotAsset.class);
+    public static final Codec<String> CHILD_ASSET = new ContainedAssetCodec<>(CosmeticSlot.class, CODEC);
 
-    public static DefaultAssetMap<String, CosmeticSlotAsset> getAssetMap() {
+    public static final Supplier<AssetStore<String, CosmeticSlot, DefaultAssetMap<String, CosmeticSlot>>> ASSET_STORE = WardrobePlugin.createAssetStore(CosmeticSlot.class);
+    public static final ValidatorCache<String> VALIDATOR_CACHE = new ValidatorCache(new AssetKeyValidator(CosmeticSlot.ASSET_STORE));
+
+    public static DefaultAssetMap<String, CosmeticSlot> getAssetMap() {
         return ASSET_STORE.get().getAssetMap();
     }
 
@@ -97,7 +110,7 @@ public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap
     }
 
     public WardrobeCategory getCategory() {
-        WardrobeCategory category = CosmeticCategoryAsset.getAssetMap().getAsset(this.category);
+        WardrobeCategory category = CosmeticCategory.getAssetMap().getAsset(this.category);
         if (category == null) {
             throw new IllegalStateException("Category not found: " + this.category);
         }

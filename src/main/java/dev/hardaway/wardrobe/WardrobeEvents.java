@@ -9,9 +9,9 @@ import com.hypixel.hytale.server.core.plugin.JavaPlugin;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.api.player.PlayerWardrobe;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticAsset;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticCategoryAsset;
-import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlotAsset;
+import dev.hardaway.wardrobe.impl.cosmetic.Cosmetic;
+import dev.hardaway.wardrobe.impl.cosmetic.CosmeticCategory;
+import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlot;
 import dev.hardaway.wardrobe.impl.player.PlayerWardrobeComponent;
 
 import java.util.Objects;
@@ -20,9 +20,9 @@ public class WardrobeEvents {
 
     protected static void registerEvents(JavaPlugin plugin) {
         plugin.getEventRegistry().registerGlobal(LivingEntityInventoryChangeEvent.class, WardrobeEvents::onInventoryChange);
-        plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticAsset.class, WardrobeEvents::onCosmeticsUpdated);
-        plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticSlotAsset.class, WardrobeEvents::onSlotsUpdated);
-        plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticCategoryAsset.class, WardrobeEvents::onCategoriesUpdated);
+        plugin.getEventRegistry().register(LoadedAssetsEvent.class, Cosmetic.class, WardrobeEvents::onCosmeticsUpdated);
+        plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticSlot.class, WardrobeEvents::onSlotsUpdated);
+        plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticCategory.class, WardrobeEvents::onCategoriesUpdated);
     }
 
     private static void onInventoryChange(LivingEntityInventoryChangeEvent event) {
@@ -39,15 +39,15 @@ public class WardrobeEvents {
         }
     }
 
-    private static void onCosmeticsUpdated(LoadedAssetsEvent<String, CosmeticAsset, DefaultAssetMap<String, CosmeticAsset>> event) {
+    private static void onCosmeticsUpdated(LoadedAssetsEvent<String, Cosmetic, DefaultAssetMap<String, Cosmetic>> event) {
         WardrobeUtil.rebuildAllWardrobes();
     }
 
-    private static void onSlotsUpdated(LoadedAssetsEvent<String, CosmeticSlotAsset, DefaultAssetMap<String, CosmeticSlotAsset>> event) {
+    private static void onSlotsUpdated(LoadedAssetsEvent<String, CosmeticSlot, DefaultAssetMap<String, CosmeticSlot>> event) {
         WardrobeUtil.rebuildAllWardrobes();
     }
 
-    private static void onCategoriesUpdated(LoadedAssetsEvent<String, CosmeticCategoryAsset, DefaultAssetMap<String, CosmeticCategoryAsset>> event) {
+    private static void onCategoriesUpdated(LoadedAssetsEvent<String, CosmeticCategory, DefaultAssetMap<String, CosmeticCategory>> event) {
         WardrobeUtil.rebuildAllWardrobes();
     }
 }
