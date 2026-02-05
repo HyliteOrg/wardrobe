@@ -2,11 +2,11 @@
   "Properties": {
     "Translation": {
       "Name": "client.myAvatar.tabs.Haircut"
-    },
-    "Icon": "Icons/Wardrobe/Slots/Haircut@2x.png"
+    }
   },
   "CosmeticType": "Haircuts",
   "Category": "Head",
+  "Icon": "Icons/Wardrobe/Slots/Haircut@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Slots/HaircutSelected@2x.png",
   "Order": 0
 }

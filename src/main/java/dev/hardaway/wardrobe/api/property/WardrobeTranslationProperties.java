@@ -36,7 +36,7 @@ public class WardrobeTranslationProperties {
             .build();
 
     private String nameKey;
-    private String descriptionKey = "";
+    private String descriptionKey;
 
     WardrobeTranslationProperties() {
     }
@@ -50,12 +50,20 @@ public class WardrobeTranslationProperties {
         return this.nameKey;
     }
 
+    public void setNameKey(String nameKey) {
+        this.nameKey = nameKey;
+    }
+
     public Message getName() {
         return Message.translation(this.getNameKey());
     }
 
     public String getDescriptionKey() {
         return this.descriptionKey;
+    }
+
+    public void setDescriptionKey(String descriptionKey) {
+        this.descriptionKey = descriptionKey;
     }
 
     public Message getDescription() {

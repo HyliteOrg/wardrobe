@@ -289,7 +289,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                 tooltip.insert(Message.raw("ID: " + cosmetic.getId()).color(Color.LIGHT_GRAY).italic(true));
             }
 
-            if (!translationProperties.getDescriptionKey().isEmpty()) {
+            if (translationProperties.getDescriptionKey() != null) {
                 tooltip.insert("\n");
                 tooltip.insert(cosmetic.getProperties().getTranslationProperties().getDescription().color(Color.LIGHT_GRAY));
             }
@@ -336,10 +336,10 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                             tooltip.insert(Message.raw("Option: ").color(Color.LIGHT_GRAY).italic(true));
                             tooltip.insert(newTranslation.getName().color(Color.LIGHT_GRAY).italic(true));
 
-                            if (!newTranslation.getDescriptionKey().isEmpty()) {
+                            if (newTranslation.getDescriptionKey() != null) {
                                 tooltip.insert("\n");
                                 tooltip.insert(newTranslation.getDescription().color(Color.LIGHT_GRAY));
-                            } else if (!translationProperties.getDescriptionKey().isEmpty()) {
+                            } else if (translationProperties.getDescriptionKey() != null) {
                                 tooltip.insert("\n");
                                 tooltip.insert(translationProperties.getDescription().color(Color.LIGHT_GRAY));
                             }

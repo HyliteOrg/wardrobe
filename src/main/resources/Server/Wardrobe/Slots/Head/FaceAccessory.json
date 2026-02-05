@@ -2,11 +2,11 @@
   "Properties": {
     "Translation": {
       "Name": "client.myAvatar.tabs.FaceAccessory"
-    },
-    "Icon": "Icons/Wardrobe/Slots/FaceAccessory@2x.png"
+    }
   },
   "CosmeticType": "FaceAccessory",
   "Category": "Head",
+  "Icon": "Icons/Wardrobe/Slots/FaceAccessory@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Slots/FaceAccessorySelected@2x.png",
   "Order": 5
 }

@@ -2,11 +2,11 @@
   "Properties": {
     "Translation": {
       "Name": "client.myAvatar.tabs.Gloves"
-    },
-    "Icon": "Icons/Wardrobe/Slots/Gloves@2x.png"
+    }
   },
   "CosmeticType": "Gloves",
   "Category": "Torso",
+  "Icon": "Icons/Wardrobe/Slots/Gloves@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Slots/GlovesSelected@2x.png",
   "Order": 2
 }

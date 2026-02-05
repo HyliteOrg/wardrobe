@@ -2,11 +2,11 @@
   "Properties": {
     "Translation": {
       "Name": "client.myAvatar.tabs.EarAccessory"
-    },
-    "Icon": "Icons/Wardrobe/Slots/EarAccessory@2x.png"
+    }
   },
   "CosmeticType": "EarAccessory",
   "Category": "Head",
+  "Icon": "Icons/Wardrobe/Slots/EarAccessory@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Slots/EarAccessorySelected@2x.png",
   "Order": 6
 }

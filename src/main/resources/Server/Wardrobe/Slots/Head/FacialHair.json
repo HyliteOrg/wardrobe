@@ -2,11 +2,11 @@
   "Properties": {
     "Translation": {
       "Name": "client.myAvatar.tabs.FacialHair"
-    },
-    "Icon": "Icons/Wardrobe/Slots/FacialHair@2x.png"
+    }
   },
   "CosmeticType": "FacialHair",
   "Category": "Head",
+  "Icon": "Icons/Wardrobe/Slots/FacialHair@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Slots/FacialHairSelected@2x.png",
   "Order": 3
 }

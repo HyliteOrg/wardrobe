@@ -2,11 +2,11 @@
   "Properties": {
     "Translation": {
       "Name": "client.myAvatar.tabs.Mouth"
-    },
-    "Icon": "Icons/Wardrobe/Slots/Mouth@2x.png"
+    }
   },
   "CosmeticType": "Mouths",
   "Category": "General",
+  "Icon": "Icons/Wardrobe/Slots/Mouth@2x.png",
   "SelectedIcon": "Icons/Wardrobe/Slots/MouthSelected@2x.png",
   "Order": 3
 }
