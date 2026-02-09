@@ -12,6 +12,8 @@ import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.WardrobePlugin;
 import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.player.PlayerWardrobe;
+import dev.hardaway.wardrobe.impl.cosmetic.CosmeticAsset;
+import dev.hardaway.wardrobe.impl.cosmetic.PlayerModelCosmetic;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -79,12 +81,25 @@ public class PlayerWardrobeComponent implements PlayerWardrobe, Component<Entity
             return;
         }
 
+        if (CosmeticAsset.getAssetMap().getAsset(cosmetic.getCosmeticId()) instanceof PlayerModelCosmetic) {
+            for (Map.Entry<String, CosmeticSaveData> entry : this.cosmetics.entrySet()) {
+                String slotId = entry.getKey();
+                CosmeticSaveData existingCosmetic = entry.getValue();
+
+                if (CosmeticAsset.getAssetMap().getAsset(existingCosmetic.getCosmeticId()) instanceof PlayerModelCosmetic) {
+                    this.cosmetics.remove(slotId);
+                    this.cosmeticIdSet.remove(existingCosmetic.getCosmeticId());
+                }
+            }
+        }
+
         // TODO: fix api so i dont have to do this
         CosmeticSaveData cosmeticSaveData = new CosmeticSaveData(cosmetic.getCosmeticId(), cosmetic.getOptionId(), cosmetic.getVariantId());
         PlayerCosmetic lastCosmetic = this.cosmetics.put(slot, cosmeticSaveData);
         if (lastCosmetic != null) {
             this.cosmeticIdSet.remove(lastCosmetic.getCosmeticId());
         }
+
         this.cosmeticIdSet.add(cosmetic.getCosmeticId());
     }
 

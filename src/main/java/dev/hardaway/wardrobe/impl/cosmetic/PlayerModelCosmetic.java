@@ -59,7 +59,7 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
         ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(this.getAppearance().getModel(playerCosmetic.getOptionId()));
         TextureConfig textureConfig = this.getAppearance().getTextureConfig(playerCosmetic.getOptionId());
 
-        Model model = Model.createUnitScaleModel(modelAsset);
+        Model model = Model.createScaledModel(modelAsset, this.getAppearance().getScale(playerCosmetic.getOptionId()));
         context.setPlayerModel(new Model(
                 model.getModelAssetId(),
                 model.getScale(),

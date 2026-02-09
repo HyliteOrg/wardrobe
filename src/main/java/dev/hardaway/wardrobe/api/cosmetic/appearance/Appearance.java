@@ -10,7 +10,9 @@ public interface Appearance {
 
     String getModel(@Nullable String variantId);
 
-    TextureConfig getTextureConfig(@Nullable String optionId);
+    TextureConfig getTextureConfig(@Nullable String variantId);
 
     String[] collectVariants();
+
+    float getScale(@Nullable String variantId);
 }

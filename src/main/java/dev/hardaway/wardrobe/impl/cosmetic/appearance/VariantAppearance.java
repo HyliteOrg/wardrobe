@@ -33,8 +33,13 @@ public class VariantAppearance implements Appearance {
     }
 
     @Override
-    public TextureConfig getTextureConfig(String optionId) {
-        Entry entry = variants.get(optionId);
+    public float getScale(String variantId) {
+        return variants.get(variantId).getScale();
+    }
+
+    @Override
+    public TextureConfig getTextureConfig(String variantId) {
+        Entry entry = variants.get(variantId);
         return entry == null ? null : entry.getTextureConfig();
     }
 
@@ -66,6 +71,12 @@ public class VariantAppearance implements Appearance {
                 .addValidator(WardrobeValidators.APPEARANCE_MODEL)
                 .add()
 
+                .append(new KeyedCodec<>("Scale", Codec.DOUBLE),
+                        (a, d) -> a.scale = d.floatValue(),
+                        (a) -> (double) a.scale
+                )
+                .add()
+
                 .append(new KeyedCodec<>("TextureConfig", TextureConfig.CODEC, true),
                         (t, value) -> t.textureConfig = value, t -> t.textureConfig
                 )
@@ -77,6 +88,7 @@ public class VariantAppearance implements Appearance {
         private WardrobeProperties properties;
         private String icon;
         private String model;
+        private float scale = 1;
         private TextureConfig textureConfig;
 
         public WardrobeProperties getProperties() {
@@ -90,6 +102,10 @@ public class VariantAppearance implements Appearance {
 
         public String getModel() {
             return model;
+        }
+
+        public float getScale() {
+            return scale;
         }
 
         public TextureConfig getTextureConfig() {

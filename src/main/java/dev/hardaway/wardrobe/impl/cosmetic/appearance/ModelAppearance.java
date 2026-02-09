@@ -20,6 +20,12 @@ public class ModelAppearance implements Appearance {
             .addValidator(WardrobeValidators.APPEARANCE_MODEL)
             .add()
 
+            .append(new KeyedCodec<>("Scale", Codec.DOUBLE),
+                    (a, d) -> a.scale = d.floatValue(),
+                    (a) -> (double) a.scale
+            )
+            .add()
+
             .append(new KeyedCodec<>("TextureConfig", TextureConfig.CODEC),
                     (a, value) -> a.textureConfig = value,
                     a -> a.textureConfig
@@ -30,6 +36,7 @@ public class ModelAppearance implements Appearance {
             .build();
 
     private String model;
+    private float scale = 1;
     private TextureConfig textureConfig;
 
     @Override
@@ -38,7 +45,12 @@ public class ModelAppearance implements Appearance {
     }
 
     @Override
-    public TextureConfig getTextureConfig(@Nullable String optionId) {
+    public float getScale(String variantId) {
+        return scale;
+    }
+
+    @Override
+    public TextureConfig getTextureConfig(@Nullable String variantId) {
         return textureConfig;
     }
 
