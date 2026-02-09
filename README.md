@@ -18,7 +18,7 @@ Players are able to access a familiar avatar customization screen by crafting an
 With Wardrobe's extensible API, developers can create addons to add specialized cosmetic types to work with your mod or server and hook them right into the customization menu. This API is currently work in progress, and we need your feedback!
 
 &nbsp;
-![](https://media.forgecdn.net/attachments/1506/716/hycosmetics-png.png)
+![](https://media.forgecdn.net/attachments/1511/311/hycosmetics-png.png)
 &nbsp;
 ![](https://media.forgecdn.net/attachments/1502/730/hyvider.png)
 
@@ -65,7 +65,7 @@ Note: Official Hytale Cosmetics are not included in Wardrobe's menu and cannot b
 There is also a `Hide Default Cosmetic` button next to the search bar. When toggled, the Hytale Cosmetic occupying that slot will be hidden, in case it doesn't fit your custom avatar's style. Some cosmetics, such as Faces, Eyes, Ears, Underwear, and Body Characteristics, cannot be hidden with this button. Creators making player model cosmetics that do not support these types should consider using the `HiddenCosmeticSlots` field to hide them.
 
 &nbsp;
-![](https://media.forgecdn.net/attachments/1509/157/hyverview-png.png)
+![](https://media.forgecdn.net/attachments/1510/797/hyverview-png.png)
 &nbsp;
 ![](https://media.forgecdn.net/attachments/1502/730/hyvider.png)
 
