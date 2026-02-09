@@ -9,6 +9,7 @@ import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
+import com.hypixel.hytale.codec.validation.Validators;
 import dev.hardaway.wardrobe.WardrobePlugin;
 import dev.hardaway.wardrobe.api.menu.WardrobeCategory;
 import dev.hardaway.wardrobe.api.property.WardrobeProperties;
@@ -37,6 +38,7 @@ public class CosmeticCategoryAsset implements WardrobeCategory, JsonAssetWithMap
                     (t, value) -> t.icon = value,
                     t -> t.icon
             )
+            .addValidator(Validators.nonNull())
             .addValidator(WardrobeValidators.ICON)
             .add()
 

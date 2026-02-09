@@ -12,6 +12,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.codecs.EnumCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
+import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.protocol.ItemArmorSlot;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import dev.hardaway.wardrobe.WardrobePlugin;
@@ -63,6 +64,7 @@ public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap
                     (t, value) -> t.icon = value,
                     t -> t.icon
             )
+            .addValidator(Validators.nonNull())
             .addValidator(WardrobeValidators.ICON)
             .add()
 
