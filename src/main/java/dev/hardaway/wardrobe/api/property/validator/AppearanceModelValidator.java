@@ -9,6 +9,7 @@ import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 
 import javax.annotation.Nonnull;
 
+@Deprecated(forRemoval = true)
 public class AppearanceModelValidator implements Validator<String> {
     public static final AppearanceModelValidator INSTANCE = new AppearanceModelValidator();
 

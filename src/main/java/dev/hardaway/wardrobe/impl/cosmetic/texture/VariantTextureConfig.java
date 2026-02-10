@@ -4,6 +4,8 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
@@ -18,7 +20,9 @@ import java.util.Map;
 public class VariantTextureConfig implements TextureConfig {
 
     public static final BuilderCodec<VariantTextureConfig> CODEC = BuilderCodec.builder(VariantTextureConfig.class, VariantTextureConfig::new)
-            .append(new KeyedCodec<>("Variants", new MapCodec<>(Entry.CODEC, LinkedHashMap::new), true), (t, value) -> t.variants = value, t -> t.variants).add()
+            .append(new KeyedCodec<>("Variants", new MapCodec<>(Entry.CODEC, LinkedHashMap::new), true), (t, value) -> t.variants = value, t -> t.variants)
+            .metadata(new UIPropertyTitle("Texture Variants")).documentation("The available Texture Variants of this Texture Configuration.")
+            .add()
             .build();
 
     private Map<String, Entry> variants;
@@ -48,6 +52,8 @@ public class VariantTextureConfig implements TextureConfig {
                         t -> t.properties
                 )
                 .addValidator(Validators.nonNull())
+                .metadata(new UIPropertyTitle("Wardrobe Properties")).documentation("Properties for the Cosmetic to display in the Wardrobe Menu.")
+                .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
                 .add()
 
                 .append(new KeyedCodec<>("Icon", Codec.STRING),
@@ -55,20 +61,27 @@ public class VariantTextureConfig implements TextureConfig {
                         t -> t.icon
                 )
                 .addValidator(WardrobeValidators.ICON)
+                .metadata(new UIPropertyTitle("Icon")).documentation("An icon to display over the color preview in the Wardrobe Menu.")
                 .add()
 
                 .append(new KeyedCodec<>("Texture", Codec.STRING, true),
                         (t, value) -> t.texture = value, t -> t.texture
                 )
                 .addValidator(CommonAssetValidator.TEXTURE_CHARACTER)
+                .metadata(new UIPropertyTitle("Texture")).documentation("The texture to use.")
                 .add()
 
                 .append(new KeyedCodec<>("WardrobeColor", Codec.STRING_ARRAY, true),
                         (t, value) -> t.colors = value, t -> t.colors
                 )
                 .addValidator(WardrobeValidators.COLOR)
+                .metadata(new UIPropertyTitle("Wardrobe Color")).documentation("An array of color strings in hexadecimal format. Each color in the array represents a stripe in the color preview. Used as the color preview in the Wardrobe Menu under 'Variants'.")
                 .add()
-
+                .afterDecode(asset -> {
+                    if (asset.getIcon() == null && asset.properties != null && asset.properties.getIcon() != null) { // DEPRECATED
+                        asset.icon = asset.properties.getIcon();
+                    }
+                })
                 .build();
 
         private WardrobeProperties properties;

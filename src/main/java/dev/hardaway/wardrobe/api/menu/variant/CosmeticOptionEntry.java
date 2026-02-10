@@ -9,4 +9,8 @@ public record CosmeticOptionEntry(
         WardrobeProperties properties,
         @Nullable String icon
 ){
+
+    public CosmeticOptionEntry(String id, WardrobeProperties properties) {
+        this(id, properties, null);
+    }
 }

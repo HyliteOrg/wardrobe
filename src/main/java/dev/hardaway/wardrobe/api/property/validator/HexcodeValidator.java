@@ -5,6 +5,7 @@ import com.hypixel.hytale.codec.schema.config.Schema;
 import com.hypixel.hytale.codec.schema.config.StringSchema;
 import com.hypixel.hytale.codec.validation.ValidationResults;
 import com.hypixel.hytale.codec.validation.Validator;
+import com.hypixel.hytale.server.core.asset.util.ColorParseUtil;
 
 import javax.annotation.Nonnull;
 import java.util.regex.Pattern;
@@ -16,13 +17,18 @@ public class HexcodeValidator implements Validator<String> {
     }
 
     public void accept(@Nonnull String string, @Nonnull ValidationResults results) {
-        if (string.charAt(0) != '#') {
-            results.fail("String must start with '#'");
+        if (string.length() != 7) {
+            results.fail("Hex color must be 7 characters");
         }
 
-        if (string.length() != 7) {
-            results.fail("String must be 7 characters");
+        try {
+            ColorParseUtil.hexStringToColor(string);
+        } catch (IllegalArgumentException e) {
+            results.fail(e.getMessage());
         }
+
+        if (results.hasFailed())
+            results.fail("got: '" + string + "' expected: #RRGGBB");
     }
 
     public void updateSchema(SchemaContext context, Schema schema) {

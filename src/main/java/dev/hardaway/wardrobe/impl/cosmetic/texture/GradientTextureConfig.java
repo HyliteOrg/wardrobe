@@ -4,6 +4,7 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticAssetValidator;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
@@ -20,8 +21,9 @@ public class GradientTextureConfig implements TextureConfig {
                     (t, value) -> t.gradientSet = value,
                     t -> t.gradientSet
             )
-            .addValidator(new CosmeticAssetValidator(CosmeticType.GRADIENT_SETS))
+            .addValidator(new CosmeticAssetValidator(CosmeticType.GRADIENT_SETS).late())
             .metadata(new UIEditor(new UIEditor.Dropdown("GradientSets")))
+            .metadata(new UIPropertyTitle("Gradient Set")).documentation("The Gradient Set determines which colors appear under the 'Variants' section in the Wardrobe Menu.")
             .add()
 
             .append(new KeyedCodec<>("GrayscaleTexture", Codec.STRING, true),
@@ -29,6 +31,7 @@ public class GradientTextureConfig implements TextureConfig {
                     t -> t.grayscaleTexture
             )
             .addValidator(CommonAssetValidator.TEXTURE_CHARACTER)
+            .metadata(new UIPropertyTitle("Grayscale Texture")).documentation("The Grayscale Texture to use. The Texture will be colored according to the Gradient Set and the selected Variant.")
             .add()
 
             .build();

@@ -4,6 +4,9 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.Validators;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
@@ -19,7 +22,10 @@ public class VariantAppearance implements Appearance {
     public static final BuilderCodec<VariantAppearance> CODEC = BuilderCodec.builder(VariantAppearance.class, VariantAppearance::new)
             .append(new KeyedCodec<>("Variants", new MapCodec<>(VariantAppearance.Entry.CODEC, LinkedHashMap::new), true),
                     (a, value) -> a.variants = value, a -> a.variants
-            ).add().build();
+            )
+            .metadata(new UIPropertyTitle("Variants")).documentation("The available variants of this appearance.")
+            .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
+            .add().build();
 
     private Map<String, Entry> variants;
 
@@ -56,6 +62,7 @@ public class VariantAppearance implements Appearance {
                         t -> t.properties
                 )
                 .addValidator(Validators.nonNull())
+                .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
                 .add()
 
                 .append(new KeyedCodec<>("Icon", Codec.STRING),
@@ -63,12 +70,14 @@ public class VariantAppearance implements Appearance {
                         t -> t.icon
                 )
                 .addValidator(WardrobeValidators.ICON)
+                .metadata(new UIPropertyTitle("Icon")).documentation("A preview icon of the Cosmetic with this Variant applied to display in the Wardrobe Menu.")
                 .add()
 
                 .append(new KeyedCodec<>("Model", Codec.STRING, true),
                         (t, value) -> t.model = value, t -> t.model
                 )
-                .addValidator(WardrobeValidators.APPEARANCE_MODEL)
+                .addValidator(Validators.nonNull())
+                .metadata(new UIPropertyTitle("Model")).documentation("The model to display for this appearance.")
                 .add()
 
                 .append(new KeyedCodec<>("Scale", Codec.DOUBLE),
@@ -81,8 +90,14 @@ public class VariantAppearance implements Appearance {
                         (t, value) -> t.textureConfig = value, t -> t.textureConfig
                 )
                 .addValidator(Validators.nonNull())
+                .metadata(new UIPropertyTitle("Appearance")).documentation("The Texture Configuration for this appearance.")
+                .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
                 .add()
-
+                .afterDecode(asset -> {
+                    if (asset.getIcon() == null && asset.properties != null && asset.properties.getIcon() != null) { // DEPRECATED
+                        asset.icon = asset.properties.getIcon();
+                    }
+                })
                 .build();
 
         private WardrobeProperties properties;

@@ -4,6 +4,8 @@ import com.hypixel.hytale.assetstore.codec.AssetBuilderCodec;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
@@ -35,7 +37,10 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
                     (c, value) -> c.overlapCosmeticSlotIds = value,
                     c -> c.overlapCosmeticSlotIds,
                     (c, p) -> c.overlapCosmeticSlotIds = p.overlapCosmeticSlotIds
-            ).add()
+            )
+            .addValidator(CosmeticSlotAsset.VALIDATOR_CACHE.getArrayValidator().late())
+            .metadata(new UIPropertyTitle("Overlapping Cosmetic Slots")).documentation("An array of Cosmetic Slot ids to mark as overlapping. When this Cosmetic is applied on a Cosmetic Slot, any Model Attachment Cosmetics in these Cosmetic Slots will change to their Armor Appearance, if there is one.")
+            .add()
 
             .appendInherited(new KeyedCodec<>("Appearance", Appearance.CODEC, true),
                     (c, value) -> c.appearance = value,
@@ -43,19 +48,25 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
                     (c, p) -> c.appearance = p.appearance
             )
             .addValidator(Validators.nonNull())
+            .metadata(new UIPropertyTitle("Appearance")).documentation("The appearance of this Cosmetic. The Model field must be a Common Asset blockymodel path.")
+            .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
             .add()
 
             .appendInherited(new KeyedCodec<>("OverlapAppearance", Appearance.CODEC),
                     (c, value) -> c.overlapAppearance = value,
                     c -> c.appearance,
                     (c, p) -> c.overlapAppearance = p.overlapAppearance
-            ).add()
+            )
+            .metadata(new UIPropertyTitle("Overlap Appearance")).documentation("The appearance of this Cosmetic to use when another Cosmetic is overlapping with the Cosmetic Slot this Cosmetic is applied to. See 'Overlapping Cosmetic Slots' above for more information.")
+            .add()
 
             .appendInherited(new KeyedCodec<>("ArmorAppearance", Appearance.CODEC, false),
                     (t, value) -> t.armorAppearance = value,
                     t -> t.armorAppearance,
                     (c, p) -> c.armorAppearance = p.armorAppearance
-            ).add()
+            )
+            .metadata(new UIPropertyTitle("Armor Appearance")).documentation("The appearance of this Cosmetic to use when there is an item equipped in the Armor Slot defined in the Cosmetic Slot this Cosmetic is applied to.")
+            .add()
 
             .build();
 

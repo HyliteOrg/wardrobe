@@ -8,9 +8,11 @@ import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIEditorPreview;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIRebuildCaches;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.asset.type.item.config.AssetIconProperties;
@@ -28,13 +30,13 @@ import java.util.function.Supplier;
 public abstract class CosmeticAsset implements WardrobeCosmetic, JsonAssetWithMap<String, DefaultAssetMap<String, CosmeticAsset>> {
 
     public static final BuilderCodec<CosmeticAsset> ABSTRACT_CODEC = BuilderCodec.abstractBuilder(CosmeticAsset.class)
-            .metadata(new UIEditorPreview(UIEditorPreview.PreviewType.ITEM)) // TODO: proper model preview & icon
             .append(
                     new KeyedCodec<>("Icon", Codec.STRING),
-                    (data, s) -> data.icon = s,
-                    data -> data.icon
+                    (t, value) -> t.icon = value,
+                    t -> t.icon
             )
             .addValidator(WardrobeValidators.ICON)
+            .metadata(new UIPropertyTitle("Icon")).documentation("A preview icon of the Cosmetic to display in the Wardrobe Menu.")
             .metadata(new UIRebuildCaches(UIRebuildCaches.ClientCache.MODELS))
             .metadata(new UIEditor(new UIEditor.Icon(
                     "Icons/Wardrobe/CosmeticsGenerated/{assetId}.png", 64, 64
@@ -55,6 +57,8 @@ public abstract class CosmeticAsset implements WardrobeCosmetic, JsonAssetWithMa
                     (c, p) -> c.properties = p.properties
             )
             .addValidator(Validators.nonNull())
+            .metadata(new UIPropertyTitle("Wardrobe Properties")).documentation("Properties for the Cosmetic to display in the Wardrobe Menu.")
+            .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
             .add()
 
             .appendInherited(new KeyedCodec<>("CosmeticSlot", Codec.STRING, true),
@@ -63,6 +67,7 @@ public abstract class CosmeticAsset implements WardrobeCosmetic, JsonAssetWithMa
                     (c, p) -> c.cosmeticSlotId = p.cosmeticSlotId
             )
             .addValidator(CosmeticSlotAsset.VALIDATOR_CACHE.getValidator().late())
+            .metadata(new UIPropertyTitle("Cosmetic Slot")).documentation("The Cosmetic Slot this Cosmetic will be applied to and show up under in the Wardrobe Menu.")
             .add()
 
             .appendInherited(new KeyedCodec<>("HiddenCosmeticSlots", Codec.STRING_ARRAY),
@@ -71,8 +76,13 @@ public abstract class CosmeticAsset implements WardrobeCosmetic, JsonAssetWithMa
                     (c, p) -> c.hiddenCosmeticSlots = p.hiddenCosmeticSlots
             )
             .addValidator(CosmeticSlotAsset.VALIDATOR_CACHE.getArrayValidator().late())
+            .metadata(new UIPropertyTitle("Cosmetic Slots to Hide")).documentation("An array of Cosmetic Slot ids to hide when this cosmetic is applied.")
             .add()
-
+            .afterDecode(asset -> {
+                if (asset.getIconPath() == null && asset.properties != null && asset.properties.getIcon() != null) { // DEPRECATED
+                    asset.icon = asset.properties.getIcon();
+                }
+            })
             .build();
 
     public static final AssetCodecMapCodec<String, CosmeticAsset> CODEC = new AssetCodecMapCodec<>(

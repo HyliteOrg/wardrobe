@@ -4,6 +4,7 @@ import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.Message;
 
@@ -19,6 +20,7 @@ public class WardrobeTranslationProperties {
                             "server.wardrobe.{assetId}.name"
                     )
             ))
+            .metadata(new UIPropertyTitle("Name Translation")).documentation("The translation key to use for the Name.")
             .addValidator(Validators.nonEmptyString())
             .add()
 
@@ -32,6 +34,7 @@ public class WardrobeTranslationProperties {
                             "server.wardrobe.{assetId}.description"
                     )
             ))
+            .metadata(new UIPropertyTitle("Description Translation")).documentation("The translation key to use for the Description.")
             .add()
             .build();
 

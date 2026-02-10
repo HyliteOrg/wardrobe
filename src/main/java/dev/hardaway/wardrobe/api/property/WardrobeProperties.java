@@ -3,11 +3,10 @@ package dev.hardaway.wardrobe.api.property;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
-import com.hypixel.hytale.codec.schema.metadata.ui.UIEditor;
-import com.hypixel.hytale.codec.schema.metadata.ui.UIRebuildCaches;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.Validators;
-import com.hypixel.hytale.server.core.asset.type.item.config.AssetIconProperties;
 import com.hypixel.hytale.server.core.permissions.PermissionsModule;
 import dev.hardaway.wardrobe.api.property.validator.WardrobeValidators;
 
@@ -24,6 +23,8 @@ public class WardrobeProperties {
                     data -> data.translationProperties
             )
             .addValidator(Validators.nonNull())
+            .metadata(new UIPropertyTitle("Translation Properties")).documentation("The translation properties for this object.")
+            .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
             .add()
 
             .append(
@@ -31,21 +32,43 @@ public class WardrobeProperties {
                     (data, s) -> data.visibility = s,
                     data -> data.visibility
             )
-            .documentation("Enum used to specify when the element will be visible in menus.")
+            .metadata(new UIPropertyTitle("Wardrobe Visibility")).documentation("The visibility in the Wardrobe Menu. ALWAYS means that players can always see this in the Wardrobe Menu. Players without permission will see the cosmetic as locked. PERMISSION means only players with the permission defined in 'Permission Node' can see this. NEVER means this object is never visible in the Wardrobe Menu.")
             .add()
 
             .append(
                     new KeyedCodec<>("PermissionNode", Codec.STRING),
                     (data, s) -> data.permissionNode = s,
                     data -> data.permissionNode
-            ).add()
+            )
+            .metadata(new UIPropertyTitle("Permission Node")).documentation("The permission node to bind to this object. See 'Wardrobe Visibility' above for more information.")
+            .add()
+
+            // DEPRECATED
+            .append(
+                    new KeyedCodec<>("Icon", Codec.STRING),
+                    (data, s) -> data.icon = s,
+                    data -> data.icon
+            )
+            .addValidator(WardrobeValidators.ICON)
+            .metadata(UIDisplayMode.HIDDEN)
+            .add()
+
             .build();
 
     private WardrobeTranslationProperties translationProperties;
     private @Nonnull WardrobeVisibility visibility = WardrobeVisibility.ALWAYS;
+    private @Nullable String icon;
     private @Nullable String permissionNode;
 
     protected WardrobeProperties() {
+    }
+
+    @Deprecated(forRemoval = true)
+    public WardrobeProperties(WardrobeTranslationProperties translationProperties, @Nonnull WardrobeVisibility visibility, @Nullable String icon, @Nullable String permissionNode) {
+        this.translationProperties = translationProperties;
+        this.visibility = visibility;
+        this.permissionNode = permissionNode;
+        this.icon = icon;
     }
 
     public WardrobeProperties(WardrobeTranslationProperties translationProperties, @Nonnull WardrobeVisibility visibility, @Nullable String permissionNode) {
@@ -61,6 +84,12 @@ public class WardrobeProperties {
     @Nonnull
     public WardrobeVisibility getWardrobeVisibility() {
         return visibility;
+    }
+
+    @Deprecated(forRemoval = true)
+    @Nullable
+    public String getIcon() {
+        return icon;
     }
 
     @Nullable

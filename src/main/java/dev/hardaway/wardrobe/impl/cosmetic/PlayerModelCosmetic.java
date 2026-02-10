@@ -2,6 +2,8 @@ package dev.hardaway.wardrobe.impl.cosmetic;
 
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.asset.type.model.config.Model;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
@@ -32,6 +34,8 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
                     t -> t.appearance
             )
             .addValidator(Validators.nonNull())
+            .metadata(new UIPropertyTitle("Appearance")).documentation("The appearance of this Cosmetic. The Model field must be a ModelAsset id.")
+            .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
             .add()
             .build();
 

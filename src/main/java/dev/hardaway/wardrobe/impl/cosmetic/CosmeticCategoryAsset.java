@@ -8,6 +8,8 @@ import com.hypixel.hytale.assetstore.map.DefaultAssetMap;
 import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.codec.validation.Validators;
 import dev.hardaway.wardrobe.WardrobePlugin;
@@ -32,6 +34,8 @@ public class CosmeticCategoryAsset implements WardrobeCategory, JsonAssetWithMap
                     (t, value) -> t.properties = value,
                     t -> t.properties
             )
+            .metadata(new UIPropertyTitle("Wardrobe Properties")).documentation("Properties for the Cosmetic Category to display in the Wardrobe Menu.")
+            .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
             .add()
 
             .append(new KeyedCodec<>("Icon", Codec.STRING, true),
@@ -40,6 +44,7 @@ public class CosmeticCategoryAsset implements WardrobeCategory, JsonAssetWithMap
             )
             .addValidator(Validators.nonNull())
             .addValidator(WardrobeValidators.ICON)
+            .metadata(new UIPropertyTitle("Icon")).documentation("The icon to display on the tab button in the Wardrobe Menu.")
             .add()
 
             .append(new KeyedCodec<>("SelectedIcon", Codec.STRING, true),
@@ -47,13 +52,20 @@ public class CosmeticCategoryAsset implements WardrobeCategory, JsonAssetWithMap
                     t -> t.selectedIcon
             )
             .addValidator(WardrobeValidators.ICON)
+            .metadata(new UIPropertyTitle("Selected Icon")).documentation("The icon to display on the tab button in the Wardrobe Menu when the tab is selected.")
             .add()
 
             .append(new KeyedCodec<>("Order", Codec.INTEGER),
                     (t, value) -> t.order = value,
                     t -> t.order
-            ).add()
-
+            )
+            .metadata(new UIPropertyTitle("Sorting Order")).documentation("The sorting order of this tab. Tabs are sorted by the sorting order with 0 at the top.")
+            .add()
+            .afterDecode(asset -> {
+                if (asset.getIconPath() == null && asset.properties != null && asset.properties.getIcon() != null) { // DEPRECATED
+                    asset.icon = asset.properties.getIcon();
+                }
+            })
             .build();
 
     public static final Supplier<AssetStore<String, CosmeticCategoryAsset, DefaultAssetMap<String, CosmeticCategoryAsset>>> ASSET_STORE = WardrobePlugin.createAssetStore(CosmeticCategoryAsset.class);

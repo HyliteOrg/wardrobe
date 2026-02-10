@@ -10,7 +10,9 @@ import com.hypixel.hytale.assetstore.map.JsonAssetWithMap;
 import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.codecs.EnumCodec;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDisplayMode;
+import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.ValidatorCache;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.protocol.ItemArmorSlot;
@@ -39,6 +41,8 @@ public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap
                     (t, value) -> t.properties = value,
                     t -> t.properties
             )
+            .metadata(new UIPropertyTitle("Wardrobe Properties")).documentation("Properties for the Cosmetic Category to display in the Wardrobe Menu.")
+            .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
             .add()
 
             .append(new KeyedCodec<>("CosmeticType", new EnumCodec<>(CosmeticType.class)),
@@ -46,18 +50,22 @@ public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap
                     t -> t.cosmeticType
             )
             .metadata(UIDisplayMode.HIDDEN)
+            .metadata(new UIPropertyTitle("Wardrobe Properties")).documentation("Properties for the Cosmetic Category to display in the Wardrobe Menu.")
             .add()
 
             .append(new KeyedCodec<>("ArmorSlot", new EnumCodec<>(ItemArmorSlot.class)),
                     (t, value) -> t.armorSlot = value,
                     t -> t.armorSlot
-            ).add()
+            )
+            .metadata(new UIPropertyTitle("Armor Slot")).documentation("The Armor Slot is used to determine if a Cosmetic in this slot should provide an alternate appearance when the Armor Slot is occupied.")
+            .add()
 
             .append(new KeyedCodec<>("Category", Codec.STRING, true),
                     (t, value) -> t.category = value,
                     t -> t.category
             )
             .addValidator(CosmeticCategoryAsset.VALIDATOR_CACHE.getValidator().late())
+            .metadata(new UIPropertyTitle("Cosmetic Category")).documentation("The Cosmetic Category this Cosmetic Slot should appear under in the Wardrobe Menu.")
             .add()
 
             .append(new KeyedCodec<>("Icon", Codec.STRING, true),
@@ -66,6 +74,7 @@ public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap
             )
             .addValidator(Validators.nonNull())
             .addValidator(WardrobeValidators.ICON)
+            .metadata(new UIPropertyTitle("Icon")).documentation("The icon to display on the Category button in the Wardrobe Menu.")
             .add()
 
             .append(new KeyedCodec<>("SelectedIcon", Codec.STRING, true),
@@ -73,14 +82,20 @@ public class CosmeticSlotAsset implements WardrobeCosmeticSlot, JsonAssetWithMap
                     t -> t.selectedIcon
             )
             .addValidator(WardrobeValidators.ICON)
+            .metadata(new UIPropertyTitle("Selected Icon")).documentation("The icon to display on the tab button in the Wardrobe Menu when the tab is selected.")
             .add()
 
             .append(new KeyedCodec<>("Order", Codec.INTEGER),
                     (t, value) -> t.order = value,
                     t -> t.order
             )
+            .metadata(new UIPropertyTitle("Sorting Order")).documentation("The sorting order of this tab. Tabs are sorted by the sorting order with 0 at the top.")
             .add()
-
+            .afterDecode(asset -> {
+                if (asset.getIconPath() == null && asset.properties != null && asset.properties.getIcon() != null) { // DEPRECATED
+                    asset.icon = asset.properties.getIcon();
+                }
+            })
             .build();
 
     public static final Codec<String> CHILD_ASSET = new ContainedAssetCodec<>(CosmeticSlotAsset.class, CODEC);

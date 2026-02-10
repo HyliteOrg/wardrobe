@@ -10,4 +10,8 @@ public record CosmeticVariantEntry(
         String[] colors,
         @Nullable String icon
 ) {
+
+    public CosmeticVariantEntry(String id, WardrobeProperties properties, String[] colors) {
+        this(id, properties, colors, null);
+    }
 }
