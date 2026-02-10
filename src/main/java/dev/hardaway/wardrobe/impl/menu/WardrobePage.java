@@ -312,9 +312,10 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
 
             if (worn != null && cosmetic.getId().equals(worn.getCosmeticId())) {
                 commandBuilder.set(selector + " #Selected.Visible", true);
-                boolean options = buildOptions(commandBuilder, eventBuilder, worn, cosmetic);
-                boolean colors = buildVariants(commandBuilder, eventBuilder, worn, cosmetic);
-                if (options || colors) anchorHeight = (int) (150 * 3.5 + 10 * (3.5 - 1) + 14);
+                int options = buildOptions(commandBuilder, eventBuilder, worn, cosmetic);
+                int colors = buildVariants(commandBuilder, eventBuilder, worn, cosmetic);
+                // TODO: calculate anchor height based on number of options and variants
+                if (options > 0 || colors > 0) anchorHeight = (int) (150 * 3.5 + 10 * (3.5 - 1) + 14);
             }
 
             if (worn != null && worn.getOptionId() != null) {
@@ -358,9 +359,9 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         commandBuilder.setObject("#Cosmetics.Anchor", anchor);
     }
 
-    private boolean buildOptions(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, PlayerCosmetic wornCosmetic, WardrobeCosmetic cosmetic) {
+    private int buildOptions(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, PlayerCosmetic wornCosmetic, WardrobeCosmetic cosmetic) {
         Map<String, CosmeticOptionEntry> optionEntries = cosmetic.getOptionEntries();
-        if (optionEntries.isEmpty()) return false;
+        if (optionEntries.isEmpty()) return 0;
 
         commandBuilder.set("#OptionsContainer.Visible", true);
 
@@ -384,14 +385,12 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                 EventData.of("@Variant", "#OptionsDropdown.Value")
         );
 
-        return true;
+        return optionEntries.size() / 5 + 1;
     }
 
-    private boolean buildVariants(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, PlayerCosmetic wornCosmetic, WardrobeCosmetic cosmetic) {
+    private int buildVariants(UICommandBuilder commandBuilder, UIEventBuilder eventBuilder, PlayerCosmetic wornCosmetic, WardrobeCosmetic cosmetic) {
         List<CosmeticVariantEntry> variantEntries = cosmetic.getVariantEntries(wornCosmetic.getOptionId());
-        if (variantEntries.isEmpty()) return false;
-
-        commandBuilder.set("#VariantsContainer.Visible", true);
+        if (!variantEntries.isEmpty()) commandBuilder.set("#VariantsContainer.Visible", true);
 
         int row = -1;
         for (int i = 0; i < variantEntries.size(); i++) {
@@ -426,7 +425,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             );
         }
 
-        return true;
+        return row + 1;
     }
 
     public static class PageEventData {

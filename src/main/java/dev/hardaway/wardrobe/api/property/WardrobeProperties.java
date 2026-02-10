@@ -32,7 +32,7 @@ public class WardrobeProperties {
                     (data, s) -> data.visibility = s,
                     data -> data.visibility
             )
-            .metadata(new UIPropertyTitle("Wardrobe Visibility")).documentation("The visibility in the Wardrobe Menu. ALWAYS means that players can always see this in the Wardrobe Menu. Players without permission will see the cosmetic as locked. PERMISSION means only players with the permission defined in 'Permission Node' can see this. NEVER means this object is never visible in the Wardrobe Menu.")
+            .metadata(new UIPropertyTitle("Wardrobe Visibility")).documentation("The visibility in the Wardrobe Menu.")
             .add()
 
             .append(
