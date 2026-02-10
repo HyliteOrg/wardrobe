@@ -26,10 +26,7 @@ import dev.hardaway.wardrobe.impl.cosmetic.texture.GradientTextureConfig;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.VariantTextureConfig;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ModelAttachmentCosmetic extends CosmeticAsset implements AppearanceCosmetic {
 
@@ -190,12 +187,26 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
             }
         }
 
-        TextureConfig textureConfig = appearance.getTextureConfig(playerCosmetic.getOptionId());
+        String option = playerCosmetic.getOptionId();
+        if (appearance.collectVariants().length > 0) {
+            if (!Arrays.stream(appearance.collectVariants()).toList().contains(playerCosmetic.getOptionId())) {
+                option = appearance.collectVariants()[0];
+            }
+        }
+
+        String variant = playerCosmetic.getVariantId();
+        if (appearance.getTextureConfig(option).collectVariants().length > 0) {
+            if (!Arrays.stream(appearance.getTextureConfig(option).collectVariants()).toList().contains(playerCosmetic.getVariantId())) {
+                variant = appearance.getTextureConfig(option).collectVariants()[0];
+            }
+        }
+
+        TextureConfig textureConfig = appearance.getTextureConfig(option);
         context.addAttachment(slot.getId(), new ModelAttachment(
-                appearance.getModel(playerCosmetic.getOptionId()),
-                textureConfig.getTexture(playerCosmetic.getVariantId()),
+                appearance.getModel(option),
+                textureConfig.getTexture(variant),
                 textureConfig.getGradientSet(),
-                textureConfig.getGradientSet() != null ? playerCosmetic.getVariantId() : null,
+                textureConfig.getGradientSet() != null ? variant : null,
                 1.0
         ));
     }

@@ -22,10 +22,7 @@ import dev.hardaway.wardrobe.impl.cosmetic.texture.GradientTextureConfig;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.VariantTextureConfig;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosmetic {
 
@@ -56,10 +53,26 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
     @Override
     public void applyCosmetic(WardrobeContext context, WardrobeCosmeticSlot slot, PlayerCosmetic playerCosmetic) {
         super.applyCosmetic(context, slot, playerCosmetic);
-        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(this.getAppearance().getModel(playerCosmetic.getOptionId()));
-        TextureConfig textureConfig = this.getAppearance().getTextureConfig(playerCosmetic.getOptionId());
+        Appearance appearance = this.getAppearance();
 
-        Model model = Model.createScaledModel(modelAsset, this.getAppearance().getScale(playerCosmetic.getOptionId()));
+        String option = playerCosmetic.getOptionId();
+        if (appearance.collectVariants().length > 0) {
+            if (!Arrays.stream(appearance.collectVariants()).toList().contains(playerCosmetic.getOptionId())) {
+                option = appearance.collectVariants()[0];
+            }
+        }
+
+        TextureConfig textureConfig = this.getAppearance().getTextureConfig(option);
+
+        String variant = playerCosmetic.getVariantId();
+        if (textureConfig.collectVariants().length > 0) {
+            if (!Arrays.stream(textureConfig.collectVariants()).toList().contains(playerCosmetic.getVariantId())) {
+                variant = textureConfig.collectVariants()[0];
+            }
+        }
+
+        ModelAsset modelAsset = ModelAsset.getAssetMap().getAsset(this.getAppearance().getModel(option));
+        Model model = Model.createScaledModel(modelAsset, this.getAppearance().getScale(option));
         context.setPlayerModel(new Model(
                 model.getModelAssetId(),
                 model.getScale(),
@@ -67,9 +80,9 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
                 model.getAttachments(),
                 model.getBoundingBox(),
                 model.getModel(),
-                textureConfig.getTexture(playerCosmetic.getVariantId()),
+                textureConfig.getTexture(variant),
                 textureConfig.getGradientSet(),
-                textureConfig.getGradientSet() != null ? playerCosmetic.getVariantId() : null,
+                textureConfig.getGradientSet() != null ? variant : null,
                 model.getEyeHeight(),
                 model.getCrouchOffset(),
                 model.getAnimationSetMap(),
