@@ -20,10 +20,16 @@ import javax.annotation.Nonnull;
 
 public class WardrobeDismissPage extends InteractiveCustomUIPage<WardrobeDismissPage.PageEventData> {
     private final PlayerWardrobeComponent wardrobe;
+    private final WardrobeMode mode;
 
     public WardrobeDismissPage(@Nonnull PlayerRef playerRef, @Nonnull CustomPageLifetime lifetime, PlayerWardrobeComponent wardrobe) {
+        this(playerRef, lifetime, wardrobe, new WardrobeMode.Player());
+    }
+
+    WardrobeDismissPage(@Nonnull PlayerRef playerRef, @Nonnull CustomPageLifetime lifetime, PlayerWardrobeComponent wardrobe, @Nonnull WardrobeMode mode) {
         super(playerRef, lifetime, PageEventData.CODEC);
         this.wardrobe = wardrobe;
+        this.mode = mode;
     }
 
     @Override
@@ -38,8 +44,15 @@ public class WardrobeDismissPage extends InteractiveCustomUIPage<WardrobeDismiss
     public void handleDataEvent(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store, @Nonnull PageEventData data) {
         super.handleDataEvent(ref, store, data);
 
-        if (WardrobePage.MenuAction.Discard.equals(data.action)) {
-            store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), wardrobe);
+        if (WardrobePage.MenuAction.Save.equals(data.action)) {
+            PlayerWardrobeComponent current = store.getComponent(ref, PlayerWardrobeComponent.getComponentType());
+            if (current != null) {
+                mode.onSave(current.clone());
+            }
+        } else if (WardrobePage.MenuAction.Discard.equals(data.action)) {
+            if (mode instanceof WardrobeMode.Player) {
+                store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), wardrobe);
+            }
         }
 
         close();
@@ -47,6 +60,10 @@ public class WardrobeDismissPage extends InteractiveCustomUIPage<WardrobeDismiss
 
     @Override
     public void onDismiss(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store) {
+        if (mode.getRestoreWardrobe() != null) {
+            store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), mode.getRestoreWardrobe());
+        }
+
         super.onDismiss(ref, store);
         playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.FirstPerson, false, null));
     }

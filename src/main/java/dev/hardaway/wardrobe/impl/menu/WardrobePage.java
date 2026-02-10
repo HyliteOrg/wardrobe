@@ -49,14 +49,20 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     private static final int VARIANTS_PER_ROW = 13;
 
     private final WardrobeMenu menu;
+    private final WardrobeMode mode;
     private final Position position;
     private final int rotationIndex;
     private final ServerCameraSettings cameraSettings;
     private boolean shouldClose = true;
 
     public WardrobePage(@Nonnull PlayerRef playerRef, PlayerWardrobeComponent wardrobe, @Nullable Position position, int rotationIndex) {
+        this(playerRef, wardrobe, position, rotationIndex, new WardrobeMode.Player());
+    }
+
+    public WardrobePage(@Nonnull PlayerRef playerRef, PlayerWardrobeComponent wardrobe, @Nullable Position position, int rotationIndex, @Nonnull WardrobeMode mode) {
         super(playerRef, CustomPageLifetime.CanDismiss, PageEventData.CODEC);
         this.menu = new WardrobeMenu(playerRef.getUuid(), wardrobe);
+        this.mode = mode;
         this.position = position;
         if (this.position != null) {
             this.position.x += 0.5;
@@ -137,18 +143,28 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             case Reset -> {
                 menu.getWardrobe().clearCosmetics();
                 menu.getWardrobe().getHiddenCosmeticTypes().clear(); // TODO: replace this with proper api method
+                if (mode instanceof WardrobeMode.Npc) {
+                    CosmeticSlotAsset.getAssetMap().getAssetMap().values().forEach(slot -> {
+                        if (slot.getHytaleCosmeticType() != null && WardrobeUtil.canBeHidden(slot.getHytaleCosmeticType())) {
+                            menu.getWardrobe().getHiddenCosmeticTypes().add(slot.getHytaleCosmeticType());
+                        }
+                    });
+                }
                 menu.getWardrobe().rebuild();
                 buildCosmetics(commandBuilder, eventBuilder, ref, store);
             }
             case Discard -> {
-                store.getExternalData().getWorld().execute(() -> {
-                    store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), menu.getBaseWardrobe());
-                });
+                if (mode instanceof WardrobeMode.Player) {
+                    store.getExternalData().getWorld().execute(() -> {
+                        store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), menu.getBaseWardrobe());
+                    });
+                }
 
                 shouldClose = true;
                 close();
             }
             case Save -> {
+                mode.onSave(menu.getWardrobe().clone());
                 shouldClose = true;
                 close();
             }
@@ -165,9 +181,13 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             shouldClose = true;
             store.getExternalData().getWorld().execute(() -> {
                 Player player = store.ensureAndGetComponent(ref, Player.getComponentType());
-                player.getPageManager().openCustomPage(ref, store, new WardrobeDismissPage(playerRef, CustomPageLifetime.CantClose, menu.getBaseWardrobe()));
+                player.getPageManager().openCustomPage(ref, store, new WardrobeDismissPage(playerRef, CustomPageLifetime.CantClose, menu.getBaseWardrobe(), mode));
             });
             return;
+        }
+
+        if (mode.getRestoreWardrobe() != null) {
+            store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), mode.getRestoreWardrobe());
         }
 
         super.onDismiss(ref, store);
