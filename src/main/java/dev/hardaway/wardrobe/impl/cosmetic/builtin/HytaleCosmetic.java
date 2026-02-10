@@ -3,6 +3,7 @@ package dev.hardaway.wardrobe.impl.cosmetic.builtin;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAttachment;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPart;
+import com.hypixel.hytale.server.core.cosmetics.PlayerSkinPartTexture;
 import dev.hardaway.wardrobe.api.cosmetic.Cosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
@@ -42,6 +43,7 @@ public class HytaleCosmetic implements Cosmetic {
         return part;
     }
 
+    @Nullable
     protected ModelAttachment createAttachment(WardrobeContext context, WardrobeCosmeticSlot slot, PlayerCosmetic playerCosmetic) {
         String model;
         String texture;
@@ -50,10 +52,15 @@ public class HytaleCosmetic implements Cosmetic {
 
         if (!this.variantMap.isEmpty()) {
             PlayerSkinPart.Variant variant = this.variantMap.get(playerCosmetic.getOptionId());
+            if (variant == null) return null; // Likely using a pre-release cosmetic?
+
             model = variant.getModel();
 
             if (variant.getTextures() != null) {
-                texture = variant.getTextures().get(playerCosmetic.getVariantId()).getTexture();
+                PlayerSkinPartTexture partTexture = variant.getTextures().get(playerCosmetic.getVariantId());
+                if (partTexture == null) return null; // Likely using a pre-release cosmetic?
+
+                texture = partTexture.getTexture();
             } else {
                 texture = variant.getGreyscaleTexture();
                 gradientSet = this.part.getGradientSet();
@@ -63,7 +70,10 @@ public class HytaleCosmetic implements Cosmetic {
             model = this.part.getModel();
 
             if (this.part.getTextures() != null) {
-                texture = this.part.getTextures().get(playerCosmetic.getVariantId()).getTexture();
+                PlayerSkinPartTexture partTexture = this.part.getTextures().get(playerCosmetic.getVariantId());
+                if (partTexture == null) return null; // Likely using a pre-release cosmetic?
+
+                texture = partTexture.getTexture();
             } else {
                 texture = this.part.getGreyscaleTexture();
                 gradientSet = this.part.getGradientSet();
@@ -86,6 +96,9 @@ public class HytaleCosmetic implements Cosmetic {
 
     @Override
     public void applyCosmetic(WardrobeContext context, WardrobeCosmeticSlot slot, PlayerCosmetic playerCosmetic) {
-        context.addAttachment(slot.getId(), this.createAttachment(context, slot, playerCosmetic));
+        ModelAttachment attachment = this.createAttachment(context, slot, playerCosmetic);
+        if (attachment == null) return;
+        // TODO: warn?
+        context.addAttachment(slot.getId(), attachment);
     }
 }

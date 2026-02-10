@@ -43,6 +43,7 @@ public class WardrobeUtil {
 
         CosmeticRegistry cosmeticRegistry = CosmeticsModule.get().getRegistry();
         PlayerSkinPart skinPart = (PlayerSkinPart) cosmeticRegistry.getByType(type).get(skinPartId.assetId);
+        if (skinPart == null) return null;
 
         return switch (type) {
             case HAIRCUTS -> new HytaleHaircutCosmetic(type, skinPart);

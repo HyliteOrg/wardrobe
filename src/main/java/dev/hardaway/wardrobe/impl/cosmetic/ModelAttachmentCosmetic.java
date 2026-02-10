@@ -199,17 +199,13 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
         }
 
         String option = playerCosmetic.getOptionId();
-        if (appearance.collectVariants().length > 0) {
-            if (!Arrays.stream(appearance.collectVariants()).toList().contains(playerCosmetic.getOptionId())) {
-                option = appearance.collectVariants()[0];
-            }
+        if (appearance.getModel(option) == null) {
+            option = appearance.collectVariants()[0];
         }
 
         String variant = playerCosmetic.getVariantId();
-        if (appearance.getTextureConfig(option).collectVariants().length > 0) {
-            if (!Arrays.stream(appearance.getTextureConfig(option).collectVariants()).toList().contains(playerCosmetic.getVariantId())) {
-                variant = appearance.getTextureConfig(option).collectVariants()[0];
-            }
+        if (appearance.getTextureConfig(option).getTexture(variant) == null) {
+            variant = appearance.getTextureConfig(option).collectVariants()[0];
         }
 
         TextureConfig textureConfig = appearance.getTextureConfig(option);

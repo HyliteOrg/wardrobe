@@ -21,6 +21,8 @@ public class HytaleHaircutCosmetic extends HytaleCosmetic {
     @Override
     protected ModelAttachment createAttachment(WardrobeContext context, WardrobeCosmeticSlot slot, PlayerCosmetic playerCosmetic) {
         ModelAttachment attachment = super.createAttachment(context, slot, playerCosmetic);
+        if (attachment == null) return null;
+
         CosmeticRegistry cosmeticRegistry = CosmeticsModule.get().getRegistry();
 
         String model = attachment.getModel();
