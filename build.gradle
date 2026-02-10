@@ -72,17 +72,19 @@ def createServerRunArguments(String srcDir) {
             "--mods=\"${srcDir}\""
 }
 
-idea.project.settings.runConfigurations {
-    "HytaleServer"(org.jetbrains.gradle.ext.Application) {
-        def serverRunDir = file("$projectDir/run")
-        if (!serverRunDir.exists()) {
-            serverRunDir.mkdirs()
-        }
+if (project.hasProperty("hytaleHome") && file(project.findProperty("hytaleHome")).exists()) {
+    idea.project.settings.runConfigurations {
+        "HytaleServer"(org.jetbrains.gradle.ext.Application) {
+            def serverRunDir = file("$projectDir/run")
+            if (!serverRunDir.exists()) {
+                serverRunDir.mkdirs()
+            }
 
-        mainClass = "com.hypixel.hytale.Main"
-        moduleName = project.idea.module.name + ".main"
-        programParameters = createServerRunArguments(layout.buildDirectory.dir("resources").get().asFile.absolutePath)
-        workingDirectory = serverRunDir
+            mainClass = "com.hypixel.hytale.Main"
+            moduleName = project.idea.module.name + ".main"
+            programParameters = createServerRunArguments(layout.buildDirectory.dir("resources").get().asFile.absolutePath)
+            workingDirectory = serverRunDir
+        }
     }
 }
 
