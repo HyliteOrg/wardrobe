@@ -88,6 +88,10 @@ if (project.hasProperty("hytaleHome") && file(project.findProperty("hytaleHome")
     }
 }
 
+tasks.withType(GenerateModuleMetadata).configureEach {
+    enabled = false
+}
+
 publishing {
     publications {
         maven(MavenPublication) {
