@@ -26,7 +26,8 @@ ext {
 
 base.archivesName = project.mod_name
 project.group = project.maven_group
-project.version = "${project.mod_version}+${project.hytale_version}"
+def gitSha = providers.exec { commandLine("git", "rev-parse", "--short", "HEAD") }.standardOutput.asText.get().trim()
+project.version = "${project.mod_version}+${project.hytale_version}-${gitSha}"
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(25)
 
