@@ -8,6 +8,8 @@ import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.server.core.Message;
 
+import javax.annotation.Nullable;
+
 public class WardrobeTranslationProperties {
     public static final BuilderCodec<WardrobeTranslationProperties> CODEC = BuilderCodec.builder(WardrobeTranslationProperties.class, WardrobeTranslationProperties::new)
             .append(
@@ -39,12 +41,12 @@ public class WardrobeTranslationProperties {
             .build();
 
     private String nameKey;
-    private String descriptionKey;
+    private @Nullable String descriptionKey;
 
     WardrobeTranslationProperties() {
     }
 
-    public WardrobeTranslationProperties(String nameKey, String descriptionKey) {
+    public WardrobeTranslationProperties(String nameKey, @Nullable String descriptionKey) {
         this.nameKey = nameKey;
         this.descriptionKey = descriptionKey;
     }
@@ -61,15 +63,16 @@ public class WardrobeTranslationProperties {
         return Message.translation(this.getNameKey());
     }
 
+    @Nullable
     public String getDescriptionKey() {
         return this.descriptionKey;
     }
 
-    public void setDescriptionKey(String descriptionKey) {
+    public void setDescriptionKey(@Nullable String descriptionKey) {
         this.descriptionKey = descriptionKey;
     }
 
-    public Message getDescription() {
-        return Message.translation(this.getDescriptionKey());
+    public @Nullable Message getDescription() {
+        return getDescriptionKey() == null ? null : Message.translation(this.getDescriptionKey());
     }
 }

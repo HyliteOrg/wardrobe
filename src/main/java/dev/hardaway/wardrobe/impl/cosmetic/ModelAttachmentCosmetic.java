@@ -23,6 +23,7 @@ import dev.hardaway.wardrobe.api.property.WardrobeProperties;
 import dev.hardaway.wardrobe.api.property.WardrobeTranslationProperties;
 import dev.hardaway.wardrobe.api.property.WardrobeVisibility;
 import dev.hardaway.wardrobe.impl.cosmetic.appearance.VariantAppearance;
+import dev.hardaway.wardrobe.impl.cosmetic.appearance.VariantAppearanceEntry;
 import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytaleCosmetic;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.GradientTextureConfig;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.VariantTextureConfig;
@@ -48,7 +49,7 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
                     (c, p) -> c.appearance = p.appearance
             )
             .addValidator(Validators.nonNull())
-            .metadata(new UIPropertyTitle("Appearance")).documentation("The appearance of this Cosmetic. The Model field must be a Common Asset blockymodel path.")
+            .metadata(new UIPropertyTitle("Appearance")).documentation("The appearance of this Cosmetic.")
             .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
             .add()
 
@@ -68,13 +69,58 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
             .metadata(new UIPropertyTitle("Armor Appearance")).documentation("The appearance of this Cosmetic to use when there is an item equipped in the Armor Slot defined in the Cosmetic Slot this Cosmetic is applied to.")
             .add()
 
-            .build();
+            .afterDecode((cosmetic) -> {
+                if (cosmetic.appearance == null) return;
+                String[] variants = cosmetic.appearance.collectVariants();
+
+                if (variants.length == 0) cosmetic.optionEntries = Map.of();
+                else if (cosmetic.appearance instanceof VariantAppearance v) {
+                    Map<String, CosmeticOptionEntry> entries = new LinkedHashMap<>();
+                    for (String variantId : variants) {
+                        VariantAppearanceEntry entry = v.getVariants().get(variantId);
+                        entries.put(variantId, new CosmeticOptionEntry(
+                                variantId,
+                                entry.getProperties(),
+                                entry.getIcon()
+                        ));
+                    }
+                    cosmetic.optionEntries = entries;
+                } else cosmetic.optionEntries = Map.of();
+
+                for (String option : cosmetic.optionEntries.keySet()) {
+                    TextureConfig textureConfig = cosmetic.appearance.getTextureConfig(option);
+                    if (textureConfig == null) continue;
+                    String[] textures = textureConfig.collectVariants();
+
+                    List<CosmeticVariantEntry> entries = new ArrayList<>();
+                    for (String textureId : textures) {
+                        WardrobeProperties properties;
+                        String[] colors;
+                        String icon = null;
+                        if (textureConfig instanceof VariantTextureConfig vt) {
+                            VariantTextureConfig.Entry entry = vt.getVariants().get(textureId);
+                            properties = entry.getProperties();
+                            colors = entry.getColors();
+                            icon = entry.getIcon();
+                        } else if (textureConfig instanceof GradientTextureConfig gt) {
+                            properties = new WardrobeProperties(new WardrobeTranslationProperties(textureId, ""), WardrobeVisibility.ALWAYS, null);
+                            colors = CosmeticsModule.get().getRegistry().getGradientSets().get(gt.getGradientSet()).getGradients().get(textureId).getBaseColor();
+                        } else {
+                            continue;
+                        }
+                        entries.add(new CosmeticVariantEntry(textureId, properties, colors, icon));
+                    }
+
+                    cosmetic.optionToVariantEntries.put(option, entries);
+                }
+            }).build();
 
     private String[] overlapCosmeticSlotIds = new String[0];
     private Appearance appearance;
     private @Nullable Appearance overlapAppearance;
     private @Nullable Appearance armorAppearance;
-
+    private Map<String, CosmeticOptionEntry> optionEntries;
+    private final Map<String, List<CosmeticVariantEntry>> optionToVariantEntries = new HashMap<>();
     protected ModelAttachmentCosmetic() {
     }
 
@@ -104,54 +150,14 @@ public class ModelAttachmentCosmetic extends CosmeticAsset implements Appearance
         return armorAppearance;
     }
 
-    // TODO: create after decoding
     @Override
     public Map<String, CosmeticOptionEntry> getOptionEntries() {
-        String[] variants = this.appearance.collectVariants();
-        if (variants.length == 0) return Map.of();
-
-        if (this.appearance instanceof VariantAppearance v) {
-            Map<String, CosmeticOptionEntry> entries = new LinkedHashMap<>();
-            for (String variantId : variants) {
-                VariantAppearance.Entry entry = v.getVariants().get(variantId);
-                entries.put(variantId, new CosmeticOptionEntry(
-                        variantId,
-                        entry.getProperties(),
-                        entry.getIcon()
-                ));
-            }
-            return entries;
-        }
-
-        return Map.of();
+        return optionEntries;
     }
 
     @Override
     public List<CosmeticVariantEntry> getVariantEntries(@Nullable String variantId) {
-        TextureConfig textureConfig = this.appearance.getTextureConfig(variantId);
-        String[] textures = textureConfig.collectVariants();
-        if (textures.length == 0) return List.of();
-
-        List<CosmeticVariantEntry> entries = new ArrayList<>();
-        for (String textureId : textures) {
-            WardrobeProperties properties;
-            String[] colors;
-            String icon = null;
-            if (textureConfig instanceof VariantTextureConfig vt) {
-                VariantTextureConfig.Entry entry = vt.getVariants().get(textureId);
-                properties = entry.getProperties();
-                colors = entry.getColors();
-                icon = entry.getIcon();
-            } else if (textureConfig instanceof GradientTextureConfig gt) {
-                properties = new WardrobeProperties(new WardrobeTranslationProperties(textureId, ""), WardrobeVisibility.ALWAYS, null);
-                colors = CosmeticsModule.get().getRegistry().getGradientSets()
-                        .get(gt.getGradientSet()).getGradients().get(textureId).getBaseColor();
-            } else {
-                continue;
-            }
-            entries.add(new CosmeticVariantEntry(textureId, properties, colors, icon));
-        }
-        return entries;
+        return variantId == null ? null : optionToVariantEntries.get(variantId);
     }
 
     @Override

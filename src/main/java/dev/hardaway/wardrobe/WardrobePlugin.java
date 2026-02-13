@@ -19,6 +19,8 @@ import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
 import dev.hardaway.wardrobe.impl.command.WardrobeCommand;
 import dev.hardaway.wardrobe.impl.cosmetic.*;
 import dev.hardaway.wardrobe.impl.cosmetic.appearance.ModelAppearance;
+import dev.hardaway.wardrobe.impl.cosmetic.appearance.ModelAssetModelAppearance;
+import dev.hardaway.wardrobe.impl.cosmetic.appearance.ModelAssetVariantAppearance;
 import dev.hardaway.wardrobe.impl.cosmetic.appearance.VariantAppearance;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.GradientTextureConfig;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.StaticTextureConfig;
@@ -59,8 +61,12 @@ public class WardrobePlugin extends JavaPlugin {
                 .register(Priority.NORMAL, "Variant", VariantTextureConfig.class, VariantTextureConfig.CODEC);
 
         this.getCodecRegistry(CosmeticAsset.CODEC)
-                .register(Priority.DEFAULT, "ModelAttachment", ModelAttachmentCosmetic.class, ModelAttachmentCosmetic.CODEC)
-                .register(Priority.NORMAL, "PlayerModel", PlayerModelCosmetic.class, PlayerModelCosmetic.CODEC);
+                .register(Priority.DEFAULT, "PlayerModel", PlayerModelCosmetic.class, PlayerModelCosmetic.CODEC)
+                .register(Priority.NORMAL, "ModelAttachment", ModelAttachmentCosmetic.class, ModelAttachmentCosmetic.CODEC);
+
+        this.getCodecRegistry(Appearance.MODELASSET_CODEC)
+                .register(Priority.DEFAULT, "Model", ModelAssetModelAppearance.class, ModelAssetModelAppearance.CODEC)
+                .register(Priority.NORMAL, "Variant", ModelAssetVariantAppearance.class, ModelAssetVariantAppearance.CODEC);
 
         this.getCodecRegistry(Appearance.CODEC)
                 .register(Priority.DEFAULT, "Model", ModelAppearance.class, ModelAppearance.CODEC)

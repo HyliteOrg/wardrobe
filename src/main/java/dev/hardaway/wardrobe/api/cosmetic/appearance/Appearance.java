@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 public interface Appearance {
 
     BuilderCodecMapCodec<Appearance> CODEC = new BuilderCodecMapCodec<>("Type", true);
+    BuilderCodecMapCodec<Appearance> MODELASSET_CODEC = new BuilderCodecMapCodec<>("Type", true);
 
     String getModel(@Nullable String variantId);
 
