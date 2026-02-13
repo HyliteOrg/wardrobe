@@ -69,7 +69,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         cameraSettings.isFirstPerson = false;
         cameraSettings.positionLerpSpeed = 0.2F;
         cameraSettings.rotationType = RotationType.Custom;
-        cameraSettings.rotationLerpSpeed = 1;
+        cameraSettings.rotationLerpSpeed = 0.3F;
         cameraSettings.mouseInputType = MouseInputType.LookAtPlane;
         cameraSettings.displayCursor = true;
     }
