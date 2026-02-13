@@ -375,9 +375,11 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             ));
         }
 
+        String option = wornCosmetic.getOptionId();
+        if (option == null) option = optionEntries.keySet().stream().findFirst().orElseThrow();
         commandBuilder.set("#OptionsDropdown.Visible", true);
         commandBuilder.set("#OptionsDropdown.Entries", entries);
-        commandBuilder.set("#OptionsDropdown.Value", wornCosmetic.getOptionId());
+        commandBuilder.set("#OptionsDropdown.Value", option);
 
         eventBuilder.addEventBinding(
                 CustomUIEventBindingType.ValueChanged,

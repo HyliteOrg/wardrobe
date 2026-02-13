@@ -40,6 +40,7 @@ public class WardrobeMenu {
         this.baseWardrobe = wardrobe.clone();
 
         this.categories = CosmeticCategoryAsset.getAssetMap().getAssetMap().values().stream()
+                .filter(c -> c.getProperties().getWardrobeVisibility() != WardrobeVisibility.NEVER)
                 .filter(c -> c.getProperties().hasPermission(playerId))
                 .sorted(Comparator.comparing(WardrobeCategory::getTabOrder))
                 .toList();
@@ -58,6 +59,7 @@ public class WardrobeMenu {
         }
 
         CosmeticSlotAsset.getAssetMap().getAssetMap().values().stream()
+                .filter(g -> g.getProperties().getWardrobeVisibility() != WardrobeVisibility.NEVER)
                 .filter(g -> g.getProperties().hasPermission(playerId))
                 .sorted(Comparator.comparing(WardrobeCosmeticSlot::getTabOrder))
                 .forEach(slot -> {
