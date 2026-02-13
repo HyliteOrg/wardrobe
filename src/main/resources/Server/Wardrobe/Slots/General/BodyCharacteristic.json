@@ -6,7 +6,7 @@
   },
   "CosmeticType": "BodyCharacteristics",
   "Category": "General",
-  "Icon": "Icons/Wardrobe/Slots/BodyCharacteristic@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/BodyCharacteristicSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/BodyCharacteristic.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/BodyCharacteristicSelected.png",
   "Order": 1
 }

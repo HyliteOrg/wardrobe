@@ -6,7 +6,7 @@
   },
   "CosmeticType": "FacialHair",
   "Category": "Head",
-  "Icon": "Icons/Wardrobe/Slots/FacialHair@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/FacialHairSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/FacialHair.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/FacialHairSelected.png",
   "Order": 3
 }

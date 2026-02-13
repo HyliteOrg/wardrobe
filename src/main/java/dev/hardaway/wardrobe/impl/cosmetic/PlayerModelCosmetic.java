@@ -12,6 +12,7 @@ import dev.hardaway.wardrobe.api.cosmetic.WardrobeContext;
 import dev.hardaway.wardrobe.api.cosmetic.WardrobeCosmeticSlot;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.AppearanceCosmetic;
+import dev.hardaway.wardrobe.api.cosmetic.appearance.ModelAssetAppearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticOptionEntry;
 import dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry;
@@ -24,12 +25,15 @@ import dev.hardaway.wardrobe.impl.cosmetic.texture.GradientTextureConfig;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.VariantTextureConfig;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosmetic {
 
     public static final BuilderCodec<PlayerModelCosmetic> CODEC = BuilderCodec.builder(PlayerModelCosmetic.class, PlayerModelCosmetic::new, CosmeticAsset.ABSTRACT_CODEC)
-            .append(new KeyedCodec<>("Appearance", Appearance.CODEC, true),
+            .append(new KeyedCodec<>("Appearance", ModelAssetAppearance.MODELASSET_CODEC, true),
                     (t, value) -> t.appearance = value,
                     t -> t.appearance
             )

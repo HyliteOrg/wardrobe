@@ -6,7 +6,7 @@
   },
   "CosmeticType": "Eyebrows",
   "Category": "Head",
-  "Icon": "Icons/Wardrobe/Slots/Eyebrows@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/EyebrowsSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/Eyebrows.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/EyebrowsSelected.png",
   "Order": 1
 }

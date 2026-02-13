@@ -6,7 +6,7 @@
   },
   "CosmeticType": "Haircuts",
   "Category": "Head",
-  "Icon": "Icons/Wardrobe/Slots/Haircut@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/HaircutSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/Haircut.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/HaircutSelected.png",
   "Order": 0
 }

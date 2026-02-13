@@ -6,7 +6,7 @@
   },
   "CosmeticType": "Capes",
   "Category": "Capes",
-  "Icon": "Icons/Wardrobe/Slots/Cape@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/CapeSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/Cape.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/CapeSelected.png",
   "Order": 0
 }

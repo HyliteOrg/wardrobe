@@ -6,7 +6,7 @@
   },
   "CosmeticType": "FaceAccessory",
   "Category": "Head",
-  "Icon": "Icons/Wardrobe/Slots/FaceAccessory@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/FaceAccessorySelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/FaceAccessory.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/FaceAccessorySelected.png",
   "Order": 5
 }
