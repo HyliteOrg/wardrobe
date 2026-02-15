@@ -6,7 +6,7 @@
   },
   "CosmeticType": "Pants",
   "Category": "Legs",
-  "Icon": "Icons/Wardrobe/Slots/Pants@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/PantsSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/Pants.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/PantsSelected.png",
   "Order": 0
 }

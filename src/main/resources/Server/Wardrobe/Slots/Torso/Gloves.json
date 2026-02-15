@@ -6,7 +6,7 @@
   },
   "CosmeticType": "Gloves",
   "Category": "Torso",
-  "Icon": "Icons/Wardrobe/Slots/Gloves@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/GlovesSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/Gloves.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/GlovesSelected.png",
   "Order": 2
 }

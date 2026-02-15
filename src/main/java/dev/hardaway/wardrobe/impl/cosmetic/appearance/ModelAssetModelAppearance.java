@@ -6,22 +6,25 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIDefaultCollapsedState;
 import com.hypixel.hytale.codec.schema.metadata.ui.UIPropertyTitle;
 import com.hypixel.hytale.codec.validation.Validators;
-import com.hypixel.hytale.server.core.asset.common.CommonAssetValidator;
-import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
+import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
 
-import javax.annotation.Nullable;
-
-public class ModelAppearance implements Appearance {
-
-    public static final BuilderCodec<ModelAppearance> CODEC = BuilderCodec.builder(ModelAppearance.class, ModelAppearance::new)
+public class ModelAssetModelAppearance extends ModelAppearance {
+    public static final BuilderCodec<ModelAssetModelAppearance> CODEC = BuilderCodec.builder(ModelAssetModelAppearance.class, ModelAssetModelAppearance::new)
             .append(new KeyedCodec<>("Model", Codec.STRING, true),
                     (a, value) -> a.model = value,
                     a -> a.model
             )
-            .addValidator(CommonAssetValidator.MODEL_CHARACTER_ATTACHMENT)
+            .addValidator(ModelAsset.VALIDATOR_CACHE.getValidator().late())
             .addValidator(Validators.nonNull())
-            .metadata(new UIPropertyTitle("Model")).documentation("The model to display for this appearance.")
+            .metadata(new UIPropertyTitle("Model")).documentation("The model asset to use for the Player Model.")
+            .add()
+
+            .append(new KeyedCodec<>("Scale", Codec.FLOAT),
+                    (a, d) -> a.scale = d,
+                    (a) -> a.scale
+            )
+            .metadata(new UIPropertyTitle("Player Model Scale")).documentation("The scale to use for the Player Model.")
             .add()
 
             .append(new KeyedCodec<>("TextureConfig", TextureConfig.CODEC),
@@ -34,28 +37,4 @@ public class ModelAppearance implements Appearance {
             .add()
 
             .build();
-
-    protected String model;
-    protected float scale = 1;
-    protected TextureConfig textureConfig;
-
-    @Override
-    public String getModel(String variantId) {
-        return model;
-    }
-
-    @Override
-    public float getScale(String variantId) {
-        return scale;
-    }
-
-    @Override
-    public TextureConfig getTextureConfig(@Nullable String variantId) {
-        return textureConfig;
-    }
-
-    @Override
-    public String[] collectVariants() {
-        return new String[0];
-    }
 }

@@ -6,7 +6,7 @@
   },
   "CosmeticType": "Underwear",
   "Category": "General",
-  "Icon": "Icons/Wardrobe/Slots/Underwear@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/UnderwearSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/Underwear.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/UnderwearSelected.png",
   "Order": 0
 }

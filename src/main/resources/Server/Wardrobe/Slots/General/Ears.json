@@ -6,7 +6,11 @@
   },
   "CosmeticType": "Ears",
   "Category": "General",
-  "Icon": "Icons/Wardrobe/Slots/Ears@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/EarsSelected@2x.png",
-  "Order": 4
+  "Icon": "Icons/Wardrobe/Slots/Ears.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/EarsSelected.png",
+  "Order": 4,
+  "Camera": {
+    "Distance": 1.5,
+    "Yaw": 245
+  }
 }

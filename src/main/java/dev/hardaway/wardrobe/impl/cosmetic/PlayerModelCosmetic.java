@@ -20,26 +20,49 @@ import dev.hardaway.wardrobe.api.property.WardrobeProperties;
 import dev.hardaway.wardrobe.api.property.WardrobeTranslationProperties;
 import dev.hardaway.wardrobe.api.property.WardrobeVisibility;
 import dev.hardaway.wardrobe.impl.cosmetic.appearance.VariantAppearance;
+import dev.hardaway.wardrobe.impl.cosmetic.appearance.VariantAppearanceEntry;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.GradientTextureConfig;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.VariantTextureConfig;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosmetic {
 
     public static final BuilderCodec<PlayerModelCosmetic> CODEC = BuilderCodec.builder(PlayerModelCosmetic.class, PlayerModelCosmetic::new, CosmeticAsset.ABSTRACT_CODEC)
-            .append(new KeyedCodec<>("Appearance", Appearance.CODEC, true),
+            .append(new KeyedCodec<>("Appearance", Appearance.MODELASSET_CODEC, true),
                     (t, value) -> t.appearance = value,
                     t -> t.appearance
             )
             .addValidator(Validators.nonNull())
-            .metadata(new UIPropertyTitle("Appearance")).documentation("The appearance of this Cosmetic. The Model field must be a ModelAsset id.")
+            .metadata(new UIPropertyTitle("Appearance")).documentation("The appearance of this Cosmetic.")
             .metadata(UIDefaultCollapsedState.UNCOLLAPSED)
             .add()
-            .build();
+
+            .afterDecode((cosmetic) -> {
+                if (cosmetic.appearance == null) return;
+                String[] variants = cosmetic.appearance.collectVariants();
+
+                if (variants.length == 0) cosmetic.optionEntries = Map.of();
+                else if (cosmetic.appearance instanceof VariantAppearance v) {
+                    Map<String, CosmeticOptionEntry> entries = new LinkedHashMap<>();
+                    for (String variantId : variants) {
+                        VariantAppearanceEntry entry = v.getVariants().get(variantId);
+                        entries.put(variantId, new CosmeticOptionEntry(
+                                variantId,
+                                entry.getProperties(),
+                                entry.getIcon()
+                        ));
+                    }
+                    cosmetic.optionEntries = entries;
+                } else cosmetic.optionEntries = Map.of();
+            }).build();
 
     private Appearance appearance;
+    private Map<String, CosmeticOptionEntry> optionEntries;
 
     private PlayerModelCosmetic() {
     }
@@ -63,8 +86,6 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
         if (appearance.getModel(option) == null) {
             option = appearance.collectVariants()[0];
         }
-
-
 
         TextureConfig textureConfig = this.getAppearance().getTextureConfig(option);
 
@@ -102,23 +123,7 @@ public class PlayerModelCosmetic extends CosmeticAsset implements AppearanceCosm
     // TODO: create after decoding
     @Override
     public Map<String, CosmeticOptionEntry> getOptionEntries() {
-        String[] variants = this.appearance.collectVariants();
-        if (variants.length == 0) return Map.of();
-
-        if (this.appearance instanceof VariantAppearance v) {
-            Map<String, CosmeticOptionEntry> entries = new LinkedHashMap<>();
-            for (String variantId : variants) {
-                VariantAppearance.Entry entry = v.getVariants().get(variantId);
-                entries.put(variantId, new CosmeticOptionEntry(
-                        variantId,
-                        entry.getProperties(),
-                        entry.getIcon()
-                ));
-            }
-            return entries;
-        }
-
-        return Map.of();
+        return optionEntries;
     }
 
     @Override

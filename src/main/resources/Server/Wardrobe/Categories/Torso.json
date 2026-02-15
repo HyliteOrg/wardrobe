@@ -4,7 +4,7 @@
       "Name": "client.myAvatar.tabs.Torso"
     }
   },
-  "Icon": "Icons/Wardrobe/Categories/Torso@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Categories/TorsoSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Categories/Torso.png",
+  "SelectedIcon": "Icons/Wardrobe/Categories/TorsoSelected.png",
   "Order": 2
 }

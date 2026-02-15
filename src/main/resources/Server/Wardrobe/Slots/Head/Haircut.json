@@ -6,7 +6,13 @@
   },
   "CosmeticType": "Haircuts",
   "Category": "Head",
-  "Icon": "Icons/Wardrobe/Slots/Haircut@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/HaircutSelected@2x.png",
-  "Order": 0
+  "Icon": "Icons/Wardrobe/Slots/Haircut.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/HaircutSelected.png",
+  "Order": 0,
+  "Camera": {
+    "Distance": 1.75,
+    "Y": 0.2,
+    "Yaw": 200,
+    "Pitch": -30
+  }
 }

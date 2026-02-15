@@ -6,7 +6,11 @@
   },
   "CosmeticType": "EarAccessory",
   "Category": "Head",
-  "Icon": "Icons/Wardrobe/Slots/EarAccessory@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/EarAccessorySelected@2x.png",
-  "Order": 6
+  "Icon": "Icons/Wardrobe/Slots/EarAccessory.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/EarAccessorySelected.png",
+  "Order": 6,
+  "Camera": {
+    "Distance": 1.5,
+    "Yaw": 245
+  }
 }

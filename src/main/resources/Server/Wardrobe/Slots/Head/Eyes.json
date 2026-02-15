@@ -6,7 +6,7 @@
   },
   "CosmeticType": "Eyes",
   "Category": "Head",
-  "Icon": "Icons/Wardrobe/Slots/Eyes@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Slots/EyesSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Slots/Eyes.png",
+  "SelectedIcon": "Icons/Wardrobe/Slots/EyesSelected.png",
   "Order": 2
 }

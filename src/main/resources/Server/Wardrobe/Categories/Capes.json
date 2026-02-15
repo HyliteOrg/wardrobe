@@ -4,7 +4,7 @@
       "Name": "client.myAvatar.tabs.Capes"
     }
   },
-  "Icon": "Icons/Wardrobe/Categories/Capes@2x.png",
-  "SelectedIcon": "Icons/Wardrobe/Categories/CapesSelected@2x.png",
+  "Icon": "Icons/Wardrobe/Categories/Capes.png",
+  "SelectedIcon": "Icons/Wardrobe/Categories/CapesSelected.png",
   "Order": 4
 }
