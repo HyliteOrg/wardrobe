@@ -23,6 +23,11 @@ public sealed interface WardrobeMode {
     default void setNpcName(String name) {
     }
 
+    @Nullable
+    default Runnable getOnClose() {
+        return null;
+    }
+
     record Player() implements WardrobeMode {
     }
 
@@ -30,6 +35,7 @@ public sealed interface WardrobeMode {
         private final PlayerWardrobeComponent restoreWardrobe;
         private final BiConsumer<PlayerWardrobeComponent, String> saveCallback;
         private String name;
+        private Runnable onClose;
 
         public Npc(PlayerWardrobeComponent restoreWardrobe, BiConsumer<PlayerWardrobeComponent, String> saveCallback) {
             this(restoreWardrobe, saveCallback, null);
@@ -60,6 +66,16 @@ public sealed interface WardrobeMode {
         @Override
         public void setNpcName(String name) {
             this.name = name;
+        }
+
+        @Override
+        @Nullable
+        public Runnable getOnClose() {
+            return onClose;
+        }
+
+        public void setOnClose(@Nullable Runnable onClose) {
+            this.onClose = onClose;
         }
     }
 }
