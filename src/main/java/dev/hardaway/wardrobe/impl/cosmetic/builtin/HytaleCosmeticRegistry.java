@@ -29,7 +29,7 @@ public class HytaleCosmeticRegistry {
 
             List<HytaleWardrobeCosmetic> slotCosmetics = new ArrayList<>();
             for (var entry : parts.entrySet()) {
-                if (entry.getValue() instanceof PlayerSkinPart part && !part.isDefaultAsset()) {
+                if (entry.getValue() instanceof PlayerSkinPart part) {
                     HytaleWardrobeCosmetic cosmetic = new HytaleWardrobeCosmetic(
                             slot.getHytaleCosmeticType(), part, slot.getId()
                     );
