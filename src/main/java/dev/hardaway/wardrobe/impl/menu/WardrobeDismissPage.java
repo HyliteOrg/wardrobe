@@ -54,6 +54,8 @@ public class WardrobeDismissPage extends InteractiveCustomUIPage<WardrobeDismiss
         } else if (WardrobePage.MenuAction.Discard.equals(data.action)) {
             if (mode instanceof WardrobeMode.Player) {
                 store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), wardrobe);
+            } else if (mode.getRestoreWardrobe() != null) {
+                store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), mode.getRestoreWardrobe());
             }
         }
 

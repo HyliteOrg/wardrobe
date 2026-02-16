@@ -79,6 +79,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         buildWardrobeTabs(commandBuilder, eventBuilder, ref, store);
 
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#SearchField", EventData.of("@SearchQuery", "#SearchField.Value"), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NpcName", EventData.of("@NpcName", "#NpcName.Value"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ResetAvatar", MenuAction.Reset.getEvent(), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Discard", MenuAction.Discard.getEvent(), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Save", MenuAction.Save.getEvent(), false);
@@ -90,6 +91,10 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
 
         UICommandBuilder commandBuilder = new UICommandBuilder();
         UIEventBuilder eventBuilder = new UIEventBuilder();
+
+        if (data.npcName != null) {
+            mode.setNpcName(data.npcName);
+        }
 
         if (data.searchQuery != null) {
             menu.setSearchQuery(data.searchQuery);
@@ -143,15 +148,22 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                     store.getExternalData().getWorld().execute(() -> {
                         store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), menu.getBaseWardrobe());
                     });
+                } else if (mode.getRestoreWardrobe() != null) {
+                    PlayerWardrobeComponent restore = mode.getRestoreWardrobe();
+                    store.getExternalData().getWorld().execute(() -> {
+                        store.putComponent(ref, PlayerWardrobeComponent.getComponentType(), restore);
+                    });
                 }
 
                 shouldClose = true;
                 close();
+                return;
             }
             case Save -> {
                 mode.onSave(menu.getWardrobe().clone());
                 shouldClose = true;
                 close();
+                return;
             }
         }
 
@@ -189,6 +201,14 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         buildTabs(commandBuilder, eventBuilder, "Slots", menu.getSelectedSlot(), menu.getSlots().toArray(WardrobeTab[]::new));
         buildCheckbox(commandBuilder, eventBuilder);
         buildCosmetics(commandBuilder, eventBuilder, ref, store);
+
+        if (mode instanceof WardrobeMode.Npc npc) {
+            commandBuilder.set("#NpcNameRow.Visible", true);
+            String npcName = npc.getNpcName();
+            if (npcName != null) {
+                commandBuilder.set("#NpcName.Value", npcName);
+            }
+        }
 
         ServerCameraSettings camera = defaultCamera;
         if (canChangeCamera) {
@@ -430,6 +450,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
     public static class PageEventData {
         public static final BuilderCodec<PageEventData> CODEC = BuilderCodec.builder(PageEventData.class, PageEventData::new)
                 .append(new KeyedCodec<>("@SearchQuery", Codec.STRING), (e, v) -> e.searchQuery = v, e -> e.searchQuery).add()
+                .append(new KeyedCodec<>("@NpcName", Codec.STRING), (e, v) -> e.npcName = v, e -> e.npcName).add()
                 .append(new KeyedCodec<>("Categories", Codec.STRING), (e, v) -> e.category = v, e -> e.category).add()
                 .append(new KeyedCodec<>("Slots", Codec.STRING), (e, v) -> e.slot = v, e -> e.slot).add()
                 .append(new KeyedCodec<>("Cosmetic", Codec.STRING), (e, v) -> e.cosmetic = v, e -> e.cosmetic).add()
@@ -440,6 +461,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                 .build();
 
         private String searchQuery;
+        private String npcName;
         private String category;
         private String slot;
         private String cosmetic;

@@ -97,6 +97,28 @@ Group {
 
           $Common.@ContentSeparator {}
 
+          Group #NpcNameRow {
+            LayoutMode: Left;
+            Anchor: (Height: 32, Top: 10);
+            Visible: false;
+
+            TextField #NpcName {
+              FlexWeight: 1;
+              PlaceholderText: "Appearance Name";
+              Style: (FontSize: 15);
+              PlaceholderStyle: (TextColor: #4b576c, FontSize: 15);
+              Padding: (Horizontal: 12);
+              Decoration: (
+                Default: (
+                  Background: (
+                    TexturePath: "../Icons/SearchFieldPatch.png",
+                    Border: 8
+                  )
+                )
+              );
+            }
+          }
+
           Group {
             LayoutMode: Left;
             Anchor: (Height: 32, Top: 10);
