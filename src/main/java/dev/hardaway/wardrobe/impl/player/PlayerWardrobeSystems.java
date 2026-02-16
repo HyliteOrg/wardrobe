@@ -28,7 +28,6 @@ import dev.hardaway.wardrobe.api.player.PlayerWardrobe;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticAsset;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlotAsset;
 import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytaleCosmetic;
-import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytaleCosmeticRegistry;
 import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytalePlayerCosmetic;
 
 import javax.annotation.Nonnull;
@@ -98,7 +97,7 @@ public class PlayerWardrobeSystems {
             for (WardrobeCosmeticSlot group : slots.values()) {
                 PlayerCosmetic playerCosmetic = wardrobeComponent.getCosmetic(group);
                 if (playerCosmetic != null) {
-                    dev.hardaway.wardrobe.api.cosmetic.Cosmetic cosmetic = HytaleCosmeticRegistry.resolve(playerCosmetic.getCosmeticId());
+                    dev.hardaway.wardrobe.api.cosmetic.Cosmetic cosmetic = CosmeticAsset.getAssetMap().getAsset(playerCosmetic.getCosmeticId()); // TODO: replace with registry
                     if (cosmetic != null) {
                         context.getCosmeticMap().put(group.getId(), cosmetic);
                     }
