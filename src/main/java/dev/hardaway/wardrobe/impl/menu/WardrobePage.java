@@ -160,6 +160,11 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
                 return;
             }
             case Save -> {
+                String npcName = mode.getNpcName();
+                if (mode instanceof WardrobeMode.Npc && (npcName == null || npcName.isBlank())) {
+                    commandBuilder.set("#NpcName.PlaceholderText", "Name required!");
+                    break;
+                }
                 mode.onSave(menu.getWardrobe().clone());
                 shouldClose = true;
                 close();
