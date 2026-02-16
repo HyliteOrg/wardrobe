@@ -36,6 +36,7 @@ import dev.hardaway.wardrobe.api.player.PlayerCosmetic;
 import dev.hardaway.wardrobe.api.property.WardrobeTranslationProperties;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticAsset;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlotAsset;
+import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytaleCosmeticRegistry;
 import dev.hardaway.wardrobe.impl.player.PlayerWardrobeComponent;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
@@ -110,7 +111,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
 
         if (data.cosmetic != null || data.option != null || data.variant != null) {
             menu.selectCosmetic(
-                    data.cosmetic != null ? CosmeticAsset.getAssetMap().getAsset(data.cosmetic) : null,
+                    data.cosmetic != null ? HytaleCosmeticRegistry.resolve(data.cosmetic) : null,
                     data.option, data.variant
             );
             buildCosmetics(commandBuilder, eventBuilder, ref, store);

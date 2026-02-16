@@ -12,6 +12,8 @@ import dev.hardaway.wardrobe.api.property.WardrobeVisibility;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticAsset;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticCategoryAsset;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlotAsset;
+import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytaleCosmeticRegistry;
+import dev.hardaway.wardrobe.impl.cosmetic.builtin.HytaleWardrobeCosmetic;
 import dev.hardaway.wardrobe.impl.player.CosmeticSaveData;
 import dev.hardaway.wardrobe.impl.player.PlayerWardrobeComponent;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -74,6 +76,10 @@ public class WardrobeMenu {
                 .filter(c -> c.getProperties().getWardrobeVisibility() != WardrobeVisibility.PERMISSION || c.getProperties().hasPermission(playerId))
                 .sorted(Comparator.comparing(dev.hardaway.wardrobe.api.cosmetic.Cosmetic::getId))
                 .forEach(c -> cosmeticMap.computeIfAbsent(c.getCosmeticSlotId(), k -> new ArrayList<>()).add(c));
+
+        for (String slotId : cosmeticMap.keySet()) {
+            cosmeticMap.get(slotId).addAll(HytaleCosmeticRegistry.getCosmeticsForSlot(slotId));
+        }
     }
 
     public List<? extends WardrobeCategory> getCategories() {
@@ -141,7 +147,7 @@ public class WardrobeMenu {
 
         if (cosmetic == null) {
             if (worn == null) return;
-            cosmetic = Objects.requireNonNull(CosmeticAsset.getAssetMap().getAsset(worn.getCosmeticId())); // TODO: registry
+            cosmetic = Objects.requireNonNull(HytaleCosmeticRegistry.resolve(worn.getCosmeticId()));
         }
 
         if (cosmetic instanceof AppearanceCosmetic a) {
@@ -160,6 +166,27 @@ public class WardrobeMenu {
                 variant = worn != null && (worn.getVariantId() != null && variants.contains(worn.getVariantId()))
                         ? worn.getVariantId()
                         : variants.isEmpty() ? null : variants.getFirst();
+            }
+        } else if (cosmetic instanceof HytaleWardrobeCosmetic h) {
+            Map<String, dev.hardaway.wardrobe.api.menu.variant.CosmeticOptionEntry> options = h.getOptionEntries();
+
+            if (!options.isEmpty()) {
+                if (option == null || !options.containsKey(option)) {
+                    option = worn != null && worn.getOptionId() != null && options.containsKey(worn.getOptionId())
+                            ? worn.getOptionId()
+                            : options.keySet().iterator().next();
+                }
+            }
+
+            List<dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry> variants = h.getVariantEntries(option);
+
+            if (!variants.isEmpty()) {
+                List<String> variantIds = variants.stream().map(dev.hardaway.wardrobe.api.menu.variant.CosmeticVariantEntry::id).toList();
+                if (variant == null || !variantIds.contains(variant)) {
+                    variant = worn != null && worn.getVariantId() != null && variantIds.contains(worn.getVariantId())
+                            ? worn.getVariantId()
+                            : variantIds.getFirst();
+                }
             }
         }
 
