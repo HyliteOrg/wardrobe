@@ -193,11 +193,11 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
             dispatchFor.dispatch(new WardrobeMenuEvents.Close(playerRef));
         }
 
+        playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.FirstPerson, false, null));
+
         Runnable onClose = mode.getOnClose();
         if (onClose != null) {
             store.getExternalData().getWorld().execute(onClose);
-        } else {
-            playerRef.getPacketHandler().writeNoCache(new SetServerCamera(ClientCameraView.FirstPerson, false, null));
         }
     }
 
