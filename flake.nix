@@ -1,0 +1,30 @@
+{
+  description = "Wardrobe development environment";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem (system:
+      let
+        pkgs = nixpkgs.legacyPackages.${system};
+        jdk = pkgs.zulu25;
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          buildInputs = [
+            jdk
+            pkgs.gradle
+          ];
+
+          JAVA_HOME = jdk.home;
+
+          shellHook = ''
+            echo "Wardrobe dev shell — Java $(java -version 2>&1 | head -1)"
+          '';
+        };
+      }
+    );
+}
