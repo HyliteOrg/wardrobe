@@ -33,7 +33,7 @@ public class HytaleWardrobeCosmetic implements WardrobeCosmetic {
         this.slotId = slotId;
 
         this.properties = new WardrobeProperties(
-                new WardrobeTranslationProperties("cosmetics." + type.name() + "." + part.getId(), null),
+                new WardrobeTranslationProperties(part.getName() != null ? part.getName() : part.getId(), null),
                 WardrobeVisibility.ALWAYS,
                 null
         );
@@ -41,9 +41,10 @@ public class HytaleWardrobeCosmetic implements WardrobeCosmetic {
         // Build option entries from variants
         if (part.getVariants() != null && !part.getVariants().isEmpty()) {
             Map<String, CosmeticOptionEntry> entries = new LinkedHashMap<>();
-            for (String variantKey : part.getVariants().keySet()) {
+            for (Map.Entry<String, PlayerSkinPart.Variant> variantEntry : part.getVariants().entrySet()) {
+                String variantKey = variantEntry.getKey();
                 WardrobeProperties optionProps = new WardrobeProperties(
-                        new WardrobeTranslationProperties("cosmetics." + type.name() + "." + part.getId() + "." + variantKey, null),
+                        new WardrobeTranslationProperties(variantKey, null),
                         WardrobeVisibility.ALWAYS,
                         null
                 );
