@@ -83,7 +83,7 @@ public class WardrobePage extends InteractiveCustomUIPage<WardrobePage.PageEvent
         eventBuilder.addEventBinding(CustomUIEventBindingType.ValueChanged, "#NpcName", EventData.of("@NpcName", "#NpcName.Value"), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#ResetAvatar", MenuAction.Reset.getEvent(), false);
         eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Discard", MenuAction.Discard.getEvent(), false);
-        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Save", MenuAction.Save.getEvent(), false);
+        eventBuilder.addEventBinding(CustomUIEventBindingType.Activating, "#Save", new EventData().append("Action", "Save").append("@NpcName", "#NpcName.Value"), false);
     }
 
     @Override
