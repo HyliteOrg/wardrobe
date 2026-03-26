@@ -9,8 +9,6 @@ import com.hypixel.hytale.builtin.asseteditor.EditorClient;
 import com.hypixel.hytale.builtin.asseteditor.assettypehandler.AssetStoreTypeHandler;
 import com.hypixel.hytale.builtin.asseteditor.assettypehandler.AssetTypeHandler;
 import com.hypixel.hytale.builtin.asseteditor.event.AssetEditorSelectAssetEvent;
-import com.hypixel.hytale.component.Ref;
-import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.Model;
 import com.hypixel.hytale.protocol.Vector2f;
 import com.hypixel.hytale.protocol.Vector3f;
@@ -18,26 +16,20 @@ import com.hypixel.hytale.protocol.packets.asseteditor.AssetEditorPreviewCameraS
 import com.hypixel.hytale.protocol.packets.asseteditor.AssetEditorUpdateModelPreview;
 import com.hypixel.hytale.server.core.asset.type.item.config.AssetIconProperties;
 import com.hypixel.hytale.server.core.asset.type.model.config.ModelAsset;
-import com.hypixel.hytale.server.core.event.events.entity.LivingEntityInventoryChangeEvent;
 import com.hypixel.hytale.server.core.io.PacketHandler;
 import com.hypixel.hytale.server.core.plugin.JavaPlugin;
-import com.hypixel.hytale.server.core.universe.world.World;
-import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.Appearance;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.AppearanceCosmetic;
 import dev.hardaway.wardrobe.api.cosmetic.appearance.TextureConfig;
-import dev.hardaway.wardrobe.api.player.PlayerWardrobe;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticAsset;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticCategoryAsset;
 import dev.hardaway.wardrobe.impl.cosmetic.CosmeticSlotAsset;
 import dev.hardaway.wardrobe.impl.cosmetic.appearance.VariantAppearance;
 import dev.hardaway.wardrobe.impl.cosmetic.texture.VariantTextureConfig;
-import dev.hardaway.wardrobe.impl.player.PlayerWardrobeComponent;
 
 import javax.annotation.Nonnull;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.Objects;
 
 public class WardrobeEvents {
 
@@ -48,20 +40,6 @@ public class WardrobeEvents {
         plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticCategoryAsset.class, WardrobeEvents::onCategoriesUpdated);
         plugin.getEventRegistry().registerGlobal(AssetEditorSelectAssetEvent.class, WardrobeEvents::onSelectAsset);
         plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticAsset.class, WardrobeEvents::onCosmeticAssetLoaded);
-    }
-
-    private static void onInventoryChange(LivingEntityInventoryChangeEvent event) {
-        if (!Objects.equals(event.getEntity().getInventory().getArmor(), event.getItemContainer()))
-            return;
-
-        Ref<EntityStore> ref = event.getEntity().getReference();
-        World world = event.getEntity().getWorld();
-        if (ref != null && world != null) {
-            Store<EntityStore> store = world.getEntityStore().getStore();
-
-            PlayerWardrobe wardrobe = store.getComponent(ref, PlayerWardrobeComponent.getComponentType());
-            if (wardrobe != null) wardrobe.rebuild();
-        }
     }
 
     private static void onCosmeticsUpdated(LoadedAssetsEvent<String, CosmeticAsset, DefaultAssetMap<String, CosmeticAsset>> event) {
