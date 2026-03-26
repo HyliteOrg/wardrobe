@@ -34,7 +34,6 @@ import java.util.Map;
 public class WardrobeEvents {
 
     protected static void registerEvents(JavaPlugin plugin) {
-        plugin.getEventRegistry().registerGlobal(LivingEntityInventoryChangeEvent.class, WardrobeEvents::onInventoryChange);
         plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticAsset.class, WardrobeEvents::onCosmeticsUpdated);
         plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticSlotAsset.class, WardrobeEvents::onSlotsUpdated);
         plugin.getEventRegistry().register(LoadedAssetsEvent.class, CosmeticCategoryAsset.class, WardrobeEvents::onCategoriesUpdated);
