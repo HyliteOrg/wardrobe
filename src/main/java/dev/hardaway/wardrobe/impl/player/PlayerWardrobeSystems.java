@@ -47,7 +47,21 @@ public class PlayerWardrobeSystems {
         @Override
         public void tick(float v, int i, @Nonnull ArchetypeChunk<EntityStore> chunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
             PlayerWardrobeComponent wardrobe = chunk.getComponent(i, PlayerWardrobeComponent.getComponentType());
-            if (wardrobe == null || !wardrobe.consumeDirty()) // TODO: use events instead of ticking
+            if (wardrobe == null)
+                return;
+
+            // Detect armor changes by comparing the current armor contents hash
+            Player player = chunk.getComponent(i, Player.getComponentType());
+            if (player != null) {
+                ItemContainer armorContainer = player.getInventory().getArmor();
+                int armorHash = computeArmorHash(armorContainer);
+                if (armorHash != wardrobe.getLastArmorHash()) {
+                    wardrobe.setLastArmorHash(armorHash);
+                    wardrobe.rebuild();
+                }
+            }
+
+            if (!wardrobe.consumeDirty())
                 return;
 
             PlayerSkinComponent playerSkinComponent = chunk.getComponent(i, PlayerSkinComponent.getComponentType());
@@ -70,6 +84,15 @@ public class PlayerWardrobeSystems {
                     chunk.getComponent(i, PlayerRef.getComponentType())
             );
             chunk.setComponent(i, ModelComponent.getComponentType(), new ModelComponent(model));
+        }
+
+        private static int computeArmorHash(ItemContainer armorContainer) {
+            int hash = 1;
+            for (short slot = 0; slot < armorContainer.getCapacity(); slot++) {
+                ItemStack stack = armorContainer.getItemStack(slot);
+                hash = 31 * hash + (stack == null || stack.isEmpty() ? 0 : stack.hashCode());
+            }
+            return hash;
         }
 
         @Nullable

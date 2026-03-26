@@ -36,6 +36,7 @@ public class PlayerWardrobeComponent implements PlayerWardrobe, Component<Entity
     private Set<String> cosmeticIdSet;
     private Set<CosmeticType> hiddenCosmeticTypes;
     private boolean dirty;
+    private transient int lastArmorHash;
 
     public PlayerWardrobeComponent() {
         this(new HashMap<>(), new HashSet<>());
@@ -128,6 +129,14 @@ public class PlayerWardrobeComponent implements PlayerWardrobe, Component<Entity
         boolean dirty = this.dirty;
         this.dirty = false;
         return dirty;
+    }
+
+    public int getLastArmorHash() {
+        return lastArmorHash;
+    }
+
+    public void setLastArmorHash(int lastArmorHash) {
+        this.lastArmorHash = lastArmorHash;
     }
 
     @Nullable

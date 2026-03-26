@@ -55,7 +55,7 @@ public class WardrobeUtil {
     @Nullable
     public static PlayerSkin.PlayerSkinPartId getSkinPartForType(CosmeticType type, PlayerSkin skin) {
         return switch (type) {
-            case EMOTES, GRADIENT_SETS, EYE_COLORS, SKIN_TONES -> null;
+            case EMOTES, EMOTES_INGAME, GRADIENT_SETS, EYE_COLORS, SKIN_TONES -> null;
             case BODY_CHARACTERISTICS -> skin.getBodyCharacteristic();
             case UNDERWEAR -> skin.getUnderwear();
             case EYEBROWS -> skin.getEyebrows();
@@ -103,8 +103,8 @@ public class WardrobeUtil {
 
     public static boolean canBeHidden(CosmeticType type) {
         return switch (type) {
-            case EMOTES, GRADIENT_SETS, EYE_COLORS, SKIN_TONES, SKIN_FEATURES, EYES, UNDERWEAR, BODY_CHARACTERISTICS,
-                 FACE, MOUTHS, EARS -> false;
+            case EMOTES, EMOTES_INGAME, GRADIENT_SETS, EYE_COLORS, SKIN_TONES, SKIN_FEATURES, EYES, UNDERWEAR,
+                 BODY_CHARACTERISTICS, FACE, MOUTHS, EARS -> false;
             case HAIRCUTS, EYEBROWS, FACIAL_HAIR, HEAD_ACCESSORY, FACE_ACCESSORY, EAR_ACCESSORY, UNDERTOPS, OVERTOPS,
                  GLOVES, PANTS, OVERPANTS, SHOES, CAPES -> true;
         };
