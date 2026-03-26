@@ -1,6 +1,7 @@
 package dev.hardaway.wardrobe;
 
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.protocol.Cosmetic;
 import com.hypixel.hytale.protocol.packets.interface_.Notification;
 import com.hypixel.hytale.protocol.packets.interface_.NotificationStyle;
 import com.hypixel.hytale.server.core.Message;
@@ -55,7 +56,6 @@ public class WardrobeUtil {
     @Nullable
     public static PlayerSkin.PlayerSkinPartId getSkinPartForType(CosmeticType type, PlayerSkin skin) {
         return switch (type) {
-            case EMOTES, EMOTES_INGAME, GRADIENT_SETS, EYE_COLORS, SKIN_TONES -> null;
             case BODY_CHARACTERISTICS -> skin.getBodyCharacteristic();
             case UNDERWEAR -> skin.getUnderwear();
             case EYEBROWS -> skin.getEyebrows();
@@ -77,12 +77,12 @@ public class WardrobeUtil {
             case FACE -> new PlayerSkin.PlayerSkinPartId(skin.getFace(), skin.getBodyCharacteristic().textureId, null);
             case MOUTHS ->
                     new PlayerSkin.PlayerSkinPartId(skin.getMouth(), skin.getBodyCharacteristic().textureId, null);
-            case null -> null;
+            default -> null;
         };
     }
 
     @Nullable
-    public static CosmeticType protocolCosmeticToCosmeticType(com.hypixel.hytale.protocol.Cosmetic cosmetic) {
+    public static CosmeticType protocolCosmeticToCosmeticType(Cosmetic cosmetic) {
         return switch (cosmetic) {
             case Haircut -> CosmeticType.HAIRCUTS;
             case FacialHair -> CosmeticType.FACIAL_HAIR;
@@ -103,8 +103,8 @@ public class WardrobeUtil {
 
     public static boolean canBeHidden(CosmeticType type) {
         return switch (type) {
-            case EMOTES, EMOTES_INGAME, GRADIENT_SETS, EYE_COLORS, SKIN_TONES, SKIN_FEATURES, EYES, UNDERWEAR,
-                 BODY_CHARACTERISTICS, FACE, MOUTHS, EARS -> false;
+            case EMOTES, EMOTES_INGAME, GRADIENT_SETS, EYE_COLORS, SKIN_TONES, SKIN_FEATURES, EYES, UNDERWEAR, BODY_CHARACTERISTICS,
+                 FACE, MOUTHS, EARS -> false;
             case HAIRCUTS, EYEBROWS, FACIAL_HAIR, HEAD_ACCESSORY, FACE_ACCESSORY, EAR_ACCESSORY, UNDERTOPS, OVERTOPS,
                  GLOVES, PANTS, OVERPANTS, SHOES, CAPES -> true;
         };

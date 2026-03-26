@@ -9,7 +9,6 @@ import com.hypixel.hytale.builtin.asseteditor.EditorClient;
 import com.hypixel.hytale.builtin.asseteditor.assettypehandler.AssetStoreTypeHandler;
 import com.hypixel.hytale.builtin.asseteditor.assettypehandler.AssetTypeHandler;
 import com.hypixel.hytale.builtin.asseteditor.event.AssetEditorSelectAssetEvent;
-import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.protocol.Model;
 import com.hypixel.hytale.protocol.Vector2f;
 import com.hypixel.hytale.protocol.Vector3f;

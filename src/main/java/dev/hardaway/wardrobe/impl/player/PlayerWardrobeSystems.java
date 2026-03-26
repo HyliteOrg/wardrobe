@@ -2,6 +2,7 @@ package dev.hardaway.wardrobe.impl.player;
 
 import com.hypixel.hytale.component.*;
 import com.hypixel.hytale.component.query.Query;
+import com.hypixel.hytale.component.system.EntityEventSystem;
 import com.hypixel.hytale.component.system.RefChangeSystem;
 import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
@@ -13,6 +14,8 @@ import com.hypixel.hytale.server.core.cosmetics.CosmeticType;
 import com.hypixel.hytale.server.core.cosmetics.CosmeticsModule;
 import com.hypixel.hytale.server.core.cosmetics.PlayerSkin;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.InventoryChangeEvent;
+import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.modules.entity.component.ModelComponent;
@@ -40,6 +43,7 @@ public class PlayerWardrobeSystems {
         plugin.getEntityStoreRegistry().registerSystem(new EntityAdded());
         plugin.getEntityStoreRegistry().registerSystem(new WardrobeChanged());
         plugin.getEntityStoreRegistry().registerSystem(new ArmorVisibilityChanged());
+        plugin.getEntityStoreRegistry().registerSystem(new ArmorInventoryChanged());
     }
 
     public static class Tick extends EntityTickingSystem<EntityStore> {
@@ -47,21 +51,7 @@ public class PlayerWardrobeSystems {
         @Override
         public void tick(float v, int i, @Nonnull ArchetypeChunk<EntityStore> chunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer) {
             PlayerWardrobeComponent wardrobe = chunk.getComponent(i, PlayerWardrobeComponent.getComponentType());
-            if (wardrobe == null)
-                return;
-
-            // Detect armor changes by comparing the current armor contents hash
-            Player player = chunk.getComponent(i, Player.getComponentType());
-            if (player != null) {
-                ItemContainer armorContainer = player.getInventory().getArmor();
-                int armorHash = computeArmorHash(armorContainer);
-                if (armorHash != wardrobe.getLastArmorHash()) {
-                    wardrobe.setLastArmorHash(armorHash);
-                    wardrobe.rebuild();
-                }
-            }
-
-            if (!wardrobe.consumeDirty())
+            if (wardrobe == null || !wardrobe.consumeDirty())
                 return;
 
             PlayerSkinComponent playerSkinComponent = chunk.getComponent(i, PlayerSkinComponent.getComponentType());
@@ -84,15 +74,6 @@ public class PlayerWardrobeSystems {
                     chunk.getComponent(i, PlayerRef.getComponentType())
             );
             chunk.setComponent(i, ModelComponent.getComponentType(), new ModelComponent(model));
-        }
-
-        private static int computeArmorHash(ItemContainer armorContainer) {
-            int hash = 1;
-            for (short slot = 0; slot < armorContainer.getCapacity(); slot++) {
-                ItemStack stack = armorContainer.getItemStack(slot);
-                hash = 31 * hash + (stack == null || stack.isEmpty() ? 0 : stack.hashCode());
-            }
-            return hash;
         }
 
         @Nullable
@@ -318,6 +299,37 @@ public class PlayerWardrobeSystems {
 
         @Nonnull
         @Override
+        public Query<EntityStore> getQuery() {
+            return QUERY;
+        }
+    }
+
+    public static class ArmorInventoryChanged extends EntityEventSystem<EntityStore, InventoryChangeEvent> {
+
+        private static final Query<EntityStore> QUERY = Query.and(Player.getComponentType(), InventoryComponent.Armor.getComponentType(), PlayerWardrobeComponent.getComponentType());
+
+        public ArmorInventoryChanged() {
+            super(InventoryChangeEvent.class);
+        }
+
+        public void handle(int index, @Nonnull ArchetypeChunk<EntityStore> archetypeChunk, @Nonnull Store<EntityStore> store, @Nonnull CommandBuffer<EntityStore> commandBuffer, @Nonnull InventoryChangeEvent event) {
+            Player playerComponent = archetypeChunk.getComponent(index, Player.getComponentType());
+            assert playerComponent != null;
+
+
+            InventoryComponent.Armor armorComponent = archetypeChunk.getComponent(index, InventoryComponent.Armor.getComponentType());
+            assert armorComponent != null;
+
+            ItemContainer armorInventory = armorComponent.getInventory();
+            if (event.getItemContainer().equals(armorInventory)) {
+                Ref<EntityStore> ref = archetypeChunk.getReferenceTo(index);
+                PlayerWardrobe wardrobe = store.getComponent(ref, PlayerWardrobeComponent.getComponentType());
+                if (wardrobe != null) wardrobe.rebuild();
+            }
+
+        }
+
+        @Nullable
         public Query<EntityStore> getQuery() {
             return QUERY;
         }
